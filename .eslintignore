@@ -1,0 +1,15 @@
+node_modules
+dist
+out
+.idea
+.git
+*.svg
+*.json
+*.png
+package-lock.json
+*.lock
+.bundle
+.vscode
+__tests__
+ios
+android
