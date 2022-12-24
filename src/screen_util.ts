@@ -1,5 +1,5 @@
 import type { EmitterSubscription } from "react-native";
-import { Dimensions, StatusBar } from "react-native";
+import { Dimensions } from "react-native";
 import { defaultDesignSize } from "./const";
 import type { ScreenUtilDesignSizeDefault, ScreenUtilInitilizeParams } from "./type";
 import { OrientationType } from "./type";

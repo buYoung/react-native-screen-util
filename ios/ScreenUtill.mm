@@ -1,18 +1,45 @@
 #import "ScreenUtill.h"
+#import <UIKit/UIKit.h>
 
 @implementation ScreenUtill
 RCT_EXPORT_MODULE()
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
-RCT_REMAP_METHOD(multiply,
-                 multiplyWithA:(double)a withB:(double)b
-                 withResolver:(RCTPromiseResolveBlock)resolve
-                 withRejecter:(RCTPromiseRejectBlock)reject)
+- (dispatch_queue_t)methodQueue
 {
-    NSNumber *result = @(a * b);
+    return dispatch_get_main_queue();
+}
 
-    resolve(result);
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
+- (NSDictionary *)constantsToExport
+{
+    return self.getSafeAreaInsets;
+}
+
+- (NSDictionary *) getSafeAreaInsets
+{
+    if (@available(iOS 11.0, *)) {
+        return @{
+            @"safeAreaInsetsTop": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.top),
+            @"safeAreaInsetsBottom": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom),
+            @"safeAreaInsetsLeft": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.left),
+            @"safeAreaInsetsRight": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.right)
+        };
+    } else {
+        return @{
+            @"safeAreaInsetsTop": @(0),
+            @"safeAreaInsetsBottom": @(0),
+            @"safeAreaInsetsLeft": @(0),
+            @"safeAreaInsetsRight": @(0),
+        };
+    }
+}
+
+RCT_EXPORT_METHOD(getSafeAreaInsets:(RCTResponseSenderBlock)callback){
+    callback(@[self.getSafeAreaInsets]);
 }
 
 // Don't compile this code when we build for the old architecture.

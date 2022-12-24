@@ -1,6 +1,15 @@
+import { NativeModules } from "react-native";
+
+if(!NativeModules.ScreenUtill) {
+    console.log("error not load Native Module.... insetUtil");
+} else {
+    console.log("get inset!", NativeModules.ScreenUtill.getSafeAreaInsets);
+}
+
 export * from "./const";
 export * from "./screen_util";
 export * from "./library/lodash";
+
 
 declare global {
     interface Number {
