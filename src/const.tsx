@@ -2,16 +2,20 @@ import type { ScreenUtilDesignSizeDefault } from "./type";
 import type { SafeAreaInsetType } from "./type/safeArea";
 
 export const defaultDesignSize: ScreenUtilDesignSizeDefault = {
+    safeAreaInset: undefined,
+    screenSize   : {
+        width    : 0,
+        height   : 0,
+        scale    : 0,
+        fontScale: 0
+    },
     scaleHeight            : 0,
     scaleWidth             : 0,
-    windowHeight           : 0,
-    windowWidth            : 0,
     debug                  : false,
-    detectOrientationChange: false,
     minTextSize            : false,
     safeArea               : false,
     scaleByHeight          : false,
-    splitScreenMode        : false,
+    splitScreenMode: false,
     uiWidth                  : 360,
     uiHeight                 : 690,
     font                   : 0
