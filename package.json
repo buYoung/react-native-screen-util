@@ -41,13 +41,13 @@
         "ios",
         "android"
     ],
-    "repository": "https://github.com/buYoung/react_native_screen_utill",
+    "repository": "https://github.com/buYoung/react-native-screen-utill",
     "author": "buyongLee <leebu18@gmail.com> (https://github.com/buYoung)",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/buYoung/react_native_screen_utill/issues"
+        "url": "https://github.com/buYoung/react-native-screen-utill/issues"
     },
-    "homepage": "https://github.com/buYoung/react_native_screen_utill#readme",
+    "homepage": "https://github.com/buYoung/react-native-screen-utill#readme",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },

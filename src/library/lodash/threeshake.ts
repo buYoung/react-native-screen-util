@@ -9,19 +9,15 @@ import round from "lodash/round";
 
 function isValueNumber(value: any): boolean {
     if(isUndefined(value)) {
-        console.log(0);
         return false;
     }
     if(isNull(value)) {
-        console.log(1);
         return false;
     }
     if(!isNumber(value)) {
-        console.log(2);
         return false;
     }
     if(isNaN(value)) {
-        console.log(3);
         return false;
     }
     return true;

@@ -1,14 +1,11 @@
 {
-    "include": [
-        "./src/*.d.ts",
-    ],
     "exclude": [
         "node_modules"
     ],
     "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react_native_screen_utill": ["./src/index"]
+      "react-native-screen-utill": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

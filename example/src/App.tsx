@@ -1,10 +1,13 @@
 import * as React from "react";
-import { useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { ScreenUtilInstall } from "react-native-screen-utill";
+import { Suspense, useEffect, useState } from "react";
+import { StyleSheet, View, Text, Image, Dimensions, ActivityIndicator } from "react-native";
+import "react-native-screen-utill";
+import screenUtil, { initializePromise, ScreenUtilInstall } from "react-native-screen-utill";
+import Assets from "./assets";
+import { styles } from "./style/main";
 
 export default function App(): JSX.Element {
-
+    const [ getResponsiveLoading, setResponsiveLoading ] = useState(false);
     // const [result, setResult] = React.useState<number | undefined>();
     //
     // React.useEffect(() => {
@@ -12,26 +15,41 @@ export default function App(): JSX.Element {
     // }, []);
 
     useEffect(() => {
-        ScreenUtilInstall();
+        setImmediate(async () => {
+            await ScreenUtilInstall({
+                width        : 390,
+                height       : 750,
+                safeArea     : true,
+                minTextSize  : true,
+                scaleByHeight: false,
+                screenSize   : Dimensions.get("window")
+            });
+            await initializePromise();
+            setResponsiveLoading(true);
+        });
+
     }, []);
-    console.log((30).w);
-    // console.log((30).w());
+
+    if(!getResponsiveLoading) {
+        return <ActivityIndicator style={{
+            flex          : 1,
+            alignContent  : "center",
+            justifyContent: "center"
+        }}/>;
+    }
     return (
         <View style={styles.container}>
-            <Text>Result: </Text>
+            <View key={"header"} style={styles.titleContainer}>
+                <Image style={{...styles.iconDefaultSize}} source={Assets.icons.filter}/>
+                <Text style={styles.title}>Libris</Text>
+                <Image style={{...styles.iconDefaultSize}} source={Assets.icons.search}/>
+            </View>
+            <View key={"body"} style={styles.cardBodyContainer} />
+            <View key={"bottom"} style={styles.bottomContainer}>
+                <Image style={{...styles.iconDefaultSize}} source={Assets.icons.library}/>
+                <Image style={{...styles.iconDefaultSize}} source={Assets.icons.plush}/>
+                <Image style={{...styles.iconDefaultSize}} source={Assets.icons.settings}/>
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container : {
-        flex          : 1,
-        alignItems    : "center",
-        justifyContent: "center"
-    },
-    box : {
-        width         : 60,
-        height        : 60,
-        marginVertical: 20
-    }
-});

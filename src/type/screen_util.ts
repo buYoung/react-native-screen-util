@@ -1,11 +1,10 @@
 import type { SafeAreaInsetType } from './safeArea';
+import type { ScaledSize } from 'react-native';
 
 
 export interface ScreenUtilDesignSizeDefault extends ScreenUtilOption {
     uiWidth: number;
     uiHeight: number;
-    windowWidth: number;
-    windowHeight: number;
     scaleWidth: number;
     scaleHeight: number;
     font: number;
@@ -20,10 +19,10 @@ export interface ScreenUtilOption {
     splitScreenMode?: boolean;
     minTextSize?: boolean;
     scaleByHeight? : boolean,
-    detectOrientationChange?: boolean,
     debug?: boolean,
     safeArea?: boolean
-    safeAreaInset?: SafeAreaInsetType
+    safeAreaInset?: SafeAreaInsetType,
+    screenSize:ScaledSize
 }
 
 export interface ScreenUtilInitilizeParams extends ScreenUtilOption, ScreenUtilDesignSize {

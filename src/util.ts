@@ -1,9 +1,10 @@
 import type { ScaledSize } from "react-native";
 import { StatusBar } from "react-native";
-import { inRange, isValueNumber, reduce, round, values } from './library/lodash';
-import { _orientation, _ScreenUtilInitilize, isScreenUtilInitialize } from './screen_util';
+import { inRange, isValueNumber, reduce, round, values } from "./library/lodash";
+import { _orientation, _ScreenUtilInitilize, isScreenUtilInitialize, scaleConst } from './screen_util';
 import type { ScreenUtilInitilizeParams } from "./type";
-import { OrientationType } from "./type";
+import { OrientationType } from './type';
+// import { OrientationType } from "./type";
 
 export function checkIsNullOrNotInitilized(value: number): boolean {
     if(!isScreenUtilInitialize) {
@@ -31,11 +32,13 @@ export function checkIsNullOrNotInitilizedGeneric<T>(value: T): boolean {
 }
 export function getScreenSizeToSafeArea(value: ScaledSize, option:ScreenUtilInitilizeParams): ScaledSize {
     const statusBarHeight = StatusBar.currentHeight;
-    if(!statusBarHeight) {
-        return value;
+    if(statusBarHeight) {
+        console.log("statusBarHeight", statusBarHeight);
+        // return value;
+        value.height -= statusBarHeight;
     }
-    if(!option.safeArea) {
-        return value;
+    if(option.safeArea) {
+        console.log("option.safeAreaInset", scaleConst.safeAreaInset);
     }
     if(option.scaleByHeight) {
         value.width = (value.height * option.width) / option.height;
@@ -65,9 +68,9 @@ export function getCurrentOrientation(size: ScaledSize): OrientationType {
         return OrientationType.LANDSCAPE;
     }
 }
-export function onDetectChangeOrientationChange(dimensions: { window: ScaledSize; screen: ScaledSize }):void {
-    if(getCurrentOrientation(dimensions.window) === _orientation) {
-        return;
-    }
-    _ScreenUtilInitilize(undefined, true);
-}
+// export function onDetectChangeOrientationChange(dimensions: { window: ScaledSize; screen: ScaledSize }):void {
+//     if(getCurrentOrientation(dimensions.window) === _orientation) {
+//         return;
+//     }
+//     _ScreenUtilInitilize(undefined, true);
+// }
