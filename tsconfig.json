@@ -1,5 +1,11 @@
 {
-  "compilerOptions": {
+    "include": [
+        "./src/*.d.ts",
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+    "compilerOptions": {
     "baseUrl": "./",
     "paths": {
       "react_native_screen_utill": ["./src/index"]
@@ -24,5 +30,5 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext"
-  },
+  }
 }

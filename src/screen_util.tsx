@@ -3,29 +3,39 @@ import { Dimensions } from "react-native";
 import { defaultDesignSize } from "./const";
 import type { ScreenUtilDesignSizeDefault, ScreenUtilInitilizeParams } from "./type";
 import { OrientationType } from "./type";
-import { getCurrentOrientation, onDetectChangeOrientationChange } from "./util";
+import { getCurrentOrientation, getScreenSizeToSafeArea, onDetectChangeOrientationChange } from "./util";
 
-export let _scaleSize: ScreenUtilDesignSizeDefault = {
-    safeArea: true,
-    width   : 0,
-    height  : 0,
-    font    : 0
+export let scaleConst: ScreenUtilDesignSizeDefault = {
+    safeArea    : true,
+    uiWidth       : 0,
+    uiHeight      : 0,
+    font        : 0,
+    windowHeight: 0,
+    windowWidth : 0,
+    scaleHeight : 0,
+    scaleWidth  : 0
 };
 export let isScreenUtilInitialize         = false;
 export let _orientation = OrientationType.NONE;
 let dimensionSubscribe: EmitterSubscription | undefined;
-
-export function ScreenUtilInitilize(option?: ScreenUtilInitilizeParams): Error | undefined {
+export let oldOptions: ScreenUtilInitilizeParams | undefined = undefined;
+export function _ScreenUtilInitilize(option?: ScreenUtilInitilizeParams, loadSavedOption?:boolean): Error | undefined {
+    if(oldOptions && loadSavedOption) {
+        option = oldOptions;
+    }
     if(!option) {
         option = {
-            width                  : defaultDesignSize.width,
-            height                 : defaultDesignSize.height,
+            width                  : defaultDesignSize.uiWidth,
+            height                 : defaultDesignSize.uiHeight,
             minTextSize            : false,
             scaleByHeight          : false,
             detectOrientationChange: false,
             debug                  : false,
             safeArea               : true
         };
+    }
+    if (oldOptions === undefined) {
+        oldOptions = option;
     }
     if(option.detectOrientationChange) {
         if(dimensionSubscribe) {
@@ -38,16 +48,19 @@ export function ScreenUtilInitilize(option?: ScreenUtilInitilizeParams): Error |
     _orientation = getCurrentOrientation(dimension);
     const width        = option.width;
     const height       = option.height;
-    let screenWidth  = dimension.width;
-    let screenHeight = dimension.height;
+    const calcDimension = getScreenSizeToSafeArea(dimension, option);
 
-    const calcWidth    = screenWidth / width;
-    const calcHeight   = (option.splitScreenMode ? Math.max(screenHeight, 700) : screenHeight) / height;
-    _scaleSize              = {
+
+    scaleConst              = {
+        windowHeight           : dimension.height,
+        windowWidth            : dimension.width,
+        safeArea               : option.safeArea,
         debug                  : option.debug,
-        width                  : calcWidth,
-        height                 : calcHeight,
-        font                   : option.minTextSize ? Math.min(calcWidth, calcHeight) : calcWidth,
+        uiWidth                  : width,
+        uiHeight                 : height,
+        scaleWidth             : calcDimension.width,
+        scaleHeight            : calcDimension.height,
+        font                   : option.minTextSize ? Math.min(calcDimension.width, calcDimension.height) : calcDimension.width,
         minTextSize            : option.minTextSize,
         scaleByHeight          : option.scaleByHeight,
         detectOrientationChange: option.detectOrientationChange,

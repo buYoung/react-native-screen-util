@@ -1,9 +1,13 @@
-
+import type { SafeAreaInsetType } from './safeArea';
 
 
 export interface ScreenUtilDesignSizeDefault extends ScreenUtilOption {
-    width: number;
-    height: number;
+    uiWidth: number;
+    uiHeight: number;
+    windowWidth: number;
+    windowHeight: number;
+    scaleWidth: number;
+    scaleHeight: number;
     font: number;
 }
 export interface ScreenUtilDesignSize extends ScreenUtilOption {
@@ -18,7 +22,8 @@ export interface ScreenUtilOption {
     scaleByHeight? : boolean,
     detectOrientationChange?: boolean,
     debug?: boolean,
-    safeArea: boolean
+    safeArea?: boolean
+    safeAreaInset?: SafeAreaInsetType
 }
 
 export interface ScreenUtilInitilizeParams extends ScreenUtilOption, ScreenUtilDesignSize {

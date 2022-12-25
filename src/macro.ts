@@ -1,6 +1,11 @@
-import { _scaleSize } from "./screen_util";
+import { scaleConst } from "./screen_util";
 
 export function marginPadding(value: number): number {
-
-    return Math.round(Math.min(_scaleSize.height, _scaleSize.width) * value);
+    if(!scaleConst.scaleWidth) {
+        return value;
+    }
+    if(!scaleConst.scaleHeight) {
+        return value;
+    }
+    return Math.min(scaleConst.scaleWidth, scaleConst.scaleHeight) * value;
 }

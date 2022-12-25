@@ -1,8 +1,9 @@
-import type { ScaledSize } from 'react-native';
-import { StatusBar } from 'react-native';
-import { inRange, isValueNumber, reduce, values } from './library/lodash';
-import { _orientation, isScreenUtilInitialize, ScreenUtilInitilize } from './screen_util';
-import { OrientationType, SafeAreaType, ScreenUtilInitilizeParams } from './type';
+import type { ScaledSize } from "react-native";
+import { StatusBar } from "react-native";
+import { inRange, isValueNumber, reduce, round, values } from './library/lodash';
+import { _orientation, _ScreenUtilInitilize, isScreenUtilInitialize } from './screen_util';
+import type { ScreenUtilInitilizeParams } from "./type";
+import { OrientationType } from "./type";
 
 export function checkIsNullOrNotInitilized(value: number): boolean {
     if(!isScreenUtilInitialize) {
@@ -28,7 +29,7 @@ export function checkIsNullOrNotInitilizedGeneric<T>(value: T): boolean {
     }, []);
     return !result.includes(false);
 }
-export function getScreenSizeToSafeArea(value: ScaledSize, option:ScreenUtilInitilizeParams, safeAreaType: SafeAreaType): ScaledSize {
+export function getScreenSizeToSafeArea(value: ScaledSize, option:ScreenUtilInitilizeParams): ScaledSize {
     const statusBarHeight = StatusBar.currentHeight;
     if(!statusBarHeight) {
         return value;
@@ -37,14 +38,21 @@ export function getScreenSizeToSafeArea(value: ScaledSize, option:ScreenUtilInit
         return value;
     }
     if(option.scaleByHeight) {
-        value.width = (value.height * option.width) / option.height
+        value.width = (value.height * option.width) / option.height;
     }
-
-    if(safeAreaType === SafeAreaType.POTTRAIT) {
-        value.height -= statusBarHeight;
-    } else {
-        value.width -= statusBarHeight;
+    if(option.splitScreenMode) {
+        value.height = Math.max(value.height, 700);
     }
+    value.width /= option.width;
+    value.height /= option.height;
+    value.width = round(value.width, 3);
+    value.height = round(value.height, 3);
+    return value;
+    // if(safeAreaType === SafeAreaType.POTTRAIT) {
+    //     value.height -= statusBarHeight;
+    // } else {
+    //     value.width -= statusBarHeight;
+    // }
 }
 export function getCurrentOrientation(size: ScaledSize): OrientationType {
     if(!size) {
@@ -61,5 +69,5 @@ export function onDetectChangeOrientationChange(dimensions: { window: ScaledSize
     if(getCurrentOrientation(dimensions.window) === _orientation) {
         return;
     }
-    ScreenUtilInitilize();
+    _ScreenUtilInitilize(undefined, true);
 }

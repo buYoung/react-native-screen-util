@@ -1,31 +1,37 @@
-import * as React from 'react';
+import * as React from "react";
+import { useEffect } from "react";
+import { StyleSheet, View, Text } from "react-native";
+import { ScreenUtilInstall } from "react-native-screen-utill";
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-screen-utill';
+export default function App(): JSX.Element {
 
-export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+    // const [result, setResult] = React.useState<number | undefined>();
+    //
+    // React.useEffect(() => {
+    //   multiply(3, 7).then(setResult);
+    // }, []);
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
-  );
+    useEffect(() => {
+        ScreenUtilInstall();
+    }, []);
+    console.log((30).w);
+    // console.log((30).w());
+    return (
+        <View style={styles.container}>
+            <Text>Result: </Text>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
+    container : {
+        flex          : 1,
+        alignItems    : "center",
+        justifyContent: "center"
+    },
+    box : {
+        width         : 60,
+        height        : 60,
+        marginVertical: 20
+    }
 });

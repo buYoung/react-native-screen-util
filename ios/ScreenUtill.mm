@@ -23,17 +23,17 @@ RCT_EXPORT_MODULE()
 {
     if (@available(iOS 11.0, *)) {
         return @{
-            @"safeAreaInsetsTop": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.top),
-            @"safeAreaInsetsBottom": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom),
-            @"safeAreaInsetsLeft": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.left),
-            @"safeAreaInsetsRight": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.right)
+            @"top": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.top),
+            @"bottom": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.bottom),
+            @"left": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.left),
+            @"right": @(UIApplication.sharedApplication.keyWindow.safeAreaInsets.right)
         };
     } else {
         return @{
-            @"safeAreaInsetsTop": @(0),
-            @"safeAreaInsetsBottom": @(0),
-            @"safeAreaInsetsLeft": @(0),
-            @"safeAreaInsetsRight": @(0),
+            @"top": @(0),
+            @"bottom": @(0),
+            @"left": @(0),
+            @"right": @(0),
         };
     }
 }
