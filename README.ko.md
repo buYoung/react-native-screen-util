@@ -18,6 +18,20 @@ npm install react-native-screen-utill
 1. 현재 마지막으로 올라간 버전은 안드로이드에서 100% 작동을 확인했습니다.
 2. 현재 안드로이드 버전 최소 29부터 지원됩니다 :< (이유는 inset 때문에..)
 3. 아직까지는 android만 확인해봤습니다. :>
+4. 2022/12/28 ios 14기기에서 정상작동 확인했습니다 100% !!
+5. ios 는 최소 ios버전 이후부터 지원 됩니다. 11버전까지는 아마 안될껍니다. :<
+
+### 디자인 적용 사진
+디자인 파일
+1. 원본 png (390 x 844)
+   1. [링크](http://livteam.in:5000/d/s/rjF8YpguyRITa3amuaquDoHPpxDaus6j/yK-0XMcGvioLkOug7vVWnaYRwA5-h6hn-Mr1gf3kWGAo)
+2. 원본 svg (390 x 844)
+   1. [링크](http://livteam.in:5000/d/s/rjFF5DGtp1NNNBlnE5BeC03I8Wbawycl/FbtgCrf_oLedb89v37uDyWOJJZXPoNRf-Vr1AAZQWGAo)
+3. ios 14
+   1. [링크](http://livteam.in:5000/d/s/rjGgUMaY8yQ5TVWP6aUtp7cTICozgGAc/aRlzIIzlOqvjwaJcQQyNVSfaGTluH-dk-fb3g-6oWGAo)
+4. android
+   1. [링크](http://livteam.in:5000/d/s/rjGkffaGo2kdheF1lmYlAjb1H3bmJqaS/NNTh56mN22Li4duFvTRdV2U1sMpzxdvI-pL0gWL8WGAo)
+
 ## Usage
 
 ```js
@@ -68,7 +82,7 @@ number .w() // 이것도 가능
 
 // ScreenUtilInstall 옵션 목록
 //  width        : 390, // << ui 디자인 넓이
-//  height       : 750, // << UI 디자인 높이(상태바, 하단 버튼? (ios경우)는 무시한 ui 작업 영역만 높이로 지정해야합니다.)
+//  height       : 844, // << UI 디자인 높이(만약 safeArea를 쓴다면 이상태를 유지하고 상태바, 하단 버튼? (ios경우)는 무시한 ui 작업 영역만 높이로 지정해야합니다.) (만약 safeArea를 쓴다면 ui design의 높이 전체값을 할당해주세요!!)
 //  safeArea     : true, // native 코드로 부터 inset 정보를 받아옵니다.
 //  minTextSize  : true, // true인경우 계산된 크기중 넓이, 높이의 비율중 더 낮은걸 시용합니다. false면 width비율 사용
 //  scaleByHeight: false, // true인경우 높이를 기준으로 계산식이 바뀌며, 넓이, 높이 값이 살짝 더 커집니다.
@@ -82,16 +96,18 @@ number .w() // 이것도 가능
 // const
 // scaleConst // 모든 정보가 저장되어있습니다. inset(display cutout), 계산된 비율, 옵션 등등
 // defaultDesignSize // 기본값입니다. 사용은 하지마세요
+// safeArea // 스타일 코드에서 사용할 safe area Inset 상수입니다. 조만간 useContext로 개량할 계획입니다.
 ```
 
 # Futures
-1. 마진을 조금더 쉽고 간편하게 사용하기위한 API추가
+1.  - [ ] 마진을 조금더 쉽고 간편하게 사용하기위한 API추가
    1. type을 지원할 예정이며, 넣은 값만 출력될 예정입니다. style에 바로 사용 가능하도록
-2. 패딩을 조금더 쉽고 간편하게 사용하기위한 API추가
+2.  - [ ] 패딩을 조금더 쉽고 간편하게 사용하기위한 API추가
    1. 1-1와 같음
-3. ios 기기 확인
-4. 안드로이드 기기에서 Inset값이 마지막으로 확인했을때 0으로 나왔던점을 다시한번 확인해야합니다.(프로그램이 꺼지지는 않지만, 값이 0으로 출력됩니다)
-5. border에는 뭘쓸지 생각중
+3.  - [x] ios 기기 확인
+4.  - [x] 안드로이드 기기에서 Inset값이 마지막으로 확인했을때 0으로 나왔던점을 다시한번 확인해야합니다.(프로그램이 꺼지지는 않지만, 값이 0으로 출력됩니다)
+5.  - [ ] border에는 뭘쓸지 생각중
+6. - [ ] npm, yarn 업로드 아마도 23년1월1일 ?
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

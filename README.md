@@ -16,9 +16,22 @@ If you've seen this git in advance and you're going to use it, please use the co
 Please leave the source!
 ```
 ### Comment
-1. current Version Work 100% android only ios is not Checking
+1. current Version Work 100% android
 2. currently android Support Minimum 29 :< (reason: screen inset)
 3. running exmaple for android :>
+4. 2022/12/28 ios example is work 100% !!
+5. ios work ios minimum 11 :<
+
+### design file
+1. original png (390 x 844)
+    1. [Link](http://livteam.in:5000/d/s/rjF8YpguyRITa3amuaquDoHPpxDaus6j/yK-0XMcGvioLkOug7vVWnaYRwA5-h6hn-Mr1gf3kWGAo)
+2. original svg (390 x 844)
+    1. [Link](http://livteam.in:5000/d/s/rjFF5DGtp1NNNBlnE5BeC03I8Wbawycl/FbtgCrf_oLedb89v37uDyWOJJZXPoNRf-Vr1AAZQWGAo)
+3. ios 14
+    1. [Link](http://livteam.in:5000/d/s/rjGgUMaY8yQ5TVWP6aUtp7cTICozgGAc/aRlzIIzlOqvjwaJcQQyNVSfaGTluH-dk-fb3g-6oWGAo)
+4. android
+    1. [Link](http://livteam.in:5000/d/s/rjGkffaGo2kdheF1lmYlAjb1H3bmJqaS/NNTh56mN22Li4duFvTRdV2U1sMpzxdvI-pL0gWL8WGAo)
+
 ## Usage
 
 ```js
@@ -28,7 +41,7 @@ import { initializePromise, ScreenUtilInstall } from 'react-native-screen-utill'
 setImmediate(async () => {
     await ScreenUtilInstall({
         width        : 390,
-        height       : 750,
+        height       : 844,
         safeArea     : true,
         minTextSize  : true,
         scaleByHeight: false,
@@ -68,7 +81,7 @@ number .w() // it is possible
 
 // ScreenUtilInstall option list
 //  width        : 390, // << UI Design Size Width
-//  height       : 750, // << UI Design Size Height(statusbar and bottom inset removed size)
+//  height       : 844, // << UI Design Size Height(if not use safe inset statusbar and bottom inset removed size) (if use safe inset set ui full height)
 //  safeArea     : true, // use Get insets info for android, ios
 //  minTextSize  : true, // check if (true)campare calc width or height for minimum (false)
 //  scaleByHeight: false, // default Scale Calc width this option is Hight calc
@@ -82,16 +95,18 @@ number .w() // it is possible
 // const
 // scaleConst // all info saved Dimensions, screen Inset, options...
 // defaultDesignSize // default Setting but I don't recommend using it
+// safeArea // check if style sheet for safeInset future this const change useContext
 ```
 
 # Futures
-1. make for Margin
+1. - [ ] make for Margin
    1. this fully typed and return styleCode marginLeft,Top,Bottom...
-2. make for Padding
+2. - [ ] make for Padding
    1. 1-1 is same
-3. Checking IOS
-4. Android Inset Checking Currently unsafe(program is not deadlock but result is 0)
-5. how to use Border
+3. - [X] Checking IOS
+5. - [X] Android Inset Checking Currently unsafe(program is not deadlock but result is 0)
+6. - [ ] how to use Border
+7. - [ ] npm, yarn upload Probably 23/1/1 ?
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

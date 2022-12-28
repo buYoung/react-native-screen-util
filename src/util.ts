@@ -1,9 +1,9 @@
 import type { ScaledSize } from "react-native";
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import { inRange, isValueNumber, reduce, round, values } from "./library/lodash";
-import { _orientation, _ScreenUtilInitilize, isScreenUtilInitialize, scaleConst } from './screen_util';
+import { isScreenUtilInitialize, scaleConst } from "./screen_util";
 import type { ScreenUtilInitilizeParams } from "./type";
-import { OrientationType } from './type';
+import { OrientationType } from "./type";
 // import { OrientationType } from "./type";
 
 export function checkIsNullOrNotInitilized(value: number): boolean {
@@ -31,31 +31,51 @@ export function checkIsNullOrNotInitilizedGeneric<T>(value: T): boolean {
     return !result.includes(false);
 }
 export function getScreenSizeToSafeArea(value: ScaledSize, option:ScreenUtilInitilizeParams): ScaledSize {
-    const statusBarHeight = StatusBar.currentHeight;
-    if(statusBarHeight) {
-        console.log("statusBarHeight", statusBarHeight);
-        // return value;
-        value.height -= statusBarHeight;
-    }
-    if(option.safeArea) {
-        console.log("option.safeAreaInset", scaleConst.safeAreaInset);
-    }
-    if(option.scaleByHeight) {
-        value.width = (value.height * option.width) / option.height;
-    }
-    if(option.splitScreenMode) {
-        value.height = Math.max(value.height, 700);
-    }
+    console.log("계산전 ", value);
+    calcSafeInset(value, option);
+    console.log("계산후 ", value);
+
     value.width /= option.width;
     value.height /= option.height;
     value.width = round(value.width, 3);
     value.height = round(value.height, 3);
     return value;
-    // if(safeAreaType === SafeAreaType.POTTRAIT) {
-    //     value.height -= statusBarHeight;
-    // } else {
-    //     value.width -= statusBarHeight;
-    // }
+}
+
+function calcSafeInset(value: ScaledSize, option:ScreenUtilInitilizeParams): void {
+    if(!option.safeArea) {
+        return;
+    }
+    if(!scaleConst.safeAreaInset) {
+        return;
+    }
+    const statusBarHeight = StatusBar.currentHeight;
+    const safeAreaType = getCurrentOrientation(value);
+    if(safeAreaType === OrientationType.POTTRAIT) {
+        if(scaleConst.safeAreaInset.top === 0 && scaleConst.safeAreaInset.bottom === 0) {
+            return;
+        }
+        let TopInset = Platform.select({
+            android: scaleConst.safeAreaInset.top,
+            ios    : 0
+        });
+        if(!TopInset) {
+            TopInset = 0;
+        }
+        value.height += (TopInset + scaleConst.safeAreaInset.bottom);
+        return;
+    }
+    if(safeAreaType === OrientationType.LANDSCAPE) {
+        if(scaleConst.safeAreaInset.left === 0 && scaleConst.safeAreaInset.right === 0) {
+            return;
+        }
+        value.width += (scaleConst.safeAreaInset.left + scaleConst.safeAreaInset.right);
+        return;
+    }
+    if(!statusBarHeight) {
+        return;
+    }
+    value.height += statusBarHeight;
 }
 export function getCurrentOrientation(size: ScaledSize): OrientationType {
     if(!size) {

@@ -81,8 +81,6 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
         }
 //        Log.d(NAME, "_getSafeAreaInsets: $insets")
 //        Log.d(NAME, "_getSafeAreaInsets: $isFullScreen")
-        Log.d(NAME, "_getSafeAreaInsets: $safeareaInsets")
-        Log.d(NAME, "_getSafeAreaInsets: ${Build.VERSION.SDK_INT}")
         return safeareaInsets
     }
     private fun _getIsFullScreen(window: Window, view: View):Boolean {

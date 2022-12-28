@@ -1,5 +1,5 @@
-import type { SafeAreaInsetType } from './safeArea';
-import type { ScaledSize } from 'react-native';
+import type { ScaledSize } from "react-native";
+import type { SafeAreaInsetType } from "./safeArea";
 
 
 export interface ScreenUtilDesignSizeDefault extends ScreenUtilOption {

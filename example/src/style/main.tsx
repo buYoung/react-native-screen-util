@@ -1,7 +1,7 @@
 import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
-import { InteractionManager, StyleSheet } from "react-native";
+import { InteractionManager, Platform, StyleSheet } from "react-native";
 import "react-native-screen-utill";
-import { initializePromise } from "react-native-screen-utill";
+import { initializePromise, safeArea } from "react-native-screen-utill";
 
 type mainStyle = {
     container: ViewStyle,
@@ -20,16 +20,26 @@ type mainStyle = {
 
 InteractionManager.runAfterInteractions(async () => {
     await initializePromise();
+    console.log(safeArea);
     styles = setStyleResponsive();
 });
 let styles = setStyleResponsive();
 
 function setStyleResponsive():mainStyle {
     const fixedWidth = (390).w();
+    let topInset = Platform.select({
+        android: 0,
+        ios    : safeArea.top
+    });
+    if(!topInset) {
+        topInset = 0;
+    }
+    console.log(topInset);
     return StyleSheet.create<mainStyle>({
         container : {
             width          : fixedWidth,
             height         : (750).h(),
+            top            : topInset.h(),
             backgroundColor: "#777"
             // backgroundColor: "#F8F7FC"
         },

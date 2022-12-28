@@ -33,4 +33,4 @@ declare global {
         pr(): number;
     }
 }
-export {}
+export {};

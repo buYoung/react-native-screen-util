@@ -1,4 +1,5 @@
 import { NativeModules } from "react-native";
+import { safeArea } from "./const";
 import { _ScreenUtilInitilize, scaleConst } from "./screen_util";
 import type { ScreenUtilInitilizeParams } from "./type";
 import type { SafeAreaInsetType } from "./type/safeArea";
@@ -11,7 +12,7 @@ export async function ScreenUtilInstall(option?: ScreenUtilInitilizeParams): Pro
         const resultSafeArea = await getSafeArea();
         const keyList = Object.keys(resultSafeArea);
         for (let i = 0; i < keyList.length; i++) {
-            const key = keyList[i];
+            const key = keyList[i] as keyof typeof resultSafeArea;
             const val = resultSafeArea[key];
             if(!scaleConst.safeAreaInset) {
                 scaleConst.safeAreaInset = {
@@ -21,7 +22,8 @@ export async function ScreenUtilInstall(option?: ScreenUtilInitilizeParams): Pro
                     top   : 0
                 };
             }
-            scaleConst[key] = val;
+            safeArea[key] = val;
+            scaleConst.safeAreaInset[key] = val;
         }
 
         const e = _ScreenUtilInitilize(option);

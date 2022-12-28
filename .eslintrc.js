@@ -82,6 +82,7 @@ module.exports = {
         "@typescript-eslint/no-var-requires"                : "off",
         "@typescript-eslint/no-unused-vars"                 : "off",
         "react-hooks/exhaustive-deps"                      : "off",
+        "no-extend-native"                                 : "off",
         "arrow-body-style"                                  : "off",
         "prefer-arrow-callback"                             : "off",
         "max-statements-per-line"                           : [ "error", { max : 2 } ],

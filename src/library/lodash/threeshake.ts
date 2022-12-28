@@ -4,8 +4,8 @@ import isNull from "lodash/isNull";
 import isNumber from "lodash/isNumber";
 import isUndefined from "lodash/isUndefined";
 import reduce from "lodash/reduce";
-import values from "lodash/values";
 import round from "lodash/round";
+import values from "lodash/values";
 
 function isValueNumber(value: any): boolean {
     if(isUndefined(value)) {

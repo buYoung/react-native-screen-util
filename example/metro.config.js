@@ -7,6 +7,7 @@ module.exports = {
     watchFolders: [root],
 
     transformer : {
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         getTransformOptions : async () => ({
             transform : {
                 experimentalImportSupport: false,

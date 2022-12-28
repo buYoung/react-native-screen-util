@@ -20,17 +20,19 @@ export let scaleConst: ScreenUtilDesignSizeDefault = {
 };
 export let isScreenUtilInitialize         = false;
 export let _orientation = OrientationType.NONE;
-export async function initializePromise(): Promise<void> {
+export async function initializePromise(): Promise<boolean> {
     let promiseCheckTimer = -1;
     return new Promise((resolve):void => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         promiseCheckTimer = setInterval(() => {
             if(!isScreenUtilInitialize) {
                 return;
             }
-            resolve();
+            resolve(true);
             clearInterval(promiseCheckTimer);
         }, 500);
-    })
+    });
 }
 export function _ScreenUtilInitilize(option?: ScreenUtilInitilizeParams): Error | undefined {
     if(!option) {
@@ -54,7 +56,7 @@ export function _ScreenUtilInitilize(option?: ScreenUtilInitilizeParams): Error 
     console.log("dimension width, height", width, height);
     const calcDimension = getScreenSizeToSafeArea(dimension, option);
 
-    console.log("calcDimension", dimension, calcDimension);
+    console.log("calcDimension", scaleConst);
 
     scaleConst              = {
         screenSize             : option.screenSize,

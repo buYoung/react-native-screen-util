@@ -1,9 +1,10 @@
 import * as React from "react";
-import { Suspense, useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, Dimensions, ActivityIndicator } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, Image, Dimensions, ActivityIndicator } from "react-native";
 import "react-native-screen-utill";
-import screenUtil, { initializePromise, ScreenUtilInstall } from "react-native-screen-utill";
+import { initializePromise, ScreenUtilInstall } from "react-native-screen-utill";
 import Assets from "./assets";
+import { loadingStyleSheet } from "./style/loading";
 import { styles } from "./style/main";
 
 export default function App(): JSX.Element {
@@ -18,7 +19,7 @@ export default function App(): JSX.Element {
         setImmediate(async () => {
             await ScreenUtilInstall({
                 width        : 390,
-                height       : 750,
+                height       : 844,
                 safeArea     : true,
                 minTextSize  : true,
                 scaleByHeight: false,
@@ -31,11 +32,7 @@ export default function App(): JSX.Element {
     }, []);
 
     if(!getResponsiveLoading) {
-        return <ActivityIndicator style={{
-            flex          : 1,
-            alignContent  : "center",
-            justifyContent: "center"
-        }}/>;
+        return <ActivityIndicator style={loadingStyleSheet.loading}/>;
     }
     return (
         <View style={styles.container}>
