@@ -1,56 +1,123 @@
-// export const paddingType = {
-//     paddingTop       : "paddingTop",
-//     paddingBottom    : "paddingBottom",
-//     paddingRight     : "paddingRight",
-//     paddingLeft      : "paddingLeft",
-//     paddingHorizontal: "paddingHorizontal",
-//     paddingVertical  : "paddingVertical",
-//     pt               : "paddingTop",
-//     pb               : "paddingBottom",
-//     pl               : "paddingLeft",
-//     pr               : "paddingRight",
-//     ph               : "paddingHorizontal",
-//     pv               : "paddingVertical"
-// };
-//
-// export type paddingType = typeof paddingType[keyof typeof paddingType];
-//
-// export type paddingParamOriginal = {
-//     paddingTop?: number, paddingBottom?: number, paddingRight?: number, paddingLeft?: number,
-// };
-// export type paddingParamOriginalAll = {
-//     padding: number
-// };
-// export type paddingParamOriginalHorizontalVertical = {
-//     paddingHorizontal?: number,
-//     paddingVertical?: number,
-// };
-// export type paddingParamOriginalHorizontal = {
-//     paddingHorizontal?: number
-// };
-// export type paddingParamOriginalVertical = {
-//     paddingVertical?: number,
-// };
-// export type paddingParamWordAll = {
-//     p: number
-// };
-// export type paddingParamWord = {
-//     pt?: number, pb?: number, pl?: number, pr?: number,
-// };
-// export type paddingParamWordhv = {
-//     ph?: number, pv?: number
-// };
-// export type paddingParamWordh = {
-//     ph?: number
-// };
-// export type paddingParamWordv = {
-//     pv?: number
-// };
-//
-// export type paddingParam<T extends paddingParamWordAll | paddingParamOriginalAll | paddingParamOriginal | paddingParamOriginalHorizontalVertical | paddingParamOriginalHorizontal | paddingParamOriginalVertical | paddingParamWord | paddingParamWordhv | paddingParamWordh | paddingParamWordv> = T;
-//
-//
-//
-//
-//
-//
+export const enum ResponsivePaddingParamEnum {
+    default,
+    All,
+    HorizonVertical,
+    WordDefault,
+    WordAll,
+    WordHorizonVertical
+}
+export type ResponsivePaddingType = {
+    paddingTop?: number,
+    paddingBottom?: number,
+    paddingRight?: number,
+    paddingLeft?: number,
+    paddingVertical?: number,
+    paddingHorizontal?: number
+};
+export type ResponsivePaddingParamOriginal = {
+    union?: ResponsivePaddingParamEnum.default
+    paddingTop?: number,
+    paddingBottom?: number,
+    paddingRight?: number,
+    paddingLeft?: number,
+    paddingHorizontal?: never
+    paddingVertical?: never,
+    padding?: never
+    p?: never,
+    ph?: never,
+    pv?: never
+    pt?: never,
+    pb?: never,
+    pl?: never,
+    pr?: never,
+};
+export type ResponsivePaddingParamOriginalAll = {
+    union?: ResponsivePaddingParamEnum.All
+    padding: number,
+    paddingTop?: never,
+    paddingBottom?: never,
+    paddingRight?: never,
+    paddingLeft?: never,
+    paddingHorizontal?: never
+    paddingVertical?: never,
+    p?: never,
+    ph?: never,
+    pv?: never
+    pt?: never,
+    pb?: never,
+    pl?: never,
+    pr?: never,
+};
+export type ResponsivePaddingParamOriginalHorizontalVertical = {
+    union?: ResponsivePaddingParamEnum.HorizonVertical
+    padding?: never,
+    paddingTop?: never,
+    paddingBottom?: never,
+    paddingRight?: never,
+    paddingLeft?: never,
+    paddingHorizontal?: number
+    paddingVertical?: number,
+    p?: never,
+    ph?: never,
+    pv?: never
+    pt?: never,
+    pb?: never,
+    pl?: never,
+    pr?: never,
+};
+export type ResponsivePaddingParamWordAll = {
+    union?: ResponsivePaddingParamEnum.WordAll,
+    p: number,
+    ph?: never,
+    pv?: never
+    pt?: never,
+    pb?: never,
+    pl?: never,
+    pr?: never,
+    padding?: never,
+    paddingTop?: never,
+    paddingBottom?: never,
+    paddingRight?: never,
+    paddingLeft?: never,
+    paddingHorizontal?: never
+    paddingVertical?: never,
+
+};
+export type ResponsivePaddingParamWord = {
+
+    union?: ResponsivePaddingParamEnum.WordDefault,
+    p?: never,
+    pt?: number,
+    pb?: number,
+    pl?: number,
+    pr?: number,
+    ph?: never,
+    pv?: never,
+    padding?: never,
+    paddingTop?: never,
+    paddingBottom?: never,
+    paddingRight?: never,
+    paddingLeft?: never,
+    paddingHorizontal?: never
+    paddingVertical?: never,
+
+};
+export type ResponsivePaddingParamWordhv = {
+    union?: ResponsivePaddingParamEnum.WordHorizonVertical,
+    p?: never,
+    ph?: number,
+    pv?: number,
+    pt?: never,
+    pb?: never,
+    pl?: never,
+    pr?: never,
+    padding?: never,
+    paddingTop?: never,
+    paddingBottom?: never,
+    paddingRight?: never,
+    paddingLeft?: never,
+    paddingHorizontal?: never
+    paddingVertical?: never,
+};
+
+export type ResponsivePaddingParam<T = ResponsivePaddingParamOriginal | ResponsivePaddingParamOriginalHorizontalVertical | ResponsivePaddingParamOriginalAll  |  ResponsivePaddingParamWord | ResponsivePaddingParamWordAll | ResponsivePaddingParamWordhv> = T;

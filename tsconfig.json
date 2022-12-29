@@ -3,9 +3,12 @@
         "node_modules"
     ],
     "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "react-native-screen-utill": ["./src/index"]
+      "react-native-screen-utill": ["./index"],
+        "src": ["./index"],
+        "type": ["./type/index"],
+        "typed": ["./type/*"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

@@ -1,4 +1,5 @@
 import inRange from "lodash/inRange";
+import isString from "lodash/isString";
 import isNaN from "lodash/isNaN";
 import isNull from "lodash/isNull";
 import isNumber from "lodash/isNumber";
@@ -23,6 +24,7 @@ function isValueNumber(value: any): boolean {
     return true;
 }
 export {
+    isString,
     isValueNumber,
     reduce,
     inRange,
