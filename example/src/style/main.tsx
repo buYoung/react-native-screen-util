@@ -1,7 +1,7 @@
 import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
 import { InteractionManager, Platform, StyleSheet } from "react-native";
 import "react-native-screen-utill";
-import { initializePromise, safeArea } from "react-native-screen-utill";
+import { ScreenResponsiveStore } from "react-native-screen-utill";
 
 type mainStyle = {
     container: ViewStyle,
@@ -19,8 +19,10 @@ type mainStyle = {
 };
 
 InteractionManager.runAfterInteractions(async () => {
-    await initializePromise();
-    console.log(safeArea);
+    console.log("get State");
+    await ScreenResponsiveStore.getState().getInitialize();
+    console.log("get State22");
+    console.log("getSafeArea", ScreenResponsiveStore.getState().getSafeArea());
     styles = setStyleResponsive();
 });
 let styles = setStyleResponsive();
@@ -29,7 +31,7 @@ function setStyleResponsive():mainStyle {
     const fixedWidth = (390).w();
     let topInset = Platform.select({
         android: 0,
-        ios    : safeArea.top
+        ios    : ScreenResponsiveStore.getState().getSafeArea()?.top
     });
     if(!topInset) {
         topInset = 0;

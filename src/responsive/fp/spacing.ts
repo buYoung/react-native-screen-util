@@ -1,17 +1,17 @@
-import { ScreenResponsive } from "src";
+import { ScreenResponsiveStore } from "src";
 import type {
     ResponsiveMarginParam,
     ResponsiveMarginType, ResponsivePaddingParam,
     ResponsivePaddingType,
     screenResponsiveCheckerAction,
     screenResponsiveGetterAction
-} from "type";
-import { ResponsiveMarginParamEnum, ResponsivePaddingParamEnum } from "type";
+} from "../../type";
+import { ResponsiveMarginParamEnum, ResponsivePaddingParamEnum } from "../../type";
 
 export function margin<T extends ResponsiveMarginParam>(value: T): ResponsiveMarginType {
     let result: ResponsiveMarginType = {};
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         result = marginHelper(value, currentState);
     } catch (e) {
 
@@ -22,7 +22,7 @@ export const m = margin;
 export function padding<T extends ResponsivePaddingParam>(value: T): ResponsivePaddingType {
     let result: ResponsivePaddingType = {};
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         result = paddingHelper(value, currentState);
     } catch (e) {
 

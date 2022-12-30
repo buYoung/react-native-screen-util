@@ -5,10 +5,7 @@
     "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "react-native-screen-utill": ["./index"],
-        "src": ["./index"],
-        "type": ["./type/index"],
-        "typed": ["./type/*"]
+        "react-native-screen-utill": ["./index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

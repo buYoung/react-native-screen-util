@@ -4,13 +4,13 @@ import type {
     ResponsiveDimensionParamType,
     screenResponsiveCheckerAction,
     screenResponsiveGetterAction
-} from "type";
-import { ResponsiveDimensionUnionParamEnum } from "type";
+} from "../../type";
+import { ResponsiveDimensionUnionParamEnum } from "../../type";
 
 export function dimension<T extends ResponsiveDimensionParams>(value: T): ResponsiveDimensionParamType {
     let result: ResponsiveDimensionParamType = {};
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         result = DimensionHelper(value, currentState);
     } catch (e) {
 

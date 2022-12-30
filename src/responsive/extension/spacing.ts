@@ -1,10 +1,10 @@
-import { ScreenResponsive } from "react-native-screen-utill";
+import { ScreenResponsiveStore } from "react-native-screen-utill";
 
 
 Number.prototype.ml          = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -16,7 +16,7 @@ Number.prototype.ml          = function (): number {
 Number.prototype.mr          = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -28,7 +28,7 @@ Number.prototype.mr          = function (): number {
 Number.prototype.mt          = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -40,7 +40,7 @@ Number.prototype.mt          = function (): number {
 Number.prototype.mb          = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -52,7 +52,7 @@ Number.prototype.mb          = function (): number {
 Number.prototype.marginLeft  = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -64,7 +64,7 @@ Number.prototype.marginLeft  = function (): number {
 Number.prototype.marginRight = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -76,7 +76,7 @@ Number.prototype.marginRight = function (): number {
 Number.prototype.marginTop   = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -88,7 +88,7 @@ Number.prototype.marginTop   = function (): number {
 Number.prototype.marginRight = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -100,7 +100,7 @@ Number.prototype.marginRight = function (): number {
 Number.prototype.pl           = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -112,7 +112,7 @@ Number.prototype.pl           = function (): number {
 Number.prototype.pr           = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -124,7 +124,7 @@ Number.prototype.pr           = function (): number {
 Number.prototype.pt           = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -136,7 +136,7 @@ Number.prototype.pt           = function (): number {
 Number.prototype.pb           = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -148,7 +148,7 @@ Number.prototype.pb           = function (): number {
 Number.prototype.paddingLeft  = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -160,7 +160,7 @@ Number.prototype.paddingLeft  = function (): number {
 Number.prototype.paddingRight = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -172,7 +172,7 @@ Number.prototype.paddingRight = function (): number {
 Number.prototype.paddingTop   = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -184,7 +184,7 @@ Number.prototype.paddingTop   = function (): number {
 Number.prototype.paddingRight = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }

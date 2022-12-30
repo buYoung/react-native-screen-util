@@ -4,7 +4,6 @@ out
 .idea
 .git
 *.svg
-*.json
 *.png
 package-lock.json
 *.lock

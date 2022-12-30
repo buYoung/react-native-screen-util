@@ -24,3 +24,5 @@ export interface screenResponsiveSetterAction {
     setScreenSizeRatio(): setStateResultType,
     setScreenSafeInset(): Promise<setStateResultType>
 }
+
+export type screenResponsiveActionUnion = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterAction;

@@ -28,9 +28,3 @@ export interface ScreenUtilOption {
 export interface ScreenUtilInitilizeParams extends ScreenUtilOption, ScreenUtilDesignSize {
 
 }
-
-
-export const enum SafeAreaType {
-    POTTRAIT,
-    LANDSCAPE
-}

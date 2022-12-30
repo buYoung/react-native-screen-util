@@ -1,10 +1,10 @@
-import { ScreenResponsive } from "react-native-screen-utill";
+import { ScreenResponsiveStore } from "react-native-screen-utill";
 
 
 Number.prototype.fontSize    = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -16,7 +16,7 @@ Number.prototype.fontSize    = function (): number {
 Number.prototype.sp          = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsive.getState();
+        const currentState = ScreenResponsiveStore.getState();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
