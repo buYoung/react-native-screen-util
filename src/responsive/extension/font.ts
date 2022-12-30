@@ -1,10 +1,10 @@
-import { ScreenResponsiveStore } from "react-native-screen-utill";
+import storePrivate from "responsive/storePrivate";
 
 
 Number.prototype.fontSize    = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsiveStore.getState();
+        const currentState = storePrivate.get();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -16,7 +16,7 @@ Number.prototype.fontSize    = function (): number {
 Number.prototype.sp          = function (): number {
     const value = Number(this);
     try {
-        const currentState = ScreenResponsiveStore.getState();
+        const currentState = storePrivate.get();
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }

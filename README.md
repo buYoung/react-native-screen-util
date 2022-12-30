@@ -4,6 +4,12 @@ react native responsive ui for design size
 
 ### Firstly
  it is library [flutter_screenutil](https://pub.dev/packages/flutter_screenutil) migration for react_native
+ used Library List
+1. flutter_screenutil
+2. [react-if](https://github.com/romac/react-if) React.Memo Add areEqual Algorithms I used shallow Algorithms reason its I think so usage data is simply
+3. [qcompare](https://www.npmjs.com/package/qcompare) state areEqual Algorithms
+4. [fast-equals](https://www.npmjs.com/package/fast-equals) state areEqual Algorithms
+5. [zustand](https://www.npmjs.com/package/zustand) state library and areEqual Algorithms
 Thx!
 ## thispage is Editing.....
 ## Installation
@@ -99,14 +105,18 @@ number .w() // it is possible
 ```
 
 # Futures
-1. - [ ] make for Margin
+1. - [x] make for Margin
    1. this fully typed and return styleCode marginLeft,Top,Bottom...
-2. - [ ] make for Padding
+2. - [x] make for Padding
    1. 1-1 is same
 3. - [X] Checking IOS
 5. - [X] Android Inset Checking Currently unsafe(program is not deadlock but result is 0)
 6. - [ ] how to use Border
 7. - [ ] npm, yarn upload Probably 23/1/1 ?
+8. - [ ] context Add (It's hard work, but it's almost over)
+9. - [x] Add context for multiple areEquals Algorithms
+10. - [x] Add React-If Add for loading option and customize React.memo
+    1. The usage is exactly the same as react-if.
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

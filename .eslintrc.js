@@ -121,7 +121,7 @@ module.exports = {
         } ],
         "space-infix-ops"                   : "off",
         "@typescript-eslint/space-infix-ops": "error",
-        "linebreak-style"                   : [ "error", "unix" ],
+        "linebreak-style"                   : [ "warn", "unix" ],
         "comma-dangle"                                      : "off",
         "@typescript-eslint/comma-dangle"   : [ "error", "never" ],
         "comma-spacing"                                     : "off",

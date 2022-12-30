@@ -1,4 +1,5 @@
-import { ScreenResponsive } from "src";
+import storePrivate from "responsive/storePrivate";
+
 import type {
     ResponsiveDimensionParams,
     ResponsiveDimensionParamType,
@@ -10,7 +11,7 @@ import { ResponsiveDimensionUnionParamEnum } from "../../type";
 export function dimension<T extends ResponsiveDimensionParams>(value: T): ResponsiveDimensionParamType {
     let result: ResponsiveDimensionParamType = {};
     try {
-        const currentState = ScreenResponsiveStore.getState();
+        const currentState = storePrivate.get();
         result = DimensionHelper(value, currentState);
     } catch (e) {
 

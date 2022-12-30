@@ -2,6 +2,7 @@ import type { OrientationType } from "./orientation";
 import type { ScreenUtilInitilizeParams } from "./screen_util";
 import type { setStateResultType } from "./result";
 import type { SafeAreaInsetType } from "./safeArea";
+import type { screenResponsiveState } from "type/screen_state";
 export interface screenResponsiveGetterAction {
     getDefaultStyle(): ScreenUtilInitilizeParams,
     getInitialize(): Promise<boolean>,
@@ -24,5 +25,9 @@ export interface screenResponsiveSetterAction {
     setScreenSizeRatio(): setStateResultType,
     setScreenSafeInset(): Promise<setStateResultType>
 }
+export interface screenResponsiveSetterActionPrivate {
+    copyData(data: screenResponsiveState): void
+}
 
 export type screenResponsiveActionUnion = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterAction;
+export type screenResponsiveActionUnionPrivate = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterActionPrivate;

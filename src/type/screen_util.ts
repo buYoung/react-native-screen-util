@@ -1,5 +1,6 @@
 import type { ScaledSize } from "react-native";
 import type { SafeAreaInsetType } from "./safeArea";
+import type { equalityFunctionEnum } from "../type/equality_function";
 
 
 export interface ScreenUtilDesignSizeDefault extends ScreenUtilOption {
@@ -18,11 +19,12 @@ export interface ScreenUtilDesignSize extends ScreenUtilOption {
 export interface ScreenUtilOption {
     splitScreenMode?: boolean;
     minTextSize?: boolean;
-    scaleByHeight? : boolean,
-    debug?: boolean,
-    safeArea?: boolean
-    safeAreaInset?: SafeAreaInsetType,
-    screenSize:ScaledSize
+    scaleByHeight? : boolean;
+    debug?: boolean;
+    safeArea?: boolean;
+    safeAreaInset?: SafeAreaInsetType;
+    screenSize:ScaledSize;
+    equality?: equalityFunctionEnum.shallow;
 }
 
 export interface ScreenUtilInitilizeParams extends ScreenUtilOption, ScreenUtilDesignSize {

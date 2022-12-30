@@ -1,4 +1,5 @@
-import { ScreenResponsiveStore } from "src";
+import storePrivate from "responsive/storePrivate";
+
 import type {
     ResponsiveMarginParam,
     ResponsiveMarginType, ResponsivePaddingParam,
@@ -11,7 +12,7 @@ import { ResponsiveMarginParamEnum, ResponsivePaddingParamEnum } from "../../typ
 export function margin<T extends ResponsiveMarginParam>(value: T): ResponsiveMarginType {
     let result: ResponsiveMarginType = {};
     try {
-        const currentState = ScreenResponsiveStore.getState();
+        const currentState =storePrivate.get();
         result = marginHelper(value, currentState);
     } catch (e) {
 
@@ -22,7 +23,7 @@ export const m = margin;
 export function padding<T extends ResponsivePaddingParam>(value: T): ResponsivePaddingType {
     let result: ResponsivePaddingType = {};
     try {
-        const currentState = ScreenResponsiveStore.getState();
+        const currentState =storePrivate.get();
         result = paddingHelper(value, currentState);
     } catch (e) {
 

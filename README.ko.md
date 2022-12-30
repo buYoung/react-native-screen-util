@@ -4,6 +4,11 @@ react native 반응형 실제 디자인 크기를 적용해서 사용하는 라�
 
 ### 첫번째로
  이 라이브러리는 [flutter_screenutil](https://pub.dev/packages/flutter_screenutil)를 리액트 네이티브로 마이그레이션 한 코드입니다
+1. flutter_screenutil
+2. [react-if](https://github.com/romac/react-if) React.Memo 기능을 추가한 버전입니다.
+3. [qcompare](https://www.npmjs.com/package/qcompare) state areEqual Algorithms
+4. [fast-equals](https://www.npmjs.com/package/fast-equals) state areEqual Algorithms
+5. [zustand](https://www.npmjs.com/package/zustand) state library and areEqual Algorithms
 Thx!
 ## 이 페이지는 아직 수정중입니다..
 ## 설치방법

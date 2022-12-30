@@ -1,4 +1,5 @@
-import { ScreenResponsiveStore } from "src";
+import storePrivate from "responsive/storePrivate";
+
 import {
     ResponsiveFontParamEnum
 } from "../../type";
@@ -12,7 +13,7 @@ import type {
 export function fontSize<T extends ResponsiveFontSizeFontUnion>(value: T): ResponsiveFontSizeType {
     const result: ResponsiveFontSizeType = {};
     try {
-        const currentState = ScreenResponsiveStore.getState();
+        const currentState = storePrivate.get();
         result.fontSize = fontSizeHelper(value, currentState);
     } catch (e) {
 
