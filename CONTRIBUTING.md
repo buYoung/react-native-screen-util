@@ -53,9 +53,9 @@ Remember to add tests for your change if possible. Run the unit tests by:
 yarn test
 ```
 
-To edit the Objective-C or Swift files, open `example/ios/ScreenUtillExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-screen-utill`.
+To edit the Objective-C or Swift files, open `example/ios/ScreenUtillExample.xcworkspace` in XCode and find the source files at `Pods > Development Pods > react-native-screen-util`.
 
-To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-screen-utill` under `Android`.
+To edit the Java or Kotlin files, open `example/android` in Android studio and find the source files at `react-native-screen-util` under `Android`.
 
 
 ### Commit message convention

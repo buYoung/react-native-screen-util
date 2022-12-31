@@ -1,4 +1,4 @@
-# react-native-screen-utill
+# react-native-screen-util
 
 react native 반응형 실제 디자인 크기를 적용해서 사용하는 라이브러리
 
@@ -9,11 +9,11 @@ react native 반응형 실제 디자인 크기를 적용해서 사용하는 라�
 3. [qcompare](https://www.npmjs.com/package/qcompare) state areEqual Algorithms
 4. [fast-equals](https://www.npmjs.com/package/fast-equals) state areEqual Algorithms
 5. [zustand](https://www.npmjs.com/package/zustand) state library and areEqual Algorithms
-Thx!
-## 이 페이지는 아직 수정중입니다..
+6. [react-if](https://www.npmjs.com/package/react-if) 엄청편한 라이브러이에요!!! 코드가 깔끔해지졌어요 ㅎㅎ 3항식따위!! ( 리팩토링을 했고, React.memo를 사용했으며, areEqual 알고리즘에 shallow를 넣었습니다.)
+
 ## 설치방법
 ```sh
-npm install react-native-screen-utill
+npm install react-native-screen-util
 
 아직 npm에 올리지 않았기 때문에 npm에 안나올껍니다.
 직접 코드를 다운로드 해서 사용해야합니다.
@@ -25,6 +25,7 @@ npm install react-native-screen-utill
 3. 아직까지는 android만 확인해봤습니다. :>
 4. 2022/12/28 ios 14기기에서 정상작동 확인했습니다 100% !!
 5. ios 는 최소 ios버전 이후부터 지원 됩니다. 11버전까지는 아마 안될껍니다. :<
+6. 2023/01/01 rework completely! Ver1 start
 
 ### 디자인 적용 사진
 디자인 파일
@@ -37,82 +38,29 @@ npm install react-native-screen-utill
 4. android
    1. [링크](http://livteam.in:5000/d/s/rjGkffaGo2kdheF1lmYlAjb1H3bmJqaS/NNTh56mN22Li4duFvTRdV2U1sMpzxdvI-pL0gWL8WGAo)
 
-## Usage
-
-```js
-import 'react-native-screen-utill';
-import { initializePromise, ScreenUtilInstall } from 'react-native-screen-utill';
-// ...
-setImmediate(async () => {
-    await ScreenUtilInstall({
-        width        : 390,
-        height       : 750,
-        safeArea     : true,
-        minTextSize  : true,
-        scaleByHeight: false,
-        screenSize   : Dimensions.get("window")
-    });
-    await initializePromise();
-    setResponsiveLoading(true);
-});
-
-또는
-
-InteractionManager.runAfterInteractions(async () => {
-  await initializePromise();
-  ...여가에 style code가 한번 더 갱신되도록 해주세요!
-});
-
-(number).w(); // 반응형 넓이
-(number).width(); // 반응형 넓이
-(number).h(); //  반응형 높이
-(number).height(); //  반응형 높이
-(number).sp(); //  반응형 폰트크기
-(number).fontSize(); //  반응형 폰트크기
-(number).ml(); //  반응형 마진 왼쪽 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).mr();//  반응형 마진 오른쪽 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).mt();//  반응형 마진 위 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).mb();//  반응형 마진 아래 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).pl(); //  반응형 패딩 왼쪽 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).pr();//  반응형 패딩 오른쪽 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).pt();//  반응형 패딩 위 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-(number).pb();//  반응형 패딩 아래 (CharGPT 에게 추천받기를 spacing 또는 gutter로 받아서 spacing으로 파일정의 했습니다  :D)
-number .w() // 이것도 가능
-10.0.w() // 이것또한 가능! 자바스크립트 코드라서
-// 마진과 패딩은 값이 같습니다. 그래서 한가지 코드로 사용해도 되지만 별로 추천은 드리지 않습니다.
-// 이유는 코드가 혼란스러워지고 인수인계 받는 사람이 화가 납니다 ^^
-// 위의 사유를 해결하기위해 조금 노가다좀 했습니다.
-// 추후에 마진과 패딩을 조금더 간단하게 사용할 수 있는 API를 추가할 예정입니다.
-
-
-// ScreenUtilInstall 옵션 목록
-//  width        : 390, // << ui 디자인 넓이
-//  height       : 844, // << UI 디자인 높이(만약 safeArea를 쓴다면 이상태를 유지하고 상태바, 하단 버튼? (ios경우)는 무시한 ui 작업 영역만 높이로 지정해야합니다.) (만약 safeArea를 쓴다면 ui design의 높이 전체값을 할당해주세요!!)
-//  safeArea     : true, // native 코드로 부터 inset 정보를 받아옵니다.
-//  minTextSize  : true, // true인경우 계산된 크기중 넓이, 높이의 비율중 더 낮은걸 시용합니다. false면 width비율 사용
-//  scaleByHeight: false, // true인경우 높이를 기준으로 계산식이 바뀌며, 넓이, 높이 값이 살짝 더 커집니다.
-//  screenSize   : Dimensions.get("window") // 리액트 네이티브의 Dimension API이며 window로 넘겨주셔야합니다.
-//  splitScreenMode?: boolean; // 삼성 폴드 같은 기기를 지원하는 기능이며, true인경우 최대 높이가 700으로 제한됩니다. (왜그런지 모름)
-//  debug?: boolean, // 아무런 작동안함
-
-// api List
-// ScreenUtilInstall / native로 부터 inset정보를 받고, option값으로 부터 화면의 비율을 계산합니다. promise의 결과값을 가지고 있으며 void 입니다.
-// initializePromise / style 코드페이지에 사용할려고 만든 API입니다. Promise의 결과값을 가지고 있으며 void 입니다.
-// const
-// scaleConst // 모든 정보가 저장되어있습니다. inset(display cutout), 계산된 비율, 옵션 등등
-// defaultDesignSize // 기본값입니다. 사용은 하지마세요
-// safeArea // 스타일 코드에서 사용할 safe area Inset 상수입니다. 조만간 useContext로 개량할 계획입니다.
-```
-
 # Futures
-1.  - [ ] 마진을 조금더 쉽고 간편하게 사용하기위한 API추가
+1.  - [x] 마진을 조금더 쉽고 간편하게 사용하기위한 API추가
    1. type을 지원할 예정이며, 넣은 값만 출력될 예정입니다. style에 바로 사용 가능하도록
-2.  - [ ] 패딩을 조금더 쉽고 간편하게 사용하기위한 API추가
+2.  - [x] 패딩을 조금더 쉽고 간편하게 사용하기위한 API추가
    1. 1-1와 같음
 3.  - [x] ios 기기 확인
 4.  - [x] 안드로이드 기기에서 Inset값이 마지막으로 확인했을때 0으로 나왔던점을 다시한번 확인해야합니다.(프로그램이 꺼지지는 않지만, 값이 0으로 출력됩니다)
 5.  - [ ] border에는 뭘쓸지 생각중
 6. - [ ] npm, yarn 업로드 아마도 23년1월1일 ?
+7. - [x] context, provider 추가 react에 대해 자세히 아는게 아니라 생명주기 등등 조사가 많이 필요했었네요 ㅋㅋ.. store가 react life cycle을 쓰고있었다니...
+8. - [x] responseiveApi에 대한 areEqual 알고리즘을 변경 할 수 있는 context 및 provider를 추가했습니다.
+9. - [x] react-if를 추가했습니다. 단, 재랜더링에 대해 방책이 없었고, pureComponent도 아니여서 React.memo를 사용하여 리팩토링 했습니다.
+   1. 사용방법은 react-if와 완전히 같습니다
+10. - [x] react-native의 StyleSheet와 똑같은 클래스형 함수를 만들었습니다.
+    - 숫자만 적으면 자동으로 변환됩니다.
+    - 단, width, height, fontSize, padding, margin만 적용됩니다.
+    - style코드는 자동으로 Object.freeze로 만듭니다.
+11. - [x] ResponsiveStore(zustand)에서 사용하는 areEqual을 변경할 수 있는 context를 추가했습니다.
+    - object.is
+    - shallow
+    - fasteEquals(shallow)
+    - fasteEquals(deep)
+    - qcompare
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.

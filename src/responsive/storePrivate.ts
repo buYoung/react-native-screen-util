@@ -1,13 +1,14 @@
-import { inRange,  isValueNumber } from "library";
 import { Dimensions } from "react-native";
-import { numberValueCheckIsNull } from "react-native-screen-utill";
+import { numberValueCheckIsNull } from "react-native-screen-util";
+import create from "zustand";
+import { inRange, isValueNumber } from "../library";
 import type {
-    SafeAreaInsetType,
-    ScreenUtilInitilizeParams,
-    screenResponsiveActionUnionPrivate,
-    screenResponsiveState } from "type";
-import { OrientationType } from "type";
-import { createStore } from "zustand";
+    SafeAreaInsetType, screenResponsiveActionUnionPrivate, screenResponsiveState, ScreenUtilInitilizeParams
+} from "../type";
+import { OrientationType } from "../type";
+import "./extension";
+
+export {};
 const initializeState = {
     safeAreaInset  : {
         top   : 0,
@@ -34,7 +35,7 @@ const initializeState = {
 };
 export type ScreemResponsiveStoreUnionPrivate = screenResponsiveState & screenResponsiveActionUnionPrivate;
 class responsivePrivateVarial {
-    store = createStore<ScreemResponsiveStoreUnionPrivate>()(
+    store = create<ScreemResponsiveStoreUnionPrivate>()(
         (set, get) => ({
             screenUtilInitialize: false,
             orientation         : false,
@@ -105,50 +106,6 @@ class responsivePrivateVarial {
                     font           : 0
                 } as ScreenUtilInitilizeParams;
             },
-
-            _____getFont(value: number): number {
-                const font = get().font;
-                if(!numberValueCheckIsNull(font)) {
-                    return value;
-                }
-                return font * value;
-            },
-            _____getWidth(value: number): number {
-                const currentState = get();
-                const screenWidth = currentState.scaleWidth;
-                const screenSizeWidth = currentState.screenSize.width;
-                if(!numberValueCheckIsNull(screenWidth)) {
-                    return value;
-                }
-                if(!numberValueCheckIsNull(screenSizeWidth)) {
-                    return value;
-                }
-                return Math.min(screenWidth * value, screenSizeWidth);
-            },
-            _____getHeight(value: number): number {
-                const currentState = get();
-                const screenHeight = currentState.scaleHeight;
-                const screenSizeHeight = currentState.screenSize.height;
-                if(!numberValueCheckIsNull(screenHeight)) {
-                    return value;
-                }
-                if(!numberValueCheckIsNull(screenSizeHeight)) {
-                    return value;
-                }
-                return Math.min(screenHeight * value, screenSizeHeight);
-            },
-            _____getSpacing(value: number): number {
-                const currentState = get();
-                const screenWidth = currentState.scaleWidth;
-                const screenHeight = currentState.scaleHeight;
-                if(!numberValueCheckIsNull(screenHeight)) {
-                    return value;
-                }
-                if(!numberValueCheckIsNull(screenWidth)) {
-                    return value;
-                }
-                return Math.min(screenWidth, screenHeight) * value;
-            },
             checkIfValueIsNull<T>(value: T): boolean {
                 if(!get().screenUtilInitialize) return false;
 
@@ -174,21 +131,92 @@ class responsivePrivateVarial {
                 return isValueNumber(value) && inRange(value, 1, 10000);
             },
             copyData(data: screenResponsiveState):void {
+                if(!data.screenUtilInitialize) {
+                    return;
+                }
                 set(data);
             }
         })
     );
-    get():ScreemResponsiveStoreUnionPrivate {
-        return this.store.getState();
+    getState():screenResponsiveState {
+        return this.store.getState() as screenResponsiveState;
+    }
+    getAction():screenResponsiveActionUnionPrivate {
+        return this.store.getState() as screenResponsiveActionUnionPrivate;
     }
     set(data: screenResponsiveState): void {
         this.store.setState(data);
     }
+    _____getInset(orientation: OrientationType): number {
+        const inset = this.getState().safeAreaInset;
+        if(!inset) {
+            return 0;
+        }
+        if(orientation === OrientationType.POTTRAIT) {
+            const maxVal = Math.max(inset.top, inset.bottom);
+            return this._____getHeight(maxVal);
+        }
+        if(orientation === OrientationType.LANDSCAPE) {
+            const maxVal = Math.max(inset.left, inset.right);
+            return this._____getWidth(maxVal);
+        }
+        return 0;
+    }
+    _____getFont(value: number): number {
+        const font = this.store.getState().font;
+        if(!numberValueCheckIsNull(font)) {
+            return value;
+        }
+        return font * value;
+    }
+    _____getWidth(value: number): number {
+        const currentState = this.store.getState();
+        const screenWidth = currentState.scaleWidth;
+        const screenSizeWidth = currentState.screenSize.width;
+        if(!numberValueCheckIsNull(screenWidth)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenSizeWidth)) {
+            return value;
+        }
+        return Math.min(screenWidth * value, screenSizeWidth);
+    }
+    _____getHeight(value: number): number {
+        const currentState = this.store.getState();
+        const screenHeight = currentState.scaleHeight;
+        const screenSizeHeight = currentState.screenSize.height;
+        if(!numberValueCheckIsNull(screenHeight)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenSizeHeight)) {
+            return value;
+        }
+        return Math.min(screenHeight * value, screenSizeHeight);
+    }
+    _____getSpacing(value: number): number {
+        const currentState = this.store.getState();
+        const screenWidth = currentState.scaleWidth;
+        const screenHeight = currentState.scaleHeight;
+        if(!numberValueCheckIsNull(screenHeight)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenWidth)) {
+            return value;
+        }
+        return Math.min(screenWidth, screenHeight) * value;
+    }
+    checkNumberIsAllowRange(value: number): boolean {
+        if(!this.store.getState().screenUtilInitialize) return false;
+        return isValueNumber(value) && inRange(value, 1, 10000);
+    }
+    constructor() {
+        // this.store.subscribe((state, _prevState) => {
+        //     console.log("private State Change", state);
+        // });
+    }
+
 }
-const responsivePrivate = new responsivePrivateVarial();
-responsivePrivate.store.subscribe((state, prevState) => {
-    console.log("private State Change", state, prevState);
-});
+const ResponsiveStore = new responsivePrivateVarial();
 function objectValueCheckIsNull<T>(currentState: ScreemResponsiveStoreUnionPrivate, value: T): boolean {
     if(!value) {
         return false;
@@ -202,5 +230,6 @@ function objectValueCheckIsNull<T>(currentState: ScreemResponsiveStoreUnionPriva
     }
     return !result.includes(false);
 }
-
-export default responsivePrivate;
+export {
+    ResponsiveStore
+};

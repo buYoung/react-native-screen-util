@@ -7,13 +7,12 @@ import { inRange, isString, isValueNumber, round } from "../library/lodash";
 import type {
     screenResponsiveState,
     SafeAreaInsetType,
-    ScreenUtilDesignSizeDefault,
     ScreenUtilInitilizeParams,
     setStateResultType,
     screenResponsiveActionUnion
 } from "../type";
 import { OrientationType } from "../type";
-import "./responsive/extension";
+import "../responsive/extension";
 const initializeState = {
     safeAreaInset  : {
         top   : 0,
@@ -39,16 +38,16 @@ const initializeState = {
     font           : 0
 };
 export type ScreemResponsiveStoreUnion = screenResponsiveState & screenResponsiveActionUnion;
-export type ScreenResponsiveStore = ReturnType<typeof createScreenResponsiveStore>;
 
 export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveStoreUnion>, [ [ "zustand/subscribeWithSelector", never ] ]> {
     return createStore<ScreemResponsiveStoreUnion>()(
         subscribeWithSelector(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             (set, get, store) => ({
                 screenUtilInitialize: false,
                 orientation         : false,
                 ...initializeState,
-                store,
                 getOrientation(): OrientationType {
                     const currentState = get();
                     if(!currentState.screenSize) {
@@ -114,52 +113,8 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         font           : 0
                     } as ScreenUtilInitilizeParams;
                 },
-
-                _____getFont(value: number): number {
-                    const font = get().font;
-                    if(!numberValueCheckIsNull(font)) {
-                        return value;
-                    }
-                    return font * value;
-                },
-                _____getWidth(value: number): number {
-                    const currentState = get();
-                    const screenWidth = currentState.scaleWidth;
-                    const screenSizeWidth = currentState.screenSize.width;
-                    if(!numberValueCheckIsNull(screenWidth)) {
-                        return value;
-                    }
-                    if(!numberValueCheckIsNull(screenSizeWidth)) {
-                        return value;
-                    }
-                    return Math.min(screenWidth * value, screenSizeWidth);
-                },
-                _____getHeight(value: number): number {
-                    const currentState = get();
-                    const screenHeight = currentState.scaleHeight;
-                    const screenSizeHeight = currentState.screenSize.height;
-                    if(!numberValueCheckIsNull(screenHeight)) {
-                        return value;
-                    }
-                    if(!numberValueCheckIsNull(screenSizeHeight)) {
-                        return value;
-                    }
-                    return Math.min(screenHeight * value, screenSizeHeight);
-                },
-                _____getSpacing(value: number): number {
-                    const currentState = get();
-                    const screenWidth = currentState.scaleWidth;
-                    const screenHeight = currentState.scaleHeight;
-                    if(!numberValueCheckIsNull(screenHeight)) {
-                        return value;
-                    }
-                    if(!numberValueCheckIsNull(screenWidth)) {
-                        return value;
-                    }
-                    return Math.min(screenWidth, screenHeight) * value;
-                },
                 checkIfValueIsNull<T>(value: T): boolean {
-                    if(!get().screenUtilInitialize) return false;
+                    // if(!get().screenUtilInitialize) return false;
 
                     switch (typeof value) {
                         case "string":
@@ -193,10 +148,12 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         if(!option) {
                             option = get().getDefaultStyle();
                         }
+                        await get().setScreenSafeInset();
                         try {
                             const width     = option.width;
                             const height    = option.height;
                             set({
+                                screenSize     : option.screenSize,
                                 safeArea       : option.safeArea,
                                 debug          : option.debug,
                                 uiWidth        : width,
@@ -227,10 +184,10 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         if(!get().checkIfValueIsNull(currentState.screenSize)) {
                             return {
                                 error  : true,
-                                message: "dimension value is nulll"
+                                message: "dimension value is null"
                             };
                         }
-                        const calcSafeAreaInset = getCalcSafeAreaInset(get(), currentState);
+                        const calcSafeAreaInset = getCalcSafeAreaInset((get() as screenResponsiveActionUnion), (currentState as screenResponsiveState));
                         if("error" in calcSafeAreaInset) {
                             return calcSafeAreaInset;
                         }
@@ -245,10 +202,11 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         screenSize.width  = round(screenSize.width, 3);
                         screenSize.height = round(screenSize.height, 3);
                         set({
-                            screenSize: screenSize,
-                            uiWidth   : currentState.uiWidth,
-                            uiHeight  : currentState.uiHeight,
-                            font      : currentState.minTextSize ? Math.min(screenSize.width, screenSize.height) : screenSize.width
+                            scaleWidth : screenSize.width,
+                            scaleHeight: screenSize.height,
+                            uiWidth    : currentState.uiWidth,
+                            uiHeight   : currentState.uiHeight,
+                            font       : currentState.minTextSize ? Math.min(screenSize.width, screenSize.height) : screenSize.width
                         });
                         return {
                             error  : false,
@@ -291,7 +249,7 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                 }
             })));
 }
-function getCalcSafeAreaInset(currentState: ScreemResponsiveStoreUnion, state: ScreenUtilDesignSizeDefault): ScaledSize | setStateResultType {
+function getCalcSafeAreaInset(currentState: screenResponsiveActionUnion, state: screenResponsiveState): ScaledSize | setStateResultType {
     if(!state.safeArea) {
         return {
             error  : true,
@@ -371,5 +329,5 @@ function objectValueCheckIsNull<T>(currentState: ScreemResponsiveStoreUnion, val
     for (let i = 0; i < freezeValues.length; i++) {
         result.push(currentState.checkIfValueIsNull(freezeValues[i]));
     }
-    return !result.includes(false);
+    return result.includes(true);
 }

@@ -1,48 +1,45 @@
-import storePrivate from "responsive/storePrivate";
+import { ResponsiveStore } from "../";
 
 import type {
     ResponsiveDimensionParams,
-    ResponsiveDimensionParamType,
-    screenResponsiveCheckerAction,
-    screenResponsiveGetterAction
+    ResponsiveDimensionParamType
 } from "../../type";
 import { ResponsiveDimensionUnionParamEnum } from "../../type";
 
 export function dimension<T extends ResponsiveDimensionParams>(value: T): ResponsiveDimensionParamType {
     let result: ResponsiveDimensionParamType = {};
     try {
-        const currentState = storePrivate.get();
-        result = DimensionHelper(value, currentState);
+        result = DimensionHelper(value);
     } catch (e) {
 
     }
     return result;
 }
 export const wh = dimension;
-function DimensionHelper(value: ResponsiveDimensionParams, state: screenResponsiveCheckerAction & screenResponsiveGetterAction): ResponsiveDimensionParamType {
+function DimensionHelper(value: ResponsiveDimensionParams): ResponsiveDimensionParamType {
     const result: ResponsiveDimensionParamType = {};
     if(value.union === ResponsiveDimensionUnionParamEnum.Default) {
         if(!value.width) {
             return {};
         } else {
-            result.width = state._____getWidth(value.width);
+            result.width = ResponsiveStore._____getWidth(value.width);
         }
         if(!value.height) {
             return {};
         } else {
-            result.height = state._____getHeight(value.height);
+            result.height = ResponsiveStore._____getHeight(value.height);
         }
     }
     if(value.union === ResponsiveDimensionUnionParamEnum.Word) {
         if(!value.w) {
             return {};
         } else {
-            result.width = state._____getWidth(value.w);
+            result.width = ResponsiveStore._____getWidth(value.w);
         }
         if(!value.h) {
             return {};
         } else {
-            result.height = state._____getHeight(value.h);
+            result.height = ResponsiveStore._____getHeight(value.h);
         }
     }
     return result;

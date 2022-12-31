@@ -1,19 +1,16 @@
-import storePrivate from "responsive/storePrivate";
+import { ResponsiveStore } from "../";
 
 import type {
     ResponsiveMarginParam,
     ResponsiveMarginType, ResponsivePaddingParam,
-    ResponsivePaddingType,
-    screenResponsiveCheckerAction,
-    screenResponsiveGetterAction
+    ResponsivePaddingType
 } from "../../type";
 import { ResponsiveMarginParamEnum, ResponsivePaddingParamEnum } from "../../type";
 
 export function margin<T extends ResponsiveMarginParam>(value: T): ResponsiveMarginType {
     let result: ResponsiveMarginType = {};
     try {
-        const currentState =storePrivate.get();
-        result = marginHelper(value, currentState);
+        result = marginHelper(value);
     } catch (e) {
 
     }
@@ -23,65 +20,64 @@ export const m = margin;
 export function padding<T extends ResponsivePaddingParam>(value: T): ResponsivePaddingType {
     let result: ResponsivePaddingType = {};
     try {
-        const currentState =storePrivate.get();
-        result = paddingHelper(value, currentState);
+        result = paddingHelper(value);
     } catch (e) {
 
     }
     return result;
 }
 export const p = padding;
-function marginHelper(value: ResponsiveMarginParam, state: screenResponsiveCheckerAction & screenResponsiveGetterAction): ResponsiveMarginType {
+function marginHelper(value: ResponsiveMarginParam): ResponsiveMarginType {
     const result: ResponsiveMarginType = {};
     if(value.union === ResponsiveMarginParamEnum.default) {
         if(!value.marginTop) {
             return {};
         } else {
-            result.marginTop = state._____getSpacing(value.marginTop);
+            result.marginTop = ResponsiveStore._____getSpacing(value.marginTop);
         }
         if(!value.marginBottom) {
             return {};
         } else {
-            result.marginBottom = state._____getSpacing(value.marginBottom);
+            result.marginBottom = ResponsiveStore._____getSpacing(value.marginBottom);
         }
         if(!value.marginLeft) {
             return {};
         } else {
-            result.marginLeft = state._____getSpacing(value.marginLeft);
+            result.marginLeft = ResponsiveStore._____getSpacing(value.marginLeft);
         }
         if(!value.marginRight) {
             return {};
         } else {
-            result.marginRight = state._____getSpacing(value.marginRight);
+            result.marginRight = ResponsiveStore._____getSpacing(value.marginRight);
         }
     }
     if(value.union === ResponsiveMarginParamEnum.WordDefault) {
         if(!value.mt) {
             return {};
         } else {
-            result.marginTop = state._____getSpacing(value.mt);
+            result.marginTop = ResponsiveStore._____getSpacing(value.mt);
         }
         if(!value.mb) {
             return {};
         } else {
-            result.marginBottom = state._____getSpacing(value.mb);
+            result.marginBottom = ResponsiveStore._____getSpacing(value.mb);
         }
         if(!value.ml) {
             return {};
         } else {
-            result.marginLeft = state._____getSpacing(value.ml);
+            result.marginLeft = ResponsiveStore._____getSpacing(value.ml);
         }
         if(!value.mr) {
             return {};
         } else {
-            result.marginRight = state._____getSpacing(value.mr);
+            result.marginRight = ResponsiveStore._____getSpacing(value.mr);
         }
     }
     if(value.union === ResponsiveMarginParamEnum.All) {
         if(!value.margin) {
             return {};
         } else {
-            const marginSpacing = state._____getSpacing(value.margin);
+            const marginSpacing = ResponsiveStore._____getSpacing(value.margin);
             result.marginTop = marginSpacing;
             result.marginBottom = marginSpacing;
             result.marginLeft = marginSpacing;
@@ -92,7 +88,7 @@ function marginHelper(value: ResponsiveMarginParam, state: screenResponsiveCheck
         if(!value.m) {
             return {};
         } else {
-            const marginSpacing = state._____getSpacing(value.m);
+            const marginSpacing = ResponsiveStore._____getSpacing(value.m);
             result.marginTop = marginSpacing;
             result.marginBottom = marginSpacing;
             result.marginLeft = marginSpacing;
@@ -103,81 +99,81 @@ function marginHelper(value: ResponsiveMarginParam, state: screenResponsiveCheck
         if(!value.marginHorizontal) {
             return {};
         } else {
-            result.marginHorizontal = state._____getSpacing(value.marginHorizontal);
+            result.marginHorizontal = ResponsiveStore._____getSpacing(value.marginHorizontal);
         }
         if(!value.marginVertical) {
             return {};
         } else {
-            result.marginVertical = state._____getSpacing(value.marginVertical);
+            result.marginVertical = ResponsiveStore._____getSpacing(value.marginVertical);
         }
     }
     if(value.union === ResponsiveMarginParamEnum.WordHorizonVertical) {
         if(!value.mh) {
             return {};
         } else {
-            result.marginHorizontal = state._____getSpacing(value.mh);
+            result.marginHorizontal = ResponsiveStore._____getSpacing(value.mh);
         }
         if(!value.mv) {
             return {};
         } else {
-            result.marginVertical = state._____getSpacing(value.mv);
+            result.marginVertical = ResponsiveStore._____getSpacing(value.mv);
         }
     }
 
     return result;
 }
 
-function paddingHelper(value: ResponsivePaddingParam, state: screenResponsiveCheckerAction & screenResponsiveGetterAction): ResponsivePaddingType {
+function paddingHelper(value: ResponsivePaddingParam): ResponsivePaddingType {
     const result: ResponsivePaddingType = {};
     if(value.union === ResponsivePaddingParamEnum.default) {
         if(!value.paddingTop) {
             return {};
         } else {
-            result.paddingTop = state._____getSpacing(value.paddingTop);
+            result.paddingTop = ResponsiveStore._____getSpacing(value.paddingTop);
         }
         if(!value.paddingBottom) {
             return {};
         } else {
-            result.paddingBottom = state._____getSpacing(value.paddingBottom);
+            result.paddingBottom = ResponsiveStore._____getSpacing(value.paddingBottom);
         }
         if(!value.paddingLeft) {
             return {};
         } else {
-            result.paddingLeft = state._____getSpacing(value.paddingLeft);
+            result.paddingLeft = ResponsiveStore._____getSpacing(value.paddingLeft);
         }
         if(!value.paddingRight) {
             return {};
         } else {
-            result.paddingRight = state._____getSpacing(value.paddingRight);
+            result.paddingRight = ResponsiveStore._____getSpacing(value.paddingRight);
         }
     }
     if(value.union === ResponsivePaddingParamEnum.WordDefault) {
         if(!value.pt) {
             return {};
         } else {
-            result.paddingTop = state._____getSpacing(value.pt);
+            result.paddingTop = ResponsiveStore._____getSpacing(value.pt);
         }
         if(!value.pb) {
             return {};
         } else {
-            result.paddingBottom = state._____getSpacing(value.pb);
+            result.paddingBottom = ResponsiveStore._____getSpacing(value.pb);
         }
         if(!value.pl) {
             return {};
         } else {
-            result.paddingLeft = state._____getSpacing(value.pl);
+            result.paddingLeft = ResponsiveStore._____getSpacing(value.pl);
         }
         if(!value.pr) {
             return {};
         } else {
-            result.paddingRight = state._____getSpacing(value.pr);
+            result.paddingRight = ResponsiveStore._____getSpacing(value.pr);
         }
     }
     if(value.union === ResponsivePaddingParamEnum.All) {
         if(!value.padding) {
             return {};
         } else {
-            const paddingSpacing = state._____getSpacing(value.padding);
+            const paddingSpacing = ResponsiveStore._____getSpacing(value.padding);
             result.paddingTop = paddingSpacing;
             result.paddingBottom = paddingSpacing;
             result.paddingLeft = paddingSpacing;
@@ -188,7 +184,7 @@ function paddingHelper(value: ResponsivePaddingParam, state: screenResponsiveChe
         if(!value.p) {
             return {};
         } else {
-            const paddingSpacing = state._____getSpacing(value.p);
+            const paddingSpacing = ResponsiveStore._____getSpacing(value.p);
             result.paddingTop = paddingSpacing;
             result.paddingBottom = paddingSpacing;
             result.paddingLeft = paddingSpacing;
@@ -199,24 +195,24 @@ function paddingHelper(value: ResponsivePaddingParam, state: screenResponsiveChe
         if(!value.paddingHorizontal) {
             return {};
         } else {
-            result.paddingHorizontal = state._____getSpacing(value.paddingHorizontal);
+            result.paddingHorizontal = ResponsiveStore._____getSpacing(value.paddingHorizontal);
         }
         if(!value.paddingVertical) {
             return {};
         } else {
-            result.paddingVertical = state._____getSpacing(value.paddingVertical);
+            result.paddingVertical = ResponsiveStore._____getSpacing(value.paddingVertical);
         }
     }
     if(value.union === ResponsivePaddingParamEnum.WordHorizonVertical) {
         if(!value.ph) {
             return {};
         } else {
-            result.paddingHorizontal = state._____getSpacing(value.ph);
+            result.paddingHorizontal = ResponsiveStore._____getSpacing(value.ph);
         }
         if(!value.pv) {
             return {};
         } else {
-            result.paddingVertical = state._____getSpacing(value.pv);
+            result.paddingVertical = ResponsiveStore._____getSpacing(value.pv);
         }
     }
 

@@ -1,10 +1,10 @@
-import storePrivate from "responsive/storePrivate";
+import { ResponsiveStore } from "../";
 
 
 Number.prototype.w           = function (): number {
     const value = Number(this);
     try {
-        const currentState = storePrivate.get();
+        const currentState = ResponsiveStore;
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -16,7 +16,7 @@ Number.prototype.w           = function (): number {
 Number.prototype.width       = function (): number {
     const value = Number(this);
     try {
-        const currentState = storePrivate.get();
+        const currentState = ResponsiveStore;
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -28,7 +28,7 @@ Number.prototype.width       = function (): number {
 Number.prototype.h           = function (): number {
     const value = Number(this);
     try {
-        const currentState = storePrivate.get();
+        const currentState = ResponsiveStore;
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
@@ -40,7 +40,7 @@ Number.prototype.h           = function (): number {
 Number.prototype.height      = function (): number {
     const value = Number(this);
     try {
-        const currentState = storePrivate.get();
+        const currentState = ResponsiveStore;
         if(!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }

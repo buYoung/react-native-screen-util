@@ -13,13 +13,13 @@ import type { equalityFunctionAction, equalityFunctionStore} from "../../type";
 
 export type EqualityFunctionUnion = equalityFunctionStore & equalityFunctionAction;
 export function createEqualityFunctionStore(): Mutate<StoreApi<EqualityFunctionUnion>, [ [ "zustand/subscribeWithSelector", never ] ]> {
-
     return createStore<EqualityFunctionUnion>()(
         subscribeWithSelector(
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             (set, get, store) => ({
                 type    : equalityFunctionEnum.shallow,
                 areEqual: shallow,
-                store,
                 GetEqualityFunction(): Function {
                     return get().areEqual;
                 },
