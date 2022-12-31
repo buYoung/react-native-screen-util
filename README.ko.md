@@ -14,6 +14,8 @@ react native 반응형 실제 디자인 크기를 적용해서 사용하는 라�
 ## 설치방법
 ```sh
 npm install react-native-screen-util
+```
+```sh
 yarn add react-native-screen-util
 ```
 ### Comment
