@@ -14,10 +14,7 @@ react native 반응형 실제 디자인 크기를 적용해서 사용하는 라�
 ## 설치방법
 ```sh
 npm install react-native-screen-util
-
-아직 npm에 올리지 않았기 때문에 npm에 안나올껍니다.
-직접 코드를 다운로드 해서 사용해야합니다.
-단, 출처는 남겨주세요!
+yarn add react-native-screen-util
 ```
 ### Comment
 1. 현재 마지막으로 올라간 버전은 안드로이드에서 100% 작동을 확인했습니다.

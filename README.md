@@ -16,10 +16,7 @@ react native responsive ui for design size
 
 ```sh
 npm install react-native-screen-util
-Probably not on the npm yet.
-
-If you've seen this git in advance and you're going to use it, please use the code yourself.
-Please leave the source!
+yarn add react-native-screen-util
 ```
 ### Comment
 1. current Version Work 100% android
