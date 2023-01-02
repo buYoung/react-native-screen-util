@@ -1,28 +1,17 @@
 package com.screenutill
 
-import android.annotation.SuppressLint
 import android.os.Build
-import android.telecom.Call
 import android.util.Log
-import android.view.View
-import android.view.Window
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
-import androidx.core.view.DisplayCutoutCompat
-import com.facebook.common.internal.ImmutableMap
-import com.facebook.react.bridge.Callback
-import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.WritableMap
-import com.facebook.react.bridge.WritableNativeMap
+import android.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.facebook.react.bridge.*
 import com.facebook.react.uimanager.PixelUtil
 
 class ScreenUtillModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
-
+    private var currentWindowInsets: WindowInsetsCompat = WindowInsetsCompat.Builder().build()
+    private val currentInsetTypes = mutableSetOf<Int>()
     override fun getName(): String {
         return NAME
     }
@@ -66,13 +55,15 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
         val insets = rootWindowInsets
         Log.d(NAME, "_getSafeAreaInsets: ${displayMatrix}")
         Log.d(NAME, "_getSafeAreaInsets: ${rootWindowInsets}")
-//        val isFullScreen:Boolean = _getIsFullScreen(window, view)
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val getInsets = insets.getInsets(WindowInsets.Type.systemGestures())
-            safeareaInsets["top"] = getInsets.top.div(density)
-            safeareaInsets["bottom"] = getInsets.bottom.div(density)
-            safeareaInsets["left"] = getInsets.left.div(density)
-            safeareaInsets["right"] = getInsets.right.div(density)
+
+            val statusBar = insets.getInsets(WindowInsets.Type.statusBars())
+            val navigationBars = insets.getInsets(WindowInsets.Type.navigationBars())
+            safeareaInsets["top"] = statusBar.top.div(density)
+            safeareaInsets["bottom"] = navigationBars.bottom.div(density)
+            safeareaInsets["left"] = statusBar.top.div(density)
+            safeareaInsets["right"] = navigationBars.bottom.div(density)
         } else {
             safeareaInsets["top"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetTop.toFloat()).toDouble()
             safeareaInsets["bottom"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetBottom.toFloat()).toDouble()
@@ -108,7 +99,6 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
             cb.invoke(e)
         }
     }
-
     companion object {
         const val NAME = "ScreenUtill"
     }

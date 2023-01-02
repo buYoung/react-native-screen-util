@@ -64,9 +64,6 @@ const cardStyle = ResponsiveStyleSheet.create<cardStyle>({
     }
 });
 
-console.log("cardStyle", cardStyle);
-
-
 export {
     cardStyle
 };

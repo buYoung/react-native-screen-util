@@ -16,10 +16,11 @@ type mainStyle = {
 
 
 const styles = ResponsiveStyleSheet.create<mainStyle>({
+
     container : {
         width          : 390,
-        height         : 750,
-        backgroundColor: "#777"
+        height         : 770,
+        backgroundColor: "red"
         // backgroundColor: "#F8F7FC"
     },
     iconDefaultSize : {
@@ -30,7 +31,7 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
         width            : 390,
         height           : 60,
         paddingHorizontal: 16,
-        backgroundColor            : "#FFFFFF",
+        backgroundColor  : "#FFFFFF",
         flexDirection    :  "row",
         alignItems       : "center",
         alignContent     : "center",
@@ -45,7 +46,6 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
         width          : 390,
         height         : 630,
         backgroundColor: "#333"
-        // color: "#F8F7FC"
     },
     bottomContainer : {
         width            : 390,
@@ -58,10 +58,8 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
         justifyContent   : "space-between"
     }
 });
-console.log("styles", styles);
 
-
-
+console.log("calc", styles.container.width,  styles.container.height, styles.titleContainer.height, styles.bottomContainer.height, styles.container.height + styles.titleContainer.height + styles.bottomContainer.height);
 export {
     styles
 };

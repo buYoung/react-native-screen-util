@@ -162,6 +162,7 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                                 scaleByHeight  : option.scaleByHeight,
                                 splitScreenMode: option.splitScreenMode
                             });
+                            console.log("get area", get().safeAreaInset, option);
                             const setScreenSizeRatioResult = get().setScreenSizeRatio();
                             if(setScreenSizeRatioResult.error) {
                                 return setScreenSizeRatioResult;
@@ -191,16 +192,19 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         if("error" in calcSafeAreaInset) {
                             return calcSafeAreaInset;
                         }
+                        console.log("get area", calcSafeAreaInset, get().safeAreaInset);
                         currentState.screenSize = calcSafeAreaInset;
                         const screenSize  = { ...currentState.screenSize };
                         const uiSize      = {...{
                             uiWidth : currentState.uiWidth,
                             uiHeight: currentState.uiHeight
                         }};
+                        console.log("responsive1", screenSize, uiSize);
                         screenSize.width /= uiSize.uiWidth;
                         screenSize.height /= uiSize.uiHeight;
                         screenSize.width  = round(screenSize.width, 3);
                         screenSize.height = round(screenSize.height, 3);
+                        console.log("screenSize", screenSize.width * currentState.uiWidth, screenSize.height * currentState.uiHeight);
                         set({
                             scaleWidth : screenSize.width,
                             scaleHeight: screenSize.height,
@@ -269,26 +273,42 @@ function getCalcSafeAreaInset(currentState: screenResponsiveActionUnion, state: 
         };
     }
     const statusBarHeight = StatusBar.currentHeight;
+    const top = state.safeAreaInset.top;
     if(currentState.getOrientation() === OrientationType.POTTRAIT) {
         let TopInset = Platform.select({
-            android: state.safeAreaInset.top,
+            android: top,
             ios    : 0
         });
         if(!TopInset) {
             TopInset = 0;
         }
+        console.log("inset add", state.screenSize.height, TopInset, state.safeAreaInset.bottom);
         state.screenSize.height += (TopInset + state.safeAreaInset.bottom);
+
         return state.screenSize;
     }
     if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
+        const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
         let LeftInset = Platform.select({
-            android: state.safeAreaInset.left,
+            android: 0,
             ios    : 0
         });
+        if(state.safeAreaInset.left === 0 && state.safeAreaInset.right === 0) {
+            LeftInset = Platform.select({
+                android: top,
+                ios    : 0
+            });
+        } else {
+            LeftInset = Platform.select({
+                android: top,
+                ios    : 0
+            });
+        }
+
         if(!LeftInset) {
             LeftInset = 0;
         }
-        state.screenSize.width += (LeftInset + state.safeAreaInset.right);
+        state.screenSize.width += (LeftInset + max);
         return state.screenSize;
     }
     if(!statusBarHeight) {

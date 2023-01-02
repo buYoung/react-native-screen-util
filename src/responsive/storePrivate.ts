@@ -157,8 +157,13 @@ class responsivePrivateVarial {
             return this._____getHeight(maxVal);
         }
         if(orientation === OrientationType.LANDSCAPE) {
-            const maxVal = Math.max(inset.left, inset.right);
-            return this._____getWidth(maxVal);
+            if(inset.left === 0 && inset.right === 0) {
+                const maxVal = Math.max(inset.top, inset.bottom);
+                return this._____getWidth(maxVal);
+            } else {
+                const maxVal = Math.max(inset.left, inset.right);
+                return this._____getWidth(maxVal);
+            }
         }
         return 0;
     }
@@ -181,6 +186,18 @@ class responsivePrivateVarial {
         }
         return Math.min(screenWidth * value, screenSizeWidth);
     }
+    _____getHeight(value: number): number {
+        const currentState = this.store.getState();
+        const screenHeight = currentState.scaleHeight;
+        const screenSizeHeight = currentState.screenSize.height;
+        if(!numberValueCheckIsNull(screenHeight)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenSizeHeight)) {
+            return value;
+        }
+        return Math.min(screenHeight * value, screenSizeHeight);
+    }
     _____getCircle(value: number): number {
         const currentState = this.store.getState();
         const screenWidth = currentState.scaleWidth;
@@ -202,18 +219,6 @@ class responsivePrivateVarial {
         const width =  Math.min(screenWidth * value, screenSizeWidth);
         const height = Math.min(screenHeight * value, screenSizeHeight);
         return (width + height) / 2;
-    }
-    _____getHeight(value: number): number {
-        const currentState = this.store.getState();
-        const screenHeight = currentState.scaleHeight;
-        const screenSizeHeight = currentState.screenSize.height;
-        if(!numberValueCheckIsNull(screenHeight)) {
-            return value;
-        }
-        if(!numberValueCheckIsNull(screenSizeHeight)) {
-            return value;
-        }
-        return Math.min(screenHeight * value, screenSizeHeight);
     }
     _____getSpacing(value: number): number {
         const currentState = this.store.getState();

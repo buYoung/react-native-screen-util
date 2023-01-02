@@ -2,7 +2,7 @@ import * as React from "react";
 import { Image, Text, View } from "react-native";
 import Assets from "../src/assets";
 import { styles } from "../src/style/main";
-// import CardComponent from "./component/card";
+import CardComponent from "./component/card";
 
 function MainHome(): JSX.Element {
     return (
