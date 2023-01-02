@@ -181,6 +181,28 @@ class responsivePrivateVarial {
         }
         return Math.min(screenWidth * value, screenSizeWidth);
     }
+    _____getCircle(value: number): number {
+        const currentState = this.store.getState();
+        const screenWidth = currentState.scaleWidth;
+        const screenSizeWidth = currentState.screenSize.width;
+        const screenHeight = currentState.scaleHeight;
+        const screenSizeHeight = currentState.screenSize.height;
+        if(!numberValueCheckIsNull(screenWidth)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenSizeWidth)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenHeight)) {
+            return value;
+        }
+        if(!numberValueCheckIsNull(screenSizeHeight)) {
+            return value;
+        }
+        const width =  Math.min(screenWidth * value, screenSizeWidth);
+        const height = Math.min(screenHeight * value, screenSizeHeight);
+        return (width + height) / 2;
+    }
     _____getHeight(value: number): number {
         const currentState = this.store.getState();
         const screenHeight = currentState.scaleHeight;

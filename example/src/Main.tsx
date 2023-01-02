@@ -2,6 +2,7 @@ import * as React from "react";
 import { Image, Text, View } from "react-native";
 import Assets from "../src/assets";
 import { styles } from "../src/style/main";
+import CardComponent from "./component/card";
 
 function MainHome(): JSX.Element {
     return (
@@ -11,7 +12,9 @@ function MainHome(): JSX.Element {
                 <Text style={styles.title}>Libris</Text>
                 <Image style={{...styles.iconDefaultSize}} source={Assets.icons.search}/>
             </View>
-            <View key={"body"} style={styles.cardBodyContainer} />
+            <View key={"body"} style={styles.cardBodyContainer} >
+                <CardComponent />
+            </View>
             <View key={"bottom"} style={styles.bottomContainer}>
                 <Image style={{...styles.iconDefaultSize}} source={Assets.icons.library}/>
                 <Image style={{...styles.iconDefaultSize}} source={Assets.icons.plush}/>

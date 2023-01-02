@@ -9,6 +9,7 @@
         "pods": "pod-install --quiet"
     },
     "dependencies": {
+        "@faker-js/faker": "^7.6.0",
         "lodash": "^4.17.21",
         "react": "18.1.0",
         "react-dom": "18.1.0",

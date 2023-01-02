@@ -11,12 +11,6 @@ type mainStyle = {
     titleContainer: ViewStyle,
     title: TextStyle,
     cardBodyContainer: ViewStyle,
-    cardContainer: ViewStyle,
-    cardLeftProfileIcon: ImageStyle,
-    cardTextContainer: ViewStyle
-    cardTitle: TextStyle,
-    cardSubject: TextStyle,
-    cardMaker: TextStyle,
     bottomContainer: ViewStyle
 };
 
@@ -53,41 +47,6 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
         backgroundColor: "#333"
         // color: "#F8F7FC"
     },
-    cardContainer : {
-        width : 390,
-        height: 100,
-        color : "#F8F7FC"
-    },
-    cardLeftProfileIcon : {
-        marginLeft : 15,
-        marginRight: 30,
-        width      : 70,
-        height     : 70
-    },
-    cardTextContainer : {
-        marginTop     : 15,
-        marginBottom  : 15,
-        display       : "flex",
-        flexDirection : "row",
-        alignItems    : "flex-start",
-        alignContent  : "flex-start",
-        justifyContent: "space-between"
-    },
-    cardTitle : {
-        color     : "#000000",
-        fontWeight: "700",
-        fontSize  : 12
-    },
-    cardSubject : {
-        color     : "#AAAAAA",
-        fontWeight: "600",
-        fontSize  : 12
-    },
-    cardMaker : {
-        color     : "#26B888",
-        fontWeight: "400",
-        fontSize  : 12
-    },
     bottomContainer : {
         width            : 390,
         height           : 60,
@@ -99,6 +58,8 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
         justifyContent   : "space-between"
     }
 });
+console.log("styles", styles);
+
 
 
 export {
