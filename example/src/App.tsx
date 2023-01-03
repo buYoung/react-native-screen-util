@@ -5,6 +5,7 @@ import { Dimensions } from "react-native";
 import { ResponsiveProvider } from "react-native-screen-util";
 import MainHome from "../src/Main";
 
+
 export default function App(): JSX.Element {
     return (
         <ResponsiveProvider option={{

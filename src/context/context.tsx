@@ -72,9 +72,6 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
     }
 
     useEffect(() => {
-        const subscribe =  Dimensions.addEventListener("change", ({window, _screen}) => {
-            console.log("dimension changed..?", window);
-        });
         InteractionManager.runAfterInteractions(async () => {
             const result = await storeRef.current.getState().setScreenResponsiveInitialize(option);
             if(result.error) {
@@ -120,7 +117,6 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
         return () => {
             unsubcribe2();
             unsubcribeEqual();
-            subscribe.remove();
         };
     }, []);
 

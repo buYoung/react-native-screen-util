@@ -19,8 +19,8 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
 
     container : {
         width          : 390,
-        height         : 770,
-        backgroundColor: "red"
+        height         : 750,
+        backgroundColor: "blue"
         // backgroundColor: "#F8F7FC"
     },
     iconDefaultSize : {
@@ -59,7 +59,7 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
     }
 });
 
-console.log("calc", styles.container.width,  styles.container.height, styles.titleContainer.height, styles.bottomContainer.height, styles.container.height + styles.titleContainer.height + styles.bottomContainer.height);
+console.log("mainContainer", styles.container);
 export {
     styles
 };

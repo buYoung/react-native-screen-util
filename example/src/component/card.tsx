@@ -11,7 +11,6 @@ export type CardProps = {
 };
 
 function CardComponent(props: CardProps): JSX.Element {
-    console.log("CardComponent", props);
     return (
         <View style={cardStyle.cardContainer}>
             <View style={cardStyle.cardLeftProfileContainer}>

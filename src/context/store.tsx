@@ -53,6 +53,10 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                     if(!currentState.screenSize) {
                         return OrientationType.NONE;
                     }
+                    if(isNaN(currentState.screenSize.width) || isNaN(currentState.screenSize.height)) {
+                        console.log("isNan?", currentState.screenSize);
+                        return OrientationType.NONE;
+                    }
                     const orientationState = currentState.screenSize.width < currentState.screenSize.height;
                     if(orientationState) {
                         return OrientationType.POTTRAIT;
@@ -95,10 +99,14 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         height       : 0,
                         width        : 0,
                         safeAreaInset: {
-                            top   : 0,
-                            bottom: 0,
-                            left  : 0,
-                            right : 0
+                            top        : 0,
+                            bottom     : 0,
+                            left       : 0,
+                            right      : 0,
+                            fontScale  : 0,
+                            realWidth  : 0,
+                            realHeight : 0,
+                            screenScale: 0
                         },
                         screenSize     : Dimensions.get("window"),
                         scaleHeight    : 0,
@@ -151,7 +159,8 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         await get().setScreenSafeInset();
                         try {
                             const width     = option.width;
-                            const height    = option.height;
+                            const height       = option.height;
+
                             set({
                                 screenSize     : option.screenSize,
                                 safeArea       : option.safeArea,
@@ -162,7 +171,6 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                                 scaleByHeight  : option.scaleByHeight,
                                 splitScreenMode: option.splitScreenMode
                             });
-                            console.log("get area", get().safeAreaInset, option);
                             const setScreenSizeRatioResult = get().setScreenSizeRatio();
                             if(setScreenSizeRatioResult.error) {
                                 return setScreenSizeRatioResult;
@@ -192,19 +200,21 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         if("error" in calcSafeAreaInset) {
                             return calcSafeAreaInset;
                         }
-                        console.log("get area", calcSafeAreaInset, get().safeAreaInset);
+                        console.log("calcSafeAreaInset", calcSafeAreaInset, calcSafeAreaInset);
                         currentState.screenSize = calcSafeAreaInset;
                         const screenSize  = { ...currentState.screenSize };
                         const uiSize      = {...{
                             uiWidth : currentState.uiWidth,
                             uiHeight: currentState.uiHeight
                         }};
-                        console.log("responsive1", screenSize, uiSize);
+                        console.log("height1", screenSize.height, uiSize.uiHeight);
+                        console.log("width", screenSize.width, uiSize.uiWidth);
                         screenSize.width /= uiSize.uiWidth;
                         screenSize.height /= uiSize.uiHeight;
+                        console.log("height2", screenSize.height, screenSize.width);
                         screenSize.width  = round(screenSize.width, 3);
                         screenSize.height = round(screenSize.height, 3);
-                        console.log("screenSize", screenSize.width * currentState.uiWidth, screenSize.height * currentState.uiHeight);
+                        console.log("height3", screenSize.height);
                         set({
                             scaleWidth : screenSize.width,
                             scaleHeight: screenSize.height,
@@ -227,10 +237,14 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                                 try {
                                     const keyList          = Object.keys(v);
                                     const setSafeAreaInset = {
-                                        top   : 0,
-                                        bottom: 0,
-                                        left  : 0,
-                                        right : 0
+                                        top        : 0,
+                                        bottom     : 0,
+                                        left       : 0,
+                                        right      : 0,
+                                        fontScale  : 0,
+                                        realHeight : 0,
+                                        realWidth  : 0,
+                                        screenScale: 0
                                     } as SafeAreaInsetType;
                                     for (let i = 0; i < keyList.length; i++) {
                                         const key = keyList[i] as keyof typeof v;
@@ -238,6 +252,7 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                                     }
 
                                     set(({ safeAreaInset : setSafeAreaInset }));
+
                                     resolve({
                                         error  : false,
                                         message: "success"
@@ -273,43 +288,38 @@ function getCalcSafeAreaInset(currentState: screenResponsiveActionUnion, state: 
         };
     }
     const statusBarHeight = StatusBar.currentHeight;
-    const top = state.safeAreaInset.top;
-    if(currentState.getOrientation() === OrientationType.POTTRAIT) {
-        let TopInset = Platform.select({
-            android: top,
-            ios    : 0
-        });
-        if(!TopInset) {
-            TopInset = 0;
-        }
-        console.log("inset add", state.screenSize.height, TopInset, state.safeAreaInset.bottom);
-        state.screenSize.height += (TopInset + state.safeAreaInset.bottom);
 
-        return state.screenSize;
+    if(Platform.OS === "android") {
+        const viewInfo = state.safeAreaInset;
+        const heightInset = (viewInfo.top + viewInfo.bottom);
+        const widthInset = (viewInfo.left + viewInfo.right);
+
+        const height = viewInfo.realHeight;
+        const width = viewInfo.realWidth;
+        console.log(heightInset, (height + heightInset) / viewInfo.screenScale);
+        console.log(widthInset, (width + widthInset) / viewInfo.screenScale);
+        // state.screenSize.height = round((viewInfo.realHeight + (TopInset + state.safeAreaInset.bottom))  / viewInfo.screenScale, 3);
+        if(currentState.getOrientation() === OrientationType.POTTRAIT) {
+            state.screenSize.height = (height + heightInset) / viewInfo.screenScale;
+            state.screenSize.width = (width + widthInset) / viewInfo.screenScale;
+            return state.screenSize;
+        }
+        if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
+            state.screenSize.height = (height + heightInset) / viewInfo.screenScale;
+            state.screenSize.width = (width + widthInset) / viewInfo.screenScale;
+            return state.screenSize;
+        }
     }
-    if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
-        const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
-        let LeftInset = Platform.select({
-            android: 0,
-            ios    : 0
-        });
-        if(state.safeAreaInset.left === 0 && state.safeAreaInset.right === 0) {
-            LeftInset = Platform.select({
-                android: top,
-                ios    : 0
-            });
-        } else {
-            LeftInset = Platform.select({
-                android: top,
-                ios    : 0
-            });
+    if(Platform.OS === "ios") {
+        if(currentState.getOrientation() === OrientationType.POTTRAIT) {
+            state.screenSize.height += state.safeAreaInset.bottom;
+            return state.screenSize;
         }
-
-        if(!LeftInset) {
-            LeftInset = 0;
+        if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
+            const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
+            state.screenSize.width += max;
+            return state.screenSize;
         }
-        state.screenSize.width += (LeftInset + max);
-        return state.screenSize;
     }
     if(!statusBarHeight) {
         return {
