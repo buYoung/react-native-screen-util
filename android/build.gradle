@@ -2,36 +2,45 @@ import groovy.json.JsonSlurper
 import org.apache.tools.ant.filters.ReplaceTokens
 import java.nio.file.Paths
 
-static def findNodeModules(baseDir) {
-    def basePath = baseDir.toPath().normalize()
-    // Node's module resolution algorithm searches up to the root directory,
-    // after which the base path will be null
-    while (basePath) {
-        def nodeModulesPath = Paths.get(basePath.toString(), "node_modules")
-        def reactNativePath = Paths.get(nodeModulesPath.toString(), "react-native")
-        if (nodeModulesPath.toFile().exists() && reactNativePath.toFile().exists()) {
-            return nodeModulesPath.toString()
-        }
-        basePath = basePath.getParent()
-    }
-    throw new GradleException("ScreenUtil: Failed to find node_modules/ path!")
-}
-def nodeModules = findNodeModules(projectDir)
-
 buildscript {
-    // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-    def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["ScreenUtill_kotlinVersion"]
+    ext.versions = [
+        'compose': '1.3.1',
+        'composeActivity': '1.6.1',
+        'composeCompiler': '1.3.2',
+        'coroutine': '1.6.2',
+        'kotlin': '1.6.21',
+        'kotlinRuntime': '1.7.20',
+        'kotlinCompilerVersion': '1.6.21',
+        'ktx': '1.8.0',
+        'ktxSupport': '2.4.1',
+        'supportLibrary': '1.4.2',
+        'gradle': '7.3.0',
+        'kotlinVersion':'1.7.20',
+        'composeFoundation':'1.3.1',
+        'jetpackLifecycle':'2.2.0',
+        'gradleDownloadTask':'5.0.1',
+    ]
 
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+        maven {
+            url = uri("https://maven.google.com")
+        }
+        maven {
+            url = uri("https://dl.google.com/dl/android/maven2/")
+        }
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:7.3.1"
-        classpath "de.undercouch:gradle-download-task:5.0.1"
+        classpath "de.undercouch:gradle-download-task:${versions.gradleDownloadTask}"
+        classpath "com.android.tools.build:gradle:${versions.gradle}"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.22.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         // noinspection DifferentKotlinGradleVersion
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -42,6 +51,7 @@ def isNewArchitectureEnabled() {
 apply plugin: "com.android.library"
 apply plugin: 'de.undercouch.download'
 apply plugin: "kotlin-android"
+apply plugin: "io.gitlab.arturbosch.detekt"
 
 if (isNewArchitectureEnabled()) {
     apply plugin: "com.facebook.react"
@@ -68,21 +78,34 @@ android {
             minifyEnabled false
         }
     }
-
+    buildFeatures {
+        compose true
+    }
     lintOptions {
         disable "GradleCompatible"
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
+    }
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    composeOptions {
+        kotlinCompilerVersion "${versions.kotlinCompilerVersion}"
+        kotlinCompilerExtensionVersion "${versions.compose}"
+    }
 }
 
 repositories {
-    mavenCentral()
-    google()
     def found = false
     def defaultDir = null
     def androidSourcesName = 'React Native sources'
@@ -149,17 +172,23 @@ repositories {
     }
 }
 
-def kotlin_version = getExtOrDefault("kotlinVersion")
-def appcompat_version = getExtOrDefault("appcompat")
 dependencies {
     // For < 0.71, this will be from the local maven repo
     // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-    implementation("androidx.appcompat:appcompat:$appcompat_version")
-    implementation("androidx.appcompat:appcompat-resources:$appcompat_version")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlinRuntime}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutine}"
+    implementation "androidx.compose.compiler:compiler:${versions.composeCompiler}"
+    implementation "androidx.compose.runtime:runtime:${versions.compose}"
+    implementation "androidx.compose.ui:ui-tooling:${versions.compose}"
+    implementation "androidx.compose.foundation:foundation-layout:${versions.compose}"
+    implementation "androidx.compose.material:material:${versions.compose}"
+    implementation "androidx.compose.runtime:runtime-saveable:${versions.compose}"
+    implementation "androidx.activity:activity-compose:${versions.composeActivity}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.jetpackLifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.jetpackLifecycle}"
+    implementation "androidx.compose.foundation:foundation:${versions.composeFoundation}"
 }
 
 if (isNewArchitectureEnabled()) {

@@ -14,7 +14,7 @@ export default function App(): JSX.Element {
             safeArea     : true,
             minTextSize  : true,
             scaleByHeight: false,
-            screenSize   : Dimensions.get("window")
+            screenSize   : Dimensions.get("screen")
         }} loading={true} autoInset={true}>
             <MainHome/>
         </ResponsiveProvider>

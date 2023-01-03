@@ -3,9 +3,6 @@ export type SafeAreaInsetType = {
     left: number,
     right: number,
     top: number,
-    fontScale: number,
-    realHeight: number,
-    realWidth: number,
     screenScale: number,
 
 };

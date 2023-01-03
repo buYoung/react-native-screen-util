@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { ViewProps, ViewStyle } from "react-native";
-import { ActivityIndicator, Dimensions, InteractionManager, Platform, StyleSheet, View } from "react-native";
+import { ActivityIndicator, InteractionManager, Platform, StyleSheet, View } from "react-native";
 import type { Mutate } from "zustand";
 
 import createContext from "zustand/context";
@@ -64,7 +64,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
     const [ getAutoInset, setAutoInset ] = useState(StyleSheet.create<responsiveContainerStyle>({
         responsiveContainer : {
             flex           : 1,
-            backgroundColor: "red"
+            backgroundColor: "green"
         }
     }));
     if(!option.equality) {

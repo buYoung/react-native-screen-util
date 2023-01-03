@@ -1,29 +1,94 @@
 package com.screenutill
 
+
+import android.app.Activity
 import android.content.Context
-import android.hardware.display.DisplayManager
+import android.content.ContextWrapper
 import android.os.Build
+import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.WindowInsets
 import android.util.Log
 import android.view.*
-import androidx.annotation.Size
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableOpenTarget
+import androidx.compose.runtime.ComposableTarget
+import androidx.compose.ui.viewinterop.AndroidView
+import com.facebook.react.ReactActivity
 import com.facebook.react.bridge.*
 import com.facebook.react.uimanager.PixelUtil
+import kotlinx.coroutines.*
 
 
 class ScreenUtillModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
+
+    private lateinit var insetWokrer: Job
+    private lateinit var currentActivity: ReactActivity
+    private lateinit var currentWindow: Window
+    private lateinit var currentWindowManager: WindowManager
+    private lateinit var currentRootView: View
+    private var rootViewPaddingList: Map<String, androidx.compose.foundation.layout.WindowInsets> = mapOf()
     override fun getName(): String {
+
         return NAME
     }
-//
-//    override fun getConstants(): Map<String, Double> {
-//        return this._getSafeAreaInsets()
-//    }
 
+    override fun getConstants(): Map<String, Double> {
+        val TAG = "buyong!"
+        Log.d(TAG, "getConstants: 1")
+        CoroutineScope(Dispatchers.IO).launch {
+            while (true) {
+                delay(500)
+                Log.d(TAG, "getConstants: 2")
+                val activity = reactApplicationContext.currentActivity
+                if (activity == null) {
+                    continue
+                } else {
+                    currentActivity = activity as ReactActivity
+                }
+                val window = activity.window
+                if (window == null) {
+                    continue
+                } else {
+                    currentWindowManager = currentActivity.windowManager
+                    currentWindow = currentActivity.window
+                }
+                Log.d(TAG, "getConstants: 3")
+                currentRootView = currentWindow.decorView
+                break
+            }
+        }.start()
+        Log.d(TAG, "getConstants: 3")
+        CoroutineScope(Dispatchers.Main).launch {
+            while (true){
+                delay(500)
+                Log.d(TAG, "getConstants: 4")
+                Log.d(NAME, "initialize: getPaddingInit Start")
+                val getPadding = getRootViewInsets().onCreate(reactApplicationContext)
+
+                val waitPaddingInit = async(Dispatchers.IO) { getPadding.getInitialize() }
+                waitPaddingInit.join()
+                Log.d(NAME, "initialize: getPadding End")
+                Log.d(NAME, "initialize: ${getRootViewInsets.rootViewPaddingList}")
+                break
+            }
+            Log.d(TAG, "getConstants: 5")
+        }
+        Log.d(TAG, "getConstants: 6")
+        return _getSafeAreaInsets()
+    }
+
+
+    fun Context.findActivity(): Activity? = when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }
 
     private fun _getSafeAreaInsets(): Map<String, Double> {
+
         val safeareaInsets: HashMap<String, Double> = hashMapOf<String, Double>(
             "top" to 0.0,
             "bottom" to 0.0,
@@ -38,9 +103,7 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
         val window = activity.window
         val manager = activity.windowManager
         val view = window.decorView
-        view.getDimensions { i, i2 ->
-            Log.d(name, "getDimensions : $i $i2")
-        }
+        Log.d(NAME, "scale Y: ${view.scaleY} ${view.rootView.scaleY}")
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             Log.d(NAME, "_getSafeAreaInsets: support Only Android Version 29 Higher!")
@@ -57,11 +120,8 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
             Log.d(NAME, "_getSafeAreaInsets: displayMatrix is null")
             return safeareaInsets
         }
-        val density = displayMatrix.density.toDouble()
-        val fontScale = displayMatrix.scaledDensity.toDouble()
-
-        Log.d(NAME, "_getSafeAreaInsets0: ${displayMatrix}")
-        Log.d(NAME, "_getSafeAreaInsets1: ${rootWindowInsets}")
+        Log.d(NAME, "_getSafeAreaInsets0: $displayMatrix")
+        Log.d(NAME, "_getSafeAreaInsets1: $rootWindowInsets")
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val metrics: WindowMetrics = manager.currentWindowMetrics
             val windowInsets = metrics.windowInsets
@@ -69,22 +129,15 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
                 WindowInsets.Type.navigationBars() or WindowInsets.Type.statusBars()
                     or WindowInsets.Type.displayCutout() or WindowInsets.Type.systemBars()
             )
-            Log.d(NAME, "_getSafeAreaInsets2: ${windowInsets.displayCutout}")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                Log.d(NAME, "_getSafeAreaInsets3: ${windowInsets.privacyIndicatorBounds}")
-            }
-            val insetsWidth: Int = ignoreInsets.right + ignoreInsets.left
-            val insetsHeight: Int = ignoreInsets.top + ignoreInsets.bottom
-            val bounds = metrics.bounds
-            val legacySize = android.util.Size(bounds.width() - insetsWidth, bounds.height() - insetsHeight)
+//            val insetsWidth: Int = ignoreInsets.right + ignoreInsets.left
+//            val insetsHeight: Int = ignoreInsets.top + ignoreInsets.bottom
+//            val bounds = metrics.bounds
+//            Log.d(NAME, "_getSafeAreaInsets: $bounds")
+//            val legacySize = android.util.Size(bounds.width() - insetsWidth, bounds.height() - insetsHeight)
             safeareaInsets["top"] = ignoreInsets.top.toDouble()
             safeareaInsets["bottom"] = ignoreInsets.bottom.toDouble()
             safeareaInsets["left"] = ignoreInsets.left.toDouble()
             safeareaInsets["right"] = ignoreInsets.right.toDouble()
-            safeareaInsets["realWidth"] = legacySize.width.toDouble()
-            safeareaInsets["realHeight"] = legacySize.height.toDouble()
-            safeareaInsets["fontScale"] = fontScale
-            safeareaInsets["screenScale"] = density
         } else {
             val insets = rootWindowInsets
             val outMetrics = DisplayMetrics()
@@ -126,24 +179,7 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
             cb.invoke(e)
         }
     }
-    inline fun View.getDimensions(crossinline onDimensionsReady: (Int, Int) -> Unit) {
-        lateinit var layoutListener: ViewTreeObserver.OnGlobalLayoutListener
-        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
-            Log.d(name, "getDimensions1: $measuredHeight $measuredHeightAndState $minimumHeight")
-            Log.d(name, "getDimensions2: $measuredWidth $measuredWidthAndState $minimumWidth")
-            Log.d(name, "getDimensions3: $top $bottom $left $right")
-            Log.d(name, "getDimensions4: $paddingTop $paddingBottom $paddingLeft $paddingRight $paddingStart $paddingEnd")
 
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                Log.d(name, "getDimensions5: $matrix $rootWindowInsets $windowInsetsController")
-            }
-
-            onDimensionsReady(width, height)
-        }
-        viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-    }
     companion object {
         const val NAME = "ScreenUtill"
     }

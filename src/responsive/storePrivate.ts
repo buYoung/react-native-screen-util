@@ -11,10 +11,11 @@ import "./extension";
 export {};
 const initializeState = {
     safeAreaInset  : {
-        top   : 0,
-        bottom: 0,
-        left  : 0,
-        right : 0
+        top        : 0,
+        bottom     : 0,
+        left       : 0,
+        right      : 0,
+        screenScale: 0
     },
     screenSize  : {
         width    : 0,
@@ -88,12 +89,13 @@ class responsivePrivateVarial {
                     height       : 0,
                     width        : 0,
                     safeAreaInset: {
-                        top   : 0,
-                        bottom: 0,
-                        left  : 0,
-                        right : 0
+                        top        : 0,
+                        bottom     : 0,
+                        left       : 0,
+                        right      : 0,
+                        screenScale: 0
                     },
-                    screenSize     : Dimensions.get("window"),
+                    screenSize     : Dimensions.get("screen"),
                     scaleHeight    : 0,
                     scaleWidth     : 0,
                     debug          : true,
@@ -102,7 +104,7 @@ class responsivePrivateVarial {
                     scaleByHeight  : false,
                     splitScreenMode: false,
                     uiWidth        : 360,
-                    uiHeight       : 690,
+                    uiHeight        : 690,
                     font           : 0
                 } as ScreenUtilInitilizeParams;
             },

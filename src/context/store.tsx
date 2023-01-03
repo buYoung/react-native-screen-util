@@ -1,5 +1,5 @@
 import type { ScaledSize } from "react-native";
-import { Dimensions, NativeModules, Platform, StatusBar } from "react-native";
+import { Dimensions, NativeModules, PixelRatio, Platform, StatusBar } from "react-native";
 import { createStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import type { StoreApi, Mutate } from "zustand/vanilla";
@@ -287,37 +287,33 @@ function getCalcSafeAreaInset(currentState: screenResponsiveActionUnion, state: 
             message: "safeAreaInset Is null"
         };
     }
-    const statusBarHeight = StatusBar.currentHeight;
-
+    let statusBarHeight = StatusBar.currentHeight;
+    if(!statusBarHeight) {
+        statusBarHeight = 0;
+    }
+    const ratio = PixelRatio.get();
     if(Platform.OS === "android") {
         const viewInfo = state.safeAreaInset;
-        const heightInset = (viewInfo.top + viewInfo.bottom);
-        const widthInset = (viewInfo.left + viewInfo.right);
-
-        const height = viewInfo.realHeight;
-        const width = viewInfo.realWidth;
-        console.log(heightInset, (height + heightInset) / viewInfo.screenScale);
-        console.log(widthInset, (width + widthInset) / viewInfo.screenScale);
-        // state.screenSize.height = round((viewInfo.realHeight + (TopInset + state.safeAreaInset.bottom))  / viewInfo.screenScale, 3);
+        let heightInset = (viewInfo.top + viewInfo.bottom);
+        let widthInset = (viewInfo.left + viewInfo.right);
         if(currentState.getOrientation() === OrientationType.POTTRAIT) {
-            state.screenSize.height = (height + heightInset) / viewInfo.screenScale;
-            state.screenSize.width = (width + widthInset) / viewInfo.screenScale;
-            return state.screenSize;
+            heightInset -= (heightInset / ratio) + (ratio * ratio);
         }
         if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
-            state.screenSize.height = (height + heightInset) / viewInfo.screenScale;
-            state.screenSize.width = (width + widthInset) / viewInfo.screenScale;
-            return state.screenSize;
+            widthInset -= (widthInset / ratio) + (ratio * ratio);
         }
+        state.screenSize.height = (state.screenSize.height + heightInset);
+        state.screenSize.width = (state.screenSize.width + widthInset);
+        return state.screenSize;
     }
     if(Platform.OS === "ios") {
         if(currentState.getOrientation() === OrientationType.POTTRAIT) {
-            state.screenSize.height += state.safeAreaInset.bottom;
+            state.screenSize.height += (state.safeAreaInset.bottom / ratio);
             return state.screenSize;
         }
         if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
             const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
-            state.screenSize.width += max;
+            state.screenSize.width += (max) / ratio;
             return state.screenSize;
         }
     }
