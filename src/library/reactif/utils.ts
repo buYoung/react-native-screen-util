@@ -1,4 +1,4 @@
-import {memo} from "react";
+import { memo } from "react";
 import shallow from "zustand/shallow";
 import { isThenable } from "./isThenable";
 import type { CancellablePromise, ExtendablePromise } from "./types";
@@ -11,11 +11,11 @@ export const _memo = memo;
  * @returns True if arrays are identical, false if they are different
  */
 export const shallowArraysEqual = (a: any[], b: any[]): boolean => {
-    if(!Array.isArray(a) || !Array.isArray(b)) throw new Error("shallowArraysEqual only accepts arrays as parameters");
-    if(a.length !== b.length) return false;
+    if (!Array.isArray(a) || !Array.isArray(b)) throw new Error("shallowArraysEqual only accepts arrays as parameters");
+    if (a.length !== b.length) return false;
 
     for (let i = 0; i < a.length; ++i) {
-        if(a[i] !== b[i]) return false;
+        if (a[i] !== b[i]) return false;
     }
     return true;
 };
@@ -28,11 +28,11 @@ export const shallowArraysEqual = (a: any[], b: any[]): boolean => {
  * - cancel: the function to use for cancelling the returned promise
  */
 export const createCancellablePromise = <T>(promise: ExtendablePromise<T>): CancellablePromise => {
-    if(!isThenable(promise)) {
+    if (!isThenable(promise)) {
         throw new Error("Argument of createCancellablePromise should be a Promise");
     }
 
-    const isCancelled = { value : false };
+    const isCancelled = { value: false };
 
     // eslint-disable-next-line no-async-promise-executor
     const wrappedPromise: ExtendablePromise<T> = new Promise(async (res, rej) => {
@@ -52,7 +52,7 @@ export const createCancellablePromise = <T>(promise: ExtendablePromise<T>): Canc
     return {
         promise: wrappedPromise,
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-        cancel : () => {
+        cancel: () => {
             isCancelled.value = true;
         }
     };

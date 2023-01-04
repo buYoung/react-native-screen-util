@@ -4,62 +4,57 @@ import "react-native-screen-util";
 // @ts-ignore
 import screenUtil, { ResponsiveStore, ResponsiveStyleSheet } from "react-native-screen-util";
 
-
 type mainStyle = {
-    container: ViewStyle,
-    iconDefaultSize: ImageStyle,
-    titleContainer: ViewStyle,
-    title: TextStyle,
-    cardBodyContainer: ViewStyle,
-    bottomContainer: ViewStyle
+    container: ViewStyle;
+    iconDefaultSize: ImageStyle;
+    titleContainer: ViewStyle;
+    title: TextStyle;
+    cardBodyContainer: ViewStyle;
+    bottomContainer: ViewStyle;
 };
 
-
 const styles = ResponsiveStyleSheet.create<mainStyle>({
-
-    container : {
-        width          : 390,
-        height         : 750,
+    container: {
+        width: 390,
+        height: 750,
         backgroundColor: "blue"
         // backgroundColor: "#F8F7FC"
     },
-    iconDefaultSize : {
-        width : 16,
+    iconDefaultSize: {
+        width: 16,
         height: 16
     },
-    titleContainer : {
-        width            : 390,
-        height           : 60,
+    titleContainer: {
+        width: 390,
+        height: 60,
         paddingHorizontal: 16,
-        backgroundColor  : "#f00",
-        flexDirection    :  "row",
-        alignItems       : "center",
-        alignContent     : "center",
-        justifyContent   : "space-between"
+        backgroundColor: "#f00",
+        flexDirection: "row",
+        alignItems: "center",
+        alignContent: "center",
+        justifyContent: "space-between"
     },
-    title : {
-        fontSize  : 24,
-        color     : "#754cc4",
+    title: {
+        fontSize: 24,
+        color: "#754cc4",
         fontWeight: "600"
     },
-    cardBodyContainer : {
-        width          : 390,
-        height         : 630,
+    cardBodyContainer: {
+        width: 390,
+        height: 630,
         backgroundColor: "#333"
     },
-    bottomContainer : {
-        width            : 390,
-        height           : 60,
+    bottomContainer: {
+        width: 390,
+        height: 60,
         paddingHorizontal: 16,
-        backgroundColor            : "#f00",
-        flexDirection    :  "row",
-        alignItems       : "center",
-        alignContent     : "center",
-        justifyContent   : "space-between"
+        backgroundColor: "#f00",
+        flexDirection: "row",
+        alignItems: "center",
+        alignContent: "center",
+        justifyContent: "space-between"
     }
 });
 
 console.log("mainContainer", styles.container);
-export {
-    styles
-};
+export { styles };

@@ -7,8 +7,7 @@ import { _memo, _shallowFn } from "./utils";
  * @param props Props of the component to render
  */
 export const render: FCWithImplicitChildren = (props) => {
-
-    if(typeof props.children === "function") {
+    if (typeof props.children === "function") {
         return <Fragment>{props.children()}</Fragment>;
     }
 

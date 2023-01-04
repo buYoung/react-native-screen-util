@@ -11,6 +11,6 @@ import { _memo, _shallowFn } from "./utils";
 export const CaseFn: FC<ComponentWithConditionPropsWithFunctionChildren> = (props) => render(props);
 
 CaseFn.defaultProps = {
-    children : null
+    children: null
 };
 export const Case: FC<ComponentWithConditionPropsWithFunctionChildren> = _memo(CaseFn, _shallowFn);

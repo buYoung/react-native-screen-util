@@ -7,8 +7,6 @@
  * Full license: https://github.com/sapphiredev/utilities/blob/main/LICENSE.md
  */
 
-
-
 interface Thenable {
     then: Function;
     catch: Function;
@@ -36,6 +34,6 @@ function hasCatch(input: { catch?: Function }): boolean {
  * @param input The promise to verify
  */
 export function isThenable(input: unknown): input is Thenable {
-    if(typeof input !== "object" || input === null) return false;
+    if (typeof input !== "object" || input === null) return false;
     return input instanceof Promise || (input !== Promise.prototype && hasThen(input) && hasCatch(input));
 }

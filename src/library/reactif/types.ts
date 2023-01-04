@@ -27,25 +27,26 @@ export interface CancellablePromise {
  * The children can also be in function style
  */
 export type ComponentWithConditionPropsWithFunctionChildren<P = NonNullObject> = P &
-CustomPropsWithChildren<{
-    condition: (() => BooleanLike) | BooleanLike;
-}>;
+    CustomPropsWithChildren<{
+        condition: (() => BooleanLike) | BooleanLike;
+    }>;
 
 /**
  * Props for a React component that have both children
  * as well as a `condition` prop that is supported by this library
  */
-export type ComponentWithConditionProps<P = NonNullObject> = P & PropsWithChildren<{ condition: (() => BooleanLike) | BooleanLike }>;
+export type ComponentWithConditionProps<P = NonNullObject> = P &
+    PropsWithChildren<{ condition: (() => BooleanLike) | BooleanLike }>;
 
 /**
  * Async related props
  */
 export interface AsyncSupportProps {
     /**
-   * - False (default): promises are cancelled before each unmount
-   * - True: promises can be fulfilled even after a
-   * component unmount or a change to promise prop
-   */
+     * - False (default): promises are cancelled before each unmount
+     * - True: promises can be fulfilled even after a
+     * component unmount or a change to promise prop
+     */
     keepAlive?: boolean;
 }
 
@@ -65,7 +66,8 @@ export interface FunctionComponentWithImplicitChildren<P = NonNullObject> {
     displayName?: string | undefined;
 }
 
-
 export type NonNullObject = {} & object;
 
-export type CustomPropsWithChildren<P> = P & { children?: ReactNode | undefined | ((...args: unknown[]) => JSX.Element) };
+export type CustomPropsWithChildren<P> = P & {
+    children?: ReactNode | undefined | ((...args: unknown[]) => JSX.Element);
+};

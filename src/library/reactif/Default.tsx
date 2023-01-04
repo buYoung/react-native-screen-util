@@ -10,7 +10,7 @@ import { _memo, _shallowFn } from "./utils";
 export const DefaultFn: FCWithImplicitChildren = (props) => render(props);
 
 DefaultFn.defaultProps = {
-    children : null
+    children: null
 };
 
 export const Default: FCWithImplicitChildren = _memo(DefaultFn, _shallowFn);

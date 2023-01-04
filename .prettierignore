@@ -1,0 +1,7 @@
+/build/
+/test-config/
+.vscode
+/node_modules/
+*.png
+*.svg
+*.jpg

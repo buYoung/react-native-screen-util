@@ -23,26 +23,26 @@ const SwitchFn: FCWithImplicitChildren = ({ children }) => {
     let defaultCase: ReactElement | undefined;
 
     // If the children are a function then resolve it first
-    if(isFunction(children)) {
+    if (isFunction(children)) {
         children = children();
     }
 
     React.Children.forEach(children, (child) => {
         // not a valid react child, don't add it
         /* istanbul ignore next - This is only a safe fail for people writing bad code */
-        if(!React.isValidElement(child)) {
+        if (!React.isValidElement(child)) {
             return;
         }
 
-        if(!matchingCase && child.type === Case) {
+        if (!matchingCase && child.type === Case) {
             const { condition } = child.props;
 
             const conditionResult = getConditionResult(condition);
 
-            if(conditionResult) {
+            if (conditionResult) {
                 matchingCase = child;
             } // else not matching condition, don't add it
-        } else if(!defaultCase && child.type === Default) {
+        } else if (!defaultCase && child.type === Default) {
             defaultCase = child;
         } // else unknown type, don't add it
     });

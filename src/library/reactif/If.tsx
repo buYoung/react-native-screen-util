@@ -19,17 +19,20 @@ import { _memo, _shallowFn } from "./utils";
  * @param __namedParameters The props to pass down to the `<IF />` component, see {@link ComponentWithConditionProps}
  */
 const IfFn: FC<ComponentWithConditionPropsAsyncSupport> = ({ condition, keepAlive = false, children }) => {
-    if(!children) {
+    if (!children) {
         return null;
     }
 
     tinyWarning(
-        (!Array.isArray(children) && !((children as ReactElement).type === Else || (children as ReactElement).type === Then)) ||
-        !(React.Children.toArray(children) as ReactElement[]).every((child) => child.type === Else || child.type === Then || child.type === Fallback),
+        (!Array.isArray(children) &&
+            !((children as ReactElement).type === Else || (children as ReactElement).type === Then)) ||
+            !(React.Children.toArray(children) as ReactElement[]).every(
+                (child) => child.type === Else || child.type === Then || child.type === Fallback
+            ),
         "The <If> component should contain <Then /> <Else /> or <Fallback /> components as its children"
     );
 
-    if(isThenable(condition)) {
+    if (isThenable(condition)) {
         return (
             <IfAsync promise={condition as ExtendablePromise<any>} keepAlive={keepAlive}>
                 {children}
@@ -39,7 +42,12 @@ const IfFn: FC<ComponentWithConditionPropsAsyncSupport> = ({ condition, keepAliv
 
     const conditionResult = getConditionResult(condition);
 
-    return <Fragment>{(React.Children.toArray(children) as ReactElement[]).find((c) => (c.type !== Else) !== !conditionResult) || null}</Fragment>;
+    return (
+        <Fragment>
+            {(React.Children.toArray(children) as ReactElement[]).find((c) => (c.type !== Else) !== !conditionResult) ||
+                null}
+        </Fragment>
+    );
 };
 
 export const If = _memo(IfFn, _shallowFn);

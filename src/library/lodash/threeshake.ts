@@ -9,25 +9,18 @@ import round from "lodash/round";
 import values from "lodash/values";
 
 function isValueNumber(value: any): boolean {
-    if(isUndefined(value)) {
+    if (isUndefined(value)) {
         return false;
     }
-    if(isNull(value)) {
+    if (isNull(value)) {
         return false;
     }
-    if(!isNumber(value)) {
+    if (!isNumber(value)) {
         return false;
     }
-    if(isNaN(value)) {
+    if (isNaN(value)) {
         return false;
     }
     return true;
 }
-export {
-    isString,
-    isValueNumber,
-    reduce,
-    inRange,
-    values,
-    round
-};
+export { isString, isValueNumber, reduce, inRange, values, round };

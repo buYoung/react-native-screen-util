@@ -25,5 +25,9 @@ export interface screenResponsiveSetterActionPrivate {
     copyData(data: screenResponsiveState): void;
 }
 
-export type screenResponsiveActionUnion = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterAction;
-export type screenResponsiveActionUnionPrivate = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterActionPrivate;
+export type screenResponsiveActionUnion = screenResponsiveGetterAction &
+    screenResponsiveCheckerAction &
+    screenResponsiveSetterAction;
+export type screenResponsiveActionUnionPrivate = screenResponsiveGetterAction &
+    screenResponsiveCheckerAction &
+    screenResponsiveSetterActionPrivate;
