@@ -175,6 +175,7 @@ export function createScreenResponsiveStore(): Mutate<
                             message: "not load Native Module.... insetUtil"
                         };
                     }
+
                     try {
                         if (!option) {
                             option = get().getDefaultStyle();
@@ -210,6 +211,80 @@ export function createScreenResponsiveStore(): Mutate<
                         return makeErrorResult(e);
                     }
                 },
+                setScreenReScreeenSizeRatio(width, height): setStateResultType {
+                    console.log("다시 그림")
+                    try {
+                        const currentState = get();
+                        currentState.screenSize.width = width;
+                        currentState.screenSize.height = height;
+                        const screenSize: ScaledSize = { ...currentState.screenSize } as ScaledSize;
+                        // set(currentState);
+                        screenSize.width = width;
+                        screenSize.height = height;
+                        const defaultScale = { ...screenSize } as ScaledSize;
+                        const fontScale = { ...screenSize } as ScaledSize;
+                        currentState.scaleWidth = width;
+                        currentState.scaleHeight = height;
+                        // const calcSafeAreaInset = getCalcSafeAreaInsetCalc(currentState);
+                        // const calcSafeAreaInsetFont = getCalcSafeAreaInsetFontCalc(currentState);
+
+                        const uiSize = {
+                            ...{
+                                uiWidth: currentState.uiWidth,
+                                uiHeight: currentState.uiHeight
+                            }
+                        };
+
+                        // console.log("일반", calcSafeAreaInset, calcSafeAreaInsetFont);
+                        const getRatioWidth = round(defaultScale.width / uiSize.uiWidth, 3);
+                        const getRatioHeight = round(defaultScale.height / uiSize.uiHeight, 3);
+                        const getRatioFontWidth = round(fontScale.width / uiSize.uiWidth, 3);
+                        const getRatioFontHeight = round(fontScale.height / uiSize.uiHeight, 3);
+                        const orientation = currentState.getOrientation();
+                        const ratio = PixelRatio.get();
+                        if (Platform.OS === "android") {
+                            if (orientation === OrientationType.POTTRAIT) {
+                                const addDpivalue = getDpiRatioValue(getRatioHeight);
+                                const addDpivalueFont = getDpiRatioValue(getRatioFontHeight);
+                                defaultScale.height += addDpivalue / ratio;
+                                fontScale.height += addDpivalueFont / ratio;
+                            }
+                            if (orientation === OrientationType.LANDSCAPE) {
+                                const addDpivalue = getDpiRatioValue(getRatioWidth);
+                                const addDpivalueFont = getDpiRatioValue(getRatioFontWidth);
+                                defaultScale.width += addDpivalue / ratio;
+                                fontScale.width += addDpivalueFont / ratio;
+                            }
+                        }
+
+                        defaultScale.width = round(defaultScale.width / uiSize.uiWidth, 3);
+                        defaultScale.height = round(defaultScale.height / uiSize.uiHeight, 3);
+                        let fontWidth = round(fontScale.width / uiSize.uiWidth, 3);
+                        let fontHeight = round(fontScale.height / uiSize.uiHeight, 3);
+                        if (!fontWidth) {
+                            fontWidth = defaultScale.width;
+                        }
+                        if (!fontHeight) {
+                            fontHeight = defaultScale.height;
+                        }
+                        set({
+                            scaleWidth: defaultScale.width,
+                            scaleHeight: defaultScale.height,
+                            font: PixelRatio.roundToNearestPixel(
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-ignore
+                                currentState.minTextSize ? Math.min(fontScale.width, fontScale.height) : fontScale.width
+                            )
+                        });
+                        return {
+                            error: false,
+                            message: "success"
+                        };
+                    } catch (e) {
+                        console.log(e);
+                        return makeErrorResult(e);
+                    }
+                },
                 setScreenSizeRatio(): setStateResultType {
                     try {
                         const currentState = get();
@@ -219,6 +294,12 @@ export function createScreenResponsiveStore(): Mutate<
                                 message: "dimension value is null"
                             };
                         }
+                        const screenSize: ScaledSize = { ...currentState.screenSize } as ScaledSize;
+                        // set(currentState);
+                        screenSize.width = currentState.screenSize.width;
+                        screenSize.height = currentState.screenSize.height;
+                        const defaultScale = { ...screenSize } as ScaledSize;
+                        const fontScale = { ...screenSize } as ScaledSize;
                         const calcSafeAreaInset = getCalcSafeAreaInset(
                             get() as screenResponsiveActionUnion,
                             currentState as screenResponsiveState
@@ -233,51 +314,54 @@ export function createScreenResponsiveStore(): Mutate<
                         if ("error" in calcSafeAreaInsetFont) {
                             return calcSafeAreaInsetFont;
                         }
-                        currentState.screenSize = calcSafeAreaInset;
-                        const screenSize = { ...currentState.screenSize };
+                        defaultScale.width -= calcSafeAreaInset.width;
+                        defaultScale.height -= calcSafeAreaInset.height;
                         const uiSize = {
                             ...{
                                 uiWidth: currentState.uiWidth,
                                 uiHeight: currentState.uiHeight
                             }
                         };
-                        const getPreRatioWidth = round(screenSize.width / uiSize.uiWidth, 3);
-                        const getPreRatioHeight = round(screenSize.height / uiSize.uiHeight, 3);
+                        const getRatioWidth = round(defaultScale.width / uiSize.uiWidth, 3);
+                        const getRatioHeight = round(defaultScale.height / uiSize.uiHeight, 3);
+                        const getRatioFontWidth = round(fontScale.width / uiSize.uiWidth, 3);
+                        const getRatioFontHeight = round(fontScale.height / uiSize.uiHeight, 3);
                         const orientation = currentState.getOrientation();
+                        const ratio = PixelRatio.get();
                         if (Platform.OS === "android") {
                             if (orientation === OrientationType.POTTRAIT) {
-                                const addDpivalue = getDpiRatioValue(getPreRatioHeight);
-                                screenSize.height += addDpivalue / PixelRatio.get();
+                                const addDpivalue = getDpiRatioValue(getRatioHeight);
+                                const addDpivalueFont = getDpiRatioValue(getRatioFontHeight);
+                                defaultScale.height += addDpivalue / ratio;
+                                fontScale.height += addDpivalueFont / ratio;
                             }
                             if (orientation === OrientationType.LANDSCAPE) {
-                                const addDpivalue = getDpiRatioValue(getPreRatioWidth);
-                                screenSize.width += addDpivalue / PixelRatio.get();
+                                const addDpivalue = getDpiRatioValue(getRatioWidth);
+                                const addDpivalueFont = getDpiRatioValue(getRatioFontWidth);
+                                defaultScale.width += addDpivalue / ratio;
+                                fontScale.width += addDpivalueFont / ratio;
                             }
                         }
-
-                        screenSize.width /= uiSize.uiWidth;
-                        screenSize.height /= uiSize.uiHeight;
-                        screenSize.width = round(screenSize.width, 3);
-                        screenSize.height = round(screenSize.height, 3);
-                        let fontWidth = round(calcSafeAreaInsetFont.width / uiSize.uiWidth, 3);
-                        let fontHeight = round(calcSafeAreaInsetFont.height / uiSize.uiHeight, 3);
+                        defaultScale.width = round(defaultScale.width / uiSize.uiWidth, 3);
+                        defaultScale.height = round(defaultScale.height / uiSize.uiHeight, 3);
+                        let fontWidth = round(fontScale.width / uiSize.uiWidth, 3);
+                        let fontHeight = round(fontScale.height / uiSize.uiHeight, 3);
                         if (!fontWidth) {
-                            fontWidth = screenSize.width;
+                            fontWidth = defaultScale.width;
                         }
                         if (!fontHeight) {
-                            fontHeight = screenSize.height;
+                            fontHeight = defaultScale.height;
                         }
 
-
                         set({
-                            scaleWidth: screenSize.width,
-                            scaleHeight: screenSize.height,
+                            scaleWidth: defaultScale.width,
+                            scaleHeight: defaultScale.height,
                             uiWidth: currentState.uiWidth,
                             uiHeight: currentState.uiHeight,
                             font: PixelRatio.roundToNearestPixel(
                                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                                 // @ts-ignore
-                                currentState.minTextSize ? Math.min(fontWidth, fontHeight) : fontWidth
+                                currentState.minTextSize ? Math.min(fontScale.width, fontScale.height) : fontScale.width
                             )
                         });
                         return {
@@ -368,29 +452,46 @@ function getCalcSafeAreaInset(
         statusBarHeight = 0;
     }
     const ratio = PixelRatio.get();
+    const orientation = currentState.getOrientation();
     if (Platform.OS === "android") {
         const viewInfo = state.safeAreaInset;
-        let heightInset = viewInfo.bottom;
-        let widthInset = viewInfo.right;
-        if (currentState.getOrientation() === OrientationType.POTTRAIT) {
-            heightInset -= heightInset / ratio + ratio * ratio;
+        let heightInset = viewInfo.bottom + viewInfo.top;
+        let widthInset = viewInfo.right + viewInfo.left;
+        if (orientation === OrientationType.POTTRAIT) {
+            heightInset += viewInfo.top * ratio;
+            widthInset = 0;
         }
-        if (currentState.getOrientation() === OrientationType.LANDSCAPE) {
-            widthInset -= widthInset / ratio + ratio * ratio;
+        if (orientation === OrientationType.LANDSCAPE) {
+            widthInset += viewInfo.left * ratio;
+            heightInset = 0;
         }
-        state.screenSize.height = state.screenSize.height + heightInset;
-        state.screenSize.width = state.screenSize.width + widthInset;
-        return state.screenSize;
+        console.log(heightInset, widthInset);
+        return {
+            width:widthInset,
+            height: heightInset,
+            fontScale: state.screenSize.fontScale,
+            scale: state.screenSize.scale
+        };
     }
     if (Platform.OS === "ios") {
-        if (currentState.getOrientation() === OrientationType.POTTRAIT) {
-            state.screenSize.height += state.safeAreaInset.bottom / ratio;
-            return state.screenSize;
+        if (orientation === OrientationType.POTTRAIT) {
+
+            return {
+                width: 0,
+                height: state.safeAreaInset.bottom / ratio,
+                fontScale: state.screenSize.fontScale,
+                scale: state.screenSize.scale
+            };
         }
-        if (currentState.getOrientation() === OrientationType.LANDSCAPE) {
+        if (orientation === OrientationType.LANDSCAPE) {
             const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
             state.screenSize.width += max / ratio;
-            return state.screenSize;
+            return {
+                width: max / ratio,
+                height: 0,
+                fontScale: state.screenSize.fontScale,
+                scale: state.screenSize.scale
+            };
         }
     }
     if (!statusBarHeight) {
@@ -399,9 +500,88 @@ function getCalcSafeAreaInset(
             message: "react native statusBar is Null"
         };
     }
-    state.screenSize.height += statusBarHeight;
-    return state.screenSize;
+    return {
+        width:0,
+        height: statusBarHeight,
+        fontScale: state.screenSize.fontScale,
+        scale: state.screenSize.scale
+    };
 }
+
+// function getCalcSafeAreaInsetCalc(state: ScreemResponsiveStoreUnion): ScaledSize {
+//     if (!state.safeArea) {
+//         throw {
+//             error: true,
+//             message: "safeArea is not Enabled"
+//         };
+//     }
+//     if (!state.safeAreaInset) {
+//         throw {
+//             error: true,
+//             message: "safeAreaInset Is null"
+//         };
+//     }
+//     if (!state.checkIfValueIsNull(state.safeAreaInset)) {
+//         throw {
+//             error: true,
+//             message: "safeAreaInset Is null"
+//         };
+//     }
+//     let statusBarHeight = StatusBar.currentHeight;
+//     if (!statusBarHeight) {
+//         statusBarHeight = 0;
+//     }
+//     const ratio = PixelRatio.get();
+//     if (Platform.OS === "android") {
+//         const viewInfo = state.safeAreaInset;
+//         let heightInset = viewInfo.top;
+//         let widthInset = viewInfo.left;
+//         if (state.getOrientation() === OrientationType.POTTRAIT) {
+//             heightInset = heightInset / ratio;
+//         }
+//         if (state.getOrientation() === OrientationType.LANDSCAPE) {
+//             widthInset = widthInset / ratio;
+//         }
+//         return {
+//             width: widthInset,
+//             height: heightInset,
+//             fontScale: state.screenSize.fontScale,
+//             scale: state.screenSize.scale
+//         };
+//     }
+//     if (Platform.OS === "ios") {
+//         if (state.getOrientation() === OrientationType.POTTRAIT) {
+//
+//             return {
+//                 width: 0,
+//                 height: state.safeAreaInset.bottom / ratio,
+//                 fontScale: state.screenSize.fontScale,
+//                 scale: state.screenSize.scale
+//             };
+//         }
+//         if (state.getOrientation() === OrientationType.LANDSCAPE) {
+//             const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
+//             return {
+//                 width: max / ratio,
+//                 height: 0,
+//                 fontScale: state.screenSize.fontScale,
+//                 scale: state.screenSize.scale
+//             };
+//         }
+//     }
+//     if (!statusBarHeight) {
+//         throw {
+//             error: true,
+//             message: "react native statusBar is Null"
+//         };
+//     }
+//     return {
+//         width:0,
+//         height: statusBarHeight,
+//         fontScale: state.screenSize.fontScale,
+//         scale: state.screenSize.scale
+//     };
+// }
 
 function getCalcSafeAreaInsetFont(
     currentState: screenResponsiveActionUnion,
@@ -430,29 +610,43 @@ function getCalcSafeAreaInsetFont(
         statusBarHeight = 0;
     }
     const ratio = PixelRatio.getFontScale();
+    const orientation = currentState.getOrientation()
     if (Platform.OS === "android") {
         const viewInfo = state.safeAreaInset;
         let heightInset = viewInfo.bottom;
         let widthInset = viewInfo.right;
-        if (currentState.getOrientation() === OrientationType.POTTRAIT) {
-            heightInset -= heightInset / ratio + ratio * ratio;
+        if (orientation === OrientationType.POTTRAIT) {
+            heightInset = heightInset / ratio;
+            widthInset = 0;
         }
-        if (currentState.getOrientation() === OrientationType.LANDSCAPE) {
-            widthInset -= widthInset / ratio + ratio * ratio;
+        if (orientation === OrientationType.LANDSCAPE) {
+            widthInset = widthInset / ratio;
+            heightInset = 0;
         }
-        state.screenSize.height = state.screenSize.height + heightInset;
-        state.screenSize.width = state.screenSize.width + widthInset;
-        return state.screenSize;
+        return {
+            width: widthInset,
+            height: heightInset,
+            fontScale: state.screenSize.fontScale,
+            scale: state.screenSize.scale
+        };
     }
     if (Platform.OS === "ios") {
-        if (currentState.getOrientation() === OrientationType.POTTRAIT) {
-            state.screenSize.height += state.safeAreaInset.bottom / ratio;
-            return state.screenSize;
+        if (orientation === OrientationType.POTTRAIT) {
+            return {
+                width: 0,
+                height: state.safeAreaInset.bottom / ratio,
+                fontScale: state.screenSize.fontScale,
+                scale: state.screenSize.scale
+            };
         }
-        if (currentState.getOrientation() === OrientationType.LANDSCAPE) {
+        if (orientation === OrientationType.LANDSCAPE) {
             const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
-            state.screenSize.width += max / ratio;
-            return state.screenSize;
+            return {
+                width: max / ratio,
+                height: 0,
+                fontScale: state.screenSize.fontScale,
+                scale: state.screenSize.scale
+            };
         }
     }
     if (!statusBarHeight) {
@@ -461,9 +655,90 @@ function getCalcSafeAreaInsetFont(
             message: "react native statusBar is Null"
         };
     }
-    state.screenSize.height += statusBarHeight;
-    return state.screenSize;
+    return {
+        width:0,
+        height: statusBarHeight,
+        fontScale: state.screenSize.fontScale,
+        scale: state.screenSize.scale
+    };
 }
+
+// function getCalcSafeAreaInsetFontCalc(state: ScreemResponsiveStoreUnion): ScaledSize {
+//     if (!state.safeArea) {
+//         throw {
+//             error: true,
+//             message: "safeArea is not Enabled"
+//         };
+//     }
+//     if (!state.safeAreaInset) {
+//         throw {
+//             error: true,
+//             message: "safeAreaInset Is null"
+//         };
+//     }
+//     if (!state.checkIfValueIsNull(state.safeAreaInset)) {
+//         throw {
+//             error: true,
+//             message: "safeAreaInset Is null"
+//         };
+//     }
+//     let statusBarHeight = StatusBar.currentHeight;
+//     if (!statusBarHeight) {
+//         statusBarHeight = 0;
+//     }
+//     const ratio = PixelRatio.getFontScale();
+//     if (Platform.OS === "android") {
+//         const viewInfo = state.safeAreaInset;
+//         let heightInset = viewInfo.bottom;
+//         let widthInset = viewInfo.right;
+//         if (state.getOrientation() === OrientationType.POTTRAIT) {
+//             heightInset -= heightInset / ratio;
+//         }
+//         if (state.getOrientation() === OrientationType.LANDSCAPE) {
+//             widthInset -= widthInset / ratio;
+//         }
+//
+//         return {
+//             width:widthInset,
+//             height: heightInset,
+//             fontScale: state.screenSize.fontScale,
+//             scale: state.screenSize.scale
+//         };;
+//     }
+//     if (Platform.OS === "ios") {
+//         if (state.getOrientation() === OrientationType.POTTRAIT) {
+//             return {
+//                 width:0,
+//                 height: state.safeAreaInset.bottom / ratio,
+//                 fontScale: state.screenSize.fontScale,
+//                 scale: state.screenSize.scale
+//             };
+//         }
+//         if (state.getOrientation() === OrientationType.LANDSCAPE) {
+//             const max = Math.max(state.safeAreaInset.left, state.safeAreaInset.bottom, state.safeAreaInset.right);
+//             state.screenSize.width += max / ratio;
+//             return {
+//                 width:max / ratio,
+//                 height: 0,
+//                 fontScale: state.screenSize.fontScale,
+//                 scale: state.screenSize.scale
+//             };
+//         }
+//     }
+//     if (!statusBarHeight) {
+//         throw {
+//             error: true,
+//             message: "react native statusBar is Null"
+//         };
+//     }
+//     state.screenSize.height += statusBarHeight;
+//     return {
+//         width:0,
+//         height: statusBarHeight,
+//         fontScale: state.screenSize.fontScale,
+//         scale: state.screenSize.scale
+//     };
+// }
 
 function makeErrorResult(e: any): setStateResultType {
     let message = "error";

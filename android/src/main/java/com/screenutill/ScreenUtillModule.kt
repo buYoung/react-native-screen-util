@@ -2,22 +2,15 @@ package com.screenutill
 
 
 import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowInsets
 import android.util.Log
 import android.view.*
-import androidx.annotation.RequiresApi
-import androidx.core.view.allViews
-import com.facebook.react.ReactActivity
 import com.facebook.react.bridge.*
 import com.facebook.react.uimanager.PixelUtil
 import kotlinx.coroutines.*
 
-
-@RequiresApi(Build.VERSION_CODES.M)
 class ScreenUtillModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
     val safeareaInsets: HashMap<String, Double> = hashMapOf(
@@ -35,6 +28,7 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
     lateinit var rootView: View
 
     init {
+
             CoroutineScope(Dispatchers.IO).launch {
                 while (true) {
                     delay(100)
@@ -48,24 +42,15 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
 
                     Log.d(NAME, "scale X: ${decorViewScaleX} ${decorViewScaleY}")
 
-                    val rootWindowInsets = decorView.rootWindowInsets ?: continue
+                    val rootWindowInsets = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        decorView.rootWindowInsets ?: continue
+                    } else {
+                        null
+                    }
                     rootView = decorView.rootView
                     val displayMatrix = reactApplicationContext.resources.displayMetrics ?: continue
                     Log.d(NAME, "_getSafeAreaInsets0: $displayMatrix")
                     Log.d(NAME, "_getSafeAreaInsets1: $rootWindowInsets")
-                    Log.d(TAG, "decorView left:  ${rootView.left}")
-                    Log.d(TAG, "decorView right:  ${rootView.right}")
-                    Log.d(TAG, "decorView top:  ${rootView.top}")
-                    Log.d(TAG, "decorView bottom:  ${rootView.bottom}")
-                    Log.d(TAG, "decorView paddingLeft:  ${rootView.paddingLeft}")
-                    Log.d(TAG, "decorView paddingRight:  ${rootView.paddingRight}")
-                    Log.d(TAG, "decorView paddingTop:  ${rootView.paddingTop}")
-                    Log.d(TAG, "decorView paddingBottom:  ${rootView.paddingBottom}")
-                    Log.d(TAG, "decorView clipBounds:  ${rootView.clipBounds}")
-                    Log.d(TAG, "decorView matrix:  ${rootView.matrix}")
-                    Log.d(TAG, "decorView measuredWidth:  ${rootView.measuredWidth}")
-                    Log.d(TAG, "decorView measuredHeight:  ${rootView.measuredHeight}")
-                    Log.d(TAG, "decorView measuredState:  ${rootView.measuredState}")
                     Log.d(TAG, "decorView measure:  ${rootView.measure(rootView.measuredWidthAndState, rootView.measuredHeightAndState)}")
 
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -88,7 +73,7 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
                         safeareaInsets["left"] = ignoreInsets.left.toDouble()
                         safeareaInsets["right"] = ignoreInsets.right.toDouble()
                     } else {
-                        val insets = rootWindowInsets
+                        val insets = rootWindowInsets ?: break
                         val outMetrics = DisplayMetrics()
                         @Suppress("DEPRECATION")
                         val display = activity.windowManager.defaultDisplay

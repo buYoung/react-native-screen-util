@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import type { ViewProps, ViewStyle } from "react-native";
+import inRange from "lodash/inRange";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { LayoutChangeEvent, ViewProps, ViewStyle } from "react-native";
 import { ActivityIndicator, InteractionManager, Platform, StyleSheet, View } from "react-native";
 import type { Mutate } from "zustand";
 
@@ -12,11 +13,7 @@ import { createScreenResponsiveStore } from "./store";
 import type { EqualityFunctionUnion } from "../library";
 import { createEqualityFunctionStore, Else, Fallback, If, Then } from "../library";
 import { ResponsiveStore } from "../responsive/storePrivate";
-import type {
-    equalityFunctionStore,
-    screenResponsiveState,
-    ScreenUtilDesignSize
-} from "../type";
+import type { equalityFunctionStore, screenResponsiveState, ScreenUtilDesignSize } from "../type";
 import { equalityFunctionEnum, OrientationType } from "../type";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -38,6 +35,15 @@ export { AreEqualProvider, useAreEqualStore, AreEqualApi };
 type responsiveContainerStyle = {
     responsiveContainer: ViewStyle;
 };
+type responsiveContainerStyle2 = {
+    rootView: ViewStyle;
+};
+const rootViewStyle = StyleSheet.create<responsiveContainerStyle2>({
+    rootView: {
+        flexGrow: 1,
+        opacity: 0
+    }
+});
 
 // export const ResponsiveContext =  React.createContext<ScreemResponsiveStoreUnion | null>(null);
 // export const areEqualContext =  React.createContext<EqualityFunctionUnion | null>(null);
@@ -72,8 +78,8 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
     const [getAutoInset, setAutoInset] = useState(
         StyleSheet.create<responsiveContainerStyle>({
             responsiveContainer: {
-                flex: 1,
-                backgroundColor: "green"
+                flexGrow: 1,
+                backgroundColor: "green",
             }
         })
     );
@@ -85,6 +91,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
         InteractionManager.runAfterInteractions(async () => {
             const result = await storeRef.current.getState().setScreenResponsiveInitialize(option);
             if (result.error) {
+                return;
                 // console.log("error ResponsiveScreen", result.message);
             }
             if (autoInset && Platform.OS === "ios") {
@@ -93,7 +100,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
                     setAutoInset(
                         StyleSheet.create<responsiveContainerStyle>({
                             responsiveContainer: {
-                                flex: 1,
+                                flexGrow: 1,
                                 top: ResponsiveStore._____getInset(orientation)
                             }
                         })
@@ -103,7 +110,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
                     setAutoInset(
                         StyleSheet.create<responsiveContainerStyle>({
                             responsiveContainer: {
-                                flex: 1,
+                                flexGrow: 1,
                                 left: ResponsiveStore._____getInset(orientation)
                             }
                         })
@@ -117,6 +124,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
             (state: screenResponsiveState) => state,
             (state) => {
                 ResponsiveStore.getAction().copyData(state);
+                // console.log("값 갱ㄷ신됨!!", state.scaleWidth, state.scaleWidth)
             },
             {
                 equalityFn: (a, b) => getAreEqual[0](a, b),
@@ -141,34 +149,53 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
         };
     }, []);
 
+    const getSize = useCallback((event: LayoutChangeEvent) => {
+        if (inRange(event.nativeEvent.layout.height, 0, 100)) {
+            return;
+        }
+        const width = event.nativeEvent.layout.width;
+        const height = event.nativeEvent.layout.height;
+        // onViewLoading.on('size', ())
+        storeRef.current.getState().setScreenReScreeenSizeRatio(width, height);
+        // console.log(width, height);
+    }, []);
+
     return (
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         <AreEqualProvider createStore={() => areEqualstoreRef.current}>
-            <ResponsiveContextProvider
-                createStore={
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-                    () => storeRef.current
-                }>
-                <If condition={loading}>
-                    <Then>
-                        <If condition={storeRef.current.getState().getInitialize()} keepAlive={true}>
-                            <Fallback>
-                                <ActivityIndicator style={loadingStyleSheet.loading} />
-                            </Fallback>
-                            <Then>
-                                {(): any => {
-                                    return <View style={getAutoInset.responsiveContainer}>{children}</View>;
-                                }}
-                            </Then>
-                        </If>
-                    </Then>
-                    <Else>
-                        <View style={getAutoInset.responsiveContainer}>{children}</View>
-                    </Else>
-                </If>
-            </ResponsiveContextProvider>
+            <View style={rootViewStyle.rootView} onLayout={getSize}>
+                <ResponsiveContextProvider
+                    createStore={
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+                        () => storeRef.current
+                    }>
+                    <If condition={loading}>
+                        <Then>
+                            <If condition={storeRef.current.getState().getInitialize()} keepAlive={true}>
+                                <Fallback>
+                                    <ActivityIndicator style={loadingStyleSheet.loading} />
+                                </Fallback>
+                                <Then>
+                                    {(): any => {
+                                        return (
+                                            <View style={getAutoInset.responsiveContainer} onLayout={getSize}>
+                                                {children}
+                                            </View>
+                                        );
+                                    }}
+                                </Then>
+                            </If>
+                        </Then>
+                        <Else>
+                            <View style={getAutoInset.responsiveContainer} onLayout={getSize}>
+                                {children}
+                            </View>
+                        </Else>
+                    </If>
+                </ResponsiveContextProvider>
+            </View>
         </AreEqualProvider>
     );
 }

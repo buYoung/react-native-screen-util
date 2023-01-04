@@ -1,15 +1,18 @@
 import { Dimensions, PixelRatio } from "react-native";
-import { numberValueCheckIsNull } from "react-native-screen-util";
+import {deepEqual} from "fast-equals";
 import create from "zustand";
 import { inRange, isValueNumber } from "../library";
 import type {
     SafeAreaInsetType,
     screenResponsiveActionUnionPrivate,
-    screenResponsiveState,
+    screenResponsiveState, screenResponsiveStatePrivate,
     ScreenUtilInitilizeParams
 } from "../type";
 import { OrientationType } from "../type";
 import "./extension";
+import shallow from "zustand/shallow";
+import { subscribeWithSelector } from "zustand/middleware";
+import { onViewSizeChangeEvent } from "../library/event/bus";
 
 export {};
 const initializeState = {
@@ -37,109 +40,143 @@ const initializeState = {
     uiHeight: 690,
     font: 0
 };
-export type ScreemResponsiveStoreUnionPrivate = screenResponsiveState & screenResponsiveActionUnionPrivate;
+export type ScreemResponsiveStoreUnionPrivate = screenResponsiveStatePrivate & screenResponsiveActionUnionPrivate;
 class responsivePrivateVarial {
-    store = create<ScreemResponsiveStoreUnionPrivate>()((set, get) => ({
-        screenUtilInitialize: false,
-        orientation: false,
-        ...initializeState,
-        getOrientation(): OrientationType {
-            const currentState = get();
-            if (!currentState.screenSize) {
-                return OrientationType.NONE;
-            }
-            const orientationState = currentState.screenSize.width < currentState.screenSize.height;
-            if (orientationState) {
-                return OrientationType.POTTRAIT;
-            }
-            return OrientationType.LANDSCAPE;
-        },
-        getInitialize: async (): Promise<boolean> => {
-            let promiseCheckTimer = -1;
-            return new Promise((resolve): void => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                promiseCheckTimer = setInterval(() => {
-                    if (!get().screenUtilInitialize) {
-                        return;
-                    }
-                    resolve(true);
-                    clearInterval(promiseCheckTimer);
-                }, 500);
-            });
-        },
-        getSpacing(value: number): number {
-            const currentState = get();
-            if (!currentState.scaleWidth) {
-                return value;
-            }
-            if (!currentState.scaleHeight) {
-                return value;
-            }
-            return Math.min(currentState.scaleWidth, currentState.scaleHeight) * value;
-        },
-        getSafeArea(): SafeAreaInsetType | undefined {
-            const safeAreaInset = get().safeAreaInset;
-            if (!get().safeAreaInset) {
-                return undefined;
-            }
-            return safeAreaInset;
-        },
-        getDefaultStyle(): ScreenUtilInitilizeParams {
-            return {
-                height: 0,
-                width: 0,
-                safeAreaInset: {
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    screenScale: 0
-                },
-                screenSize: Dimensions.get("screen"),
-                scaleHeight: 0,
-                scaleWidth: 0,
-                debug: true,
-                minTextSize: true,
-                safeArea: true,
-                scaleByHeight: false,
-                splitScreenMode: false,
-                uiWidth: 360,
-                uiHeight: 690,
-                font: 0
-            } as ScreenUtilInitilizeParams;
-        },
-        checkIfValueIsNull<T>(value: T): boolean {
-            if (!get().screenUtilInitialize) return false;
-
-            switch (typeof value) {
-                case "string":
-                    return value !== "";
-                case "boolean":
+    store = create<ScreemResponsiveStoreUnionPrivate>()(
+        subscribeWithSelector(
+        (set, get) => ({
+            screenUtilInitialize: false,
+            orientation: false,
+            oldSize: { width: 0, height:0 },
+            nextSize: { width: 0, height:0 },
+            ...initializeState,
+            getOrientation(): OrientationType {
+                const currentState = get();
+                if (!currentState.screenSize) {
+                    return OrientationType.NONE;
+                }
+                const orientationState = currentState.screenSize.width < currentState.screenSize.height;
+                if (orientationState) {
+                    return OrientationType.POTTRAIT;
+                }
+                return OrientationType.LANDSCAPE;
+            },
+            getInitialize: async (): Promise<boolean> => {
+                let promiseCheckTimer = -1;
+                return new Promise((resolve): void => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    promiseCheckTimer = setInterval(() => {
+                        if (!get().screenUtilInitialize) {
+                            return;
+                        }
+                        resolve(true);
+                        clearInterval(promiseCheckTimer);
+                    }, 500);
+                });
+            },
+            getSpacing(value: number): number {
+                const currentState = get();
+                if (!currentState.scaleWidth) {
                     return value;
-                case "number":
-                    return numberValueCheckIsNull(value);
-                case "object":
-                    return objectValueCheckIsNull(get(), value);
-                case "bigint":
-                case "function":
-                case "symbol":
-                case "undefined":
-                default:
-                    return false;
+                }
+                if (!currentState.scaleHeight) {
+                    return value;
+                }
+                return Math.min(currentState.scaleWidth, currentState.scaleHeight) * value;
+            },
+            getSafeArea(): SafeAreaInsetType | undefined {
+                const safeAreaInset = get().safeAreaInset;
+                if (!get().safeAreaInset) {
+                    return undefined;
+                }
+                return safeAreaInset;
+            },
+            getDefaultStyle(): ScreenUtilInitilizeParams {
+                return {
+                    height: 0,
+                    width: 0,
+                    safeAreaInset: {
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        screenScale: 0
+                    },
+                    screenSize: Dimensions.get("window"),
+                    scaleHeight: 0,
+                    scaleWidth: 0,
+                    debug: true,
+                    minTextSize: true,
+                    safeArea: true,
+                    scaleByHeight: false,
+                    splitScreenMode: false,
+                    uiWidth: 360,
+                    uiHeight: 690,
+                    font: 0
+                } as ScreenUtilInitilizeParams;
+            },
+            checkIfValueIsNull<T>(value: T): boolean {
+                if (!get().screenUtilInitialize) return false;
+
+                switch (typeof value) {
+                    case "string":
+                        return value !== "";
+                    case "boolean":
+                        return value;
+                    case "number":
+                        return this.checkNumberIsAllowRange(value);
+                    case "object":
+                        return objectValueCheckIsNull(get(), value);
+                    case "bigint":
+                    case "function":
+                    case "symbol":
+                    case "undefined":
+                    default:
+                        return false;
+                }
+            },
+            checkNumberIsAllowRange(value: number): boolean {
+                if (!get().screenUtilInitialize) return false;
+                return isValueNumber(value) && inRange(value, 1, 10000);
+            },
+            copyData(data: screenResponsiveState): void {
+                if (!data.screenUtilInitialize) {
+                    return;
+                }
+                const state = get();
+                const a = {
+                    safeAreaInset: state.safeAreaInset,
+                    safeArea: state.safeArea,
+                    screenSize: state.screenSize,
+                    scaleWidth: state.scaleWidth,
+                    scaleHeight: state.scaleHeight,
+                    font: state.font
+                } as screenResponsiveState;
+                const b = {
+                    safeAreaInset: data.safeAreaInset,
+                    safeArea: data.safeArea,
+                    screenSize: data.screenSize,
+                    scaleWidth: data.scaleWidth,
+                    scaleHeight: data.scaleHeight,
+                    font: data.font
+                } as screenResponsiveState;
+                const prev = {
+                    width: a.screenSize.width,
+                    height: a.screenSize.height,
+                };
+                const next = {
+                    width: b.screenSize.width,
+                    height: b.screenSize.height,
+                };
+                if (prev.width === next.width && prev.height === next.height) {
+                    return;
+                }
+                onViewSizeChangeEvent.emit("change", [prev, next]);
+                set(data);
             }
-        },
-        checkNumberIsAllowRange(value: number): boolean {
-            if (!get().screenUtilInitialize) return false;
-            return isValueNumber(value) && inRange(value, 1, 10000);
-        },
-        copyData(data: screenResponsiveState): void {
-            if (!data.screenUtilInitialize) {
-                return;
-            }
-            set(data);
-        }
-    }));
+        })
+    ));
     getState(): screenResponsiveState {
         return this.store.getState() as screenResponsiveState;
     }
@@ -171,7 +208,7 @@ class responsivePrivateVarial {
     }
     _____getFont(value: number): number {
         const font = this.store.getState().font;
-        if (!numberValueCheckIsNull(font)) {
+        if (!this.checkNumberIsAllowRange(font)) {
             return value;
         }
         return PixelRatio.roundToNearestPixel(font * value);
@@ -180,10 +217,10 @@ class responsivePrivateVarial {
         const currentState = this.store.getState();
         const screenWidth = currentState.scaleWidth;
         const screenSizeWidth = currentState.screenSize.width;
-        if (!numberValueCheckIsNull(screenWidth)) {
+        if (!this.checkNumberIsAllowRange(screenWidth)) {
             return value;
         }
-        if (!numberValueCheckIsNull(screenSizeWidth)) {
+        if (!this.checkNumberIsAllowRange(screenSizeWidth)) {
             return value;
         }
         return PixelRatio.roundToNearestPixel(Math.min(screenWidth * value, screenSizeWidth));
@@ -192,10 +229,10 @@ class responsivePrivateVarial {
         const currentState = this.store.getState();
         const screenHeight = currentState.scaleHeight;
         const screenSizeHeight = currentState.screenSize.height;
-        if (!numberValueCheckIsNull(screenHeight)) {
+        if (!this.checkNumberIsAllowRange(screenHeight)) {
             return value;
         }
-        if (!numberValueCheckIsNull(screenSizeHeight)) {
+        if (!this.checkNumberIsAllowRange(screenSizeHeight)) {
             return value;
         }
         return PixelRatio.roundToNearestPixel(Math.min(screenHeight * value, screenSizeHeight));
@@ -206,16 +243,16 @@ class responsivePrivateVarial {
         const screenSizeWidth = currentState.screenSize.width;
         const screenHeight = currentState.scaleHeight;
         const screenSizeHeight = currentState.screenSize.height;
-        if (!numberValueCheckIsNull(screenWidth)) {
+        if (!this.checkNumberIsAllowRange(screenWidth)) {
             return value;
         }
-        if (!numberValueCheckIsNull(screenSizeWidth)) {
+        if (!this.checkNumberIsAllowRange(screenSizeWidth)) {
             return value;
         }
-        if (!numberValueCheckIsNull(screenHeight)) {
+        if (!this.checkNumberIsAllowRange(screenHeight)) {
             return value;
         }
-        if (!numberValueCheckIsNull(screenSizeHeight)) {
+        if (!this.checkNumberIsAllowRange(screenSizeHeight)) {
             return value;
         }
         const width = Math.min(screenWidth * value, screenSizeWidth);
@@ -226,10 +263,10 @@ class responsivePrivateVarial {
         const currentState = this.store.getState();
         const screenWidth = currentState.scaleWidth;
         const screenHeight = currentState.scaleHeight;
-        if (!numberValueCheckIsNull(screenHeight)) {
+        if (!this.checkNumberIsAllowRange(screenHeight)) {
             return value;
         }
-        if (!numberValueCheckIsNull(screenWidth)) {
+        if (!this.checkNumberIsAllowRange(screenWidth)) {
             return value;
         }
         return PixelRatio.roundToNearestPixel(Math.min(screenWidth, screenHeight) * value);

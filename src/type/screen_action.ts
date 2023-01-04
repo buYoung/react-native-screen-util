@@ -19,6 +19,7 @@ export interface screenResponsiveCheckerAction {
 export interface screenResponsiveSetterAction {
     setScreenResponsiveInitialize(option?: ScreenUtilInitilizeParams): Promise<setStateResultType>;
     setScreenSizeRatio(): setStateResultType;
+    setScreenReScreeenSizeRatio(width: number, height: number): setStateResultType;
     setScreenSafeInset(): Promise<setStateResultType>;
 }
 export interface screenResponsiveSetterActionPrivate {
