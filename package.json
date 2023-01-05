@@ -31,10 +31,11 @@
         "typecheck": "tsc --noEmit",
         "lint": "eslint \"**/*.{js,ts,tsx}\"",
         "prepack": "bob build",
-        "release": "release-it",
+        "release": "export GITHUB_TOKEN=$(gh auth token) && release-it",
         "example": "yarn --cwd example",
         "bootstrap": "yarn example && yarn install",
-        "scan": "qodana scan --show-report"
+        "scan": "qodana scan --show-report",
+        "token": "export GITHUB_TOKEN=$(gh auth token)"
     },
     "keywords": [
         "responsive",
