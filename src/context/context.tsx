@@ -158,39 +158,53 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
     return (
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         <AreEqualProvider createStore={() => areEqualstoreRef.current}>
-            <View style={rootViewStyle.rootView} onLayout={getSize}>
-                <ResponsiveContextProvider
-                    createStore={
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-                        () => storeRef.current
-                    }>
-                    <If condition={loading}>
-                        <Then>
-                            <If condition={storeRef.current.getState().getInitialize()} keepAlive={true}>
-                                <Fallback>
-                                    <ActivityIndicator style={loadingStyleSheet.loading} />
-                                </Fallback>
-                                <Then>
-                                    {(): any => {
-                                        return (
-                                            <View style={getAutoInset.responsiveContainer} onLayout={getSize}>
-                                                {children}
-                                            </View>
-                                        );
-                                    }}
-                                </Then>
-                            </If>
-                        </Then>
-                        <Else>
-                            <View style={getAutoInset.responsiveContainer} onLayout={getSize}>
-                                {children}
-                            </View>
-                        </Else>
-                    </If>
-                </ResponsiveContextProvider>
-            </View>
+            {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                <View style={rootViewStyle.rootView} onLayout={getSize}>
+                    <ResponsiveContextProvider
+                        createStore={
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+                            () => storeRef.current
+                        }>
+                        <If condition={loading}>
+                            <Then>
+                                <If condition={storeRef.current.getState().getInitialize()} keepAlive={true}>
+                                    <Fallback>
+                                        {
+                                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                            // @ts-ignore
+                                            <ActivityIndicator style={loadingStyleSheet.loading} />
+                                        }
+                                    </Fallback>
+                                    <Then>
+                                        {(): any => {
+                                            return (
+                                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                                // @ts-ignore
+                                                <View style={getAutoInset.responsiveContainer} onLayout={getSize}>
+                                                    {children}
+                                                </View>
+                                            );
+                                        }}
+                                    </Then>
+                                </If>
+                            </Then>
+                            <Else>
+                                {
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    <View style={getAutoInset.responsiveContainer} onLayout={getSize}>
+                                        {children}
+                                    </View>
+                                }
+                            </Else>
+                        </If>
+                    </ResponsiveContextProvider>
+                </View>
+            }
         </AreEqualProvider>
     );
 }
