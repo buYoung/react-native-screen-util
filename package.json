@@ -34,8 +34,7 @@
         "release": "export GITHUB_TOKEN=$(gh auth token) && release-it",
         "example": "yarn --cwd example",
         "bootstrap": "yarn example && yarn install",
-        "scan": "qodana scan --show-report",
-        "token": "export GITHUB_TOKEN=$(gh auth token)"
+        "scan": "qodana scan --show-report"
     },
     "keywords": [
         "responsive",
@@ -117,7 +116,7 @@
         "github": {
             "release": true,
             "preRelease": true,
-            "token": "${gh auth token}"
+            "token": true
         }
     },
     "react-native-builder-bob": {
