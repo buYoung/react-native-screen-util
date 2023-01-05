@@ -21,8 +21,8 @@ interface Props<T> extends AsyncSupportProps, PropsWithChildren<{ promise: Exten
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function IfAsyncFn<T = any>({ promise, keepAlive = false, children }: Props<T>) {
-    const [ isResolved, setIsResolved ] = useState<null | boolean>(null);
-    const [ returnValue, setReturnValue ] = useState(null);
+    const [isResolved, setIsResolved] = useState<null | boolean>(null);
+    const [returnValue, setReturnValue] = useState(null);
 
     // Make promise cancellable
     const cancellablePromise = useMemo((): CancellablePromise => createCancellablePromise(promise), [promise]);
@@ -32,11 +32,11 @@ function IfAsyncFn<T = any>({ promise, keepAlive = false, children }: Props<T>) 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         return () => {
-            if(!keepAlive) {
+            if (!keepAlive) {
                 cancellablePromise.cancel();
             }
         };
-    }, [ cancellablePromise, cancellablePromise.promise, keepAlive ]);
+    }, [cancellablePromise, cancellablePromise.promise, keepAlive]);
 
     // Await promise
     useSingleton(async () => {
@@ -55,30 +55,30 @@ function IfAsyncFn<T = any>({ promise, keepAlive = false, children }: Props<T>) 
         }
     }, [cancellablePromise.promise]);
 
-    if(!children || !isThenable(promise)) {
+    if (!children || !isThenable(promise)) {
         return null;
     }
 
-    if(isResolved === null) {
-    // Promise is pending
+    if (isResolved === null) {
+        // Promise is pending
         const hasFallback = (React.Children.toArray(children) as ReactElement[]).find((c) => c.type === Fallback);
         return <Fragment>{hasFallback || null}</Fragment>;
     }
 
-    if(!isResolved) {
-    // Promise is fulfilled and rejected
+    if (!isResolved) {
+        // Promise is fulfilled and rejected
         const hasElse = (React.Children.toArray(children) as ReactElement[]).find((c) => c.type === Else);
-        if(!hasElse) return <Fragment>{null}</Fragment>;
+        if (!hasElse) return <Fragment>{null}</Fragment>;
 
         // Inject caught error
         let elseElement = hasElse;
-        if(typeof hasElse.props.children === "function") {
+        if (typeof hasElse.props.children === "function") {
             elseElement = {
                 ...hasElse,
-                props : {
+                props: {
                     ...hasElse.props,
                     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-                    children : () => hasElse.props.children(returnValue, history.current, cancellablePromise.promise)
+                    children: () => hasElse.props.children(returnValue, history.current, cancellablePromise.promise)
                 }
             };
         }
@@ -87,18 +87,18 @@ function IfAsyncFn<T = any>({ promise, keepAlive = false, children }: Props<T>) 
 
     // Promise is fulfilled and resolved
     const hasThen = (React.Children.toArray(children) as ReactElement[]).find((c) => c.type === Then);
-    if(!hasThen) return <Fragment>{null}</Fragment>;
+    if (!hasThen) return <Fragment>{null}</Fragment>;
 
     // Inject promise return value
     let thenElement = hasThen;
 
-    if(typeof hasThen.props.children === "function") {
+    if (typeof hasThen.props.children === "function") {
         thenElement = {
             ...hasThen,
-            props : {
+            props: {
                 ...hasThen.props,
                 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-                children : () => hasThen.props.children(returnValue, history.current, cancellablePromise.promise)
+                children: () => hasThen.props.children(returnValue, history.current, cancellablePromise.promise)
             }
         };
     }
@@ -106,6 +106,4 @@ function IfAsyncFn<T = any>({ promise, keepAlive = false, children }: Props<T>) 
     return <Fragment>{thenElement}</Fragment>;
 }
 const IfAsync = _memo(IfAsyncFn, _shallowFn);
-export {
-    IfAsync
-};
+export { IfAsync };

@@ -3,20 +3,18 @@ export const enum ResponsiveFontParamEnum {
     word
 }
 export type ResponsiveFontSizeType = {
-    fontSize?: number
+    fontSize?: number;
 };
 export type ResponsiveFontSizeTypeParamOriginal = {
-    union?: ResponsiveFontParamEnum.default
-    fontSize?: number
-    sp?: never
+    union?: ResponsiveFontParamEnum.default;
+    fontSize?: number;
+    sp?: never;
 };
 
 export type ResponsiveFontSizeTypeParamWordOriginal = {
-    union?: ResponsiveFontParamEnum.word
-    sp?: number
-    fontSize?: never
+    union?: ResponsiveFontParamEnum.word;
+    sp?: number;
+    fontSize?: never;
 };
-
-
 
 export type ResponsiveFontSizeFontUnion = ResponsiveFontSizeTypeParamOriginal | ResponsiveFontSizeTypeParamWordOriginal;

@@ -1,107 +1,114 @@
 package com.screenutill
 
-import android.annotation.SuppressLint
+
+import android.app.Activity
 import android.os.Build
-import android.telecom.Call
-import android.util.Log
-import android.view.View
-import android.view.Window
+import android.util.DisplayMetrics
 import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
-import androidx.core.view.DisplayCutoutCompat
-import com.facebook.common.internal.ImmutableMap
-import com.facebook.react.bridge.Callback
-import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.WritableMap
-import com.facebook.react.bridge.WritableNativeMap
+import android.util.Log
+import android.view.*
+import com.facebook.react.bridge.*
 import com.facebook.react.uimanager.PixelUtil
+import kotlinx.coroutines.*
 
 class ScreenUtillModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
+    val safeareaInsets: HashMap<String, Double> = hashMapOf(
+        "top" to 0.0,
+        "bottom" to 0.0,
+        "left" to 0.0,
+        "right" to 0.0,
+    )
+    var isInitialized:Boolean = false
+    val TAG = "buyong!"
+    lateinit var activity: Activity
+    lateinit var window: Window
+    lateinit var manager: WindowManager
+    lateinit var decorView: View
+    lateinit var rootView: View
 
+    init {
+
+            CoroutineScope(Dispatchers.IO).launch {
+                while (true) {
+                    delay(100)
+                    activity = reactApplicationContext.currentActivity ?: continue
+                    window = activity.window
+                    manager = activity.windowManager
+                    decorView = window.decorView
+                    val decorViewScaleX = decorView.scaleX
+                    val decorViewScaleY = decorView.scaleX
+
+
+                    Log.d(NAME, "scale X: ${decorViewScaleX} ${decorViewScaleY}")
+
+                    val rootWindowInsets = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        decorView.rootWindowInsets ?: continue
+                    } else {
+                        null
+                    }
+                    rootView = decorView.rootView
+                    val displayMatrix = reactApplicationContext.resources.displayMetrics ?: continue
+                    Log.d(NAME, "_getSafeAreaInsets0: $displayMatrix")
+                    Log.d(NAME, "_getSafeAreaInsets1: $rootWindowInsets")
+                    Log.d(TAG, "decorView measure:  ${rootView.measure(rootView.measuredWidthAndState, rootView.measuredHeightAndState)}")
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val maxMetrics = manager.maximumWindowMetrics
+                        val metrics: WindowMetrics = manager.currentWindowMetrics
+                        Log.d(TAG, "max maxMetrics: ${maxMetrics.bounds}")
+                        Log.d(TAG, "max matrics: ${metrics.bounds}")
+                        val windowInsets = metrics.windowInsets
+                        val ignoreInsets = windowInsets.getInsetsIgnoringVisibility (
+                            WindowInsets.Type.navigationBars() or WindowInsets.Type.statusBars()
+                                or WindowInsets.Type.displayCutout() or WindowInsets.Type.systemBars()
+                        )
+//            val insetsWidth: Int = ignoreInsets.right + ignoreInsets.left
+//            val insetsHeight: Int = ignoreInsets.top + ignoreInsets.bottom
+//            val bounds = metrics.bounds
+//            Log.d(NAME, "_getSafeAreaInsets: $bounds")
+//            val legacySize = android.util.Size(bounds.width() - insetsWidth, bounds.height() - insetsHeight)
+                        safeareaInsets["top"] = ignoreInsets.top.toDouble()
+                        safeareaInsets["bottom"] = ignoreInsets.bottom.toDouble()
+                        safeareaInsets["left"] = ignoreInsets.left.toDouble()
+                        safeareaInsets["right"] = ignoreInsets.right.toDouble()
+                    } else {
+                        val insets = rootWindowInsets ?: break
+                        val outMetrics = DisplayMetrics()
+                        @Suppress("DEPRECATION")
+                        val display = activity.windowManager.defaultDisplay
+                        @Suppress("DEPRECATION")
+                        display.getMetrics(outMetrics)
+                        Log.d(NAME, "R aborve: $outMetrics")
+                        safeareaInsets["top"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetTop.toFloat()).toDouble()
+                        safeareaInsets["bottom"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetBottom.toFloat()).toDouble()
+                        safeareaInsets["left"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetLeft.toFloat()).toDouble()
+                        safeareaInsets["right"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetRight.toFloat()).toDouble()
+                        break
+                    }
+                    isInitialized = true
+                    break
+                }
+
+        }
+    }
     override fun getName(): String {
         return NAME
-    }
-
-    override fun getConstants(): Map<String, Double> {
-        return this._getSafeAreaInsets()
-    }
-
-    private fun _getSafeAreaInsets(): Map<String, Double> {
-        val safeareaInsets: HashMap<String, Double> = hashMapOf<String, Double>(
-            "top" to 0.0,
-            "bottom" to 0.0,
-            "left" to 0.0,
-            "right" to 0.0,
-        )
-        val activity = reactApplicationContext.currentActivity
-        if(activity == null) {
-            Log.d(NAME, "_getSafeAreaInsets: Error No activity...")
-            return safeareaInsets
-        }
-        val window = activity.window
-
-        val view = window.decorView
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            Log.d(NAME, "_getSafeAreaInsets: support Only Android Version 29 Higher!")
-            return safeareaInsets
-        }
-
-        val rootWindowInsets = view.rootWindowInsets
-        if(rootWindowInsets == null) {
-            Log.d(NAME, "_getSafeAreaInsets: rootWindowInsets is Null")
-            return safeareaInsets
-        }
-        val displayMatrix = reactApplicationContext.resources.displayMetrics
-        if(displayMatrix == null) {
-            Log.d(NAME, "_getSafeAreaInsets: displayMatrix is null")
-            return safeareaInsets
-        }
-        val density = displayMatrix.density.toDouble()
-        val insets = rootWindowInsets
-        Log.d(NAME, "_getSafeAreaInsets: ${displayMatrix}")
-        Log.d(NAME, "_getSafeAreaInsets: ${rootWindowInsets}")
-//        val isFullScreen:Boolean = _getIsFullScreen(window, view)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val getInsets = insets.getInsets(WindowInsets.Type.systemGestures())
-            safeareaInsets["top"] = getInsets.top.div(density)
-            safeareaInsets["bottom"] = getInsets.bottom.div(density)
-            safeareaInsets["left"] = getInsets.left.div(density)
-            safeareaInsets["right"] = getInsets.right.div(density)
-        } else {
-            safeareaInsets["top"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetTop.toFloat()).toDouble()
-            safeareaInsets["bottom"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetBottom.toFloat()).toDouble()
-            safeareaInsets["left"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetLeft.toFloat()).toDouble()
-            safeareaInsets["right"] = PixelUtil.toDIPFromPixel(insets.systemWindowInsetRight.toFloat()).toDouble()
-        }
-//        Log.d(NAME, "_getSafeAreaInsets: $insets")
-//        Log.d(NAME, "_getSafeAreaInsets: $isFullScreen")
-        return safeareaInsets
-    }
-    private fun _getIsFullScreen(window: Window, view: View):Boolean {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val insetController = view.windowInsetsController ?: return false
-            return insetController.systemBarsBehavior == WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        } else {
-            return (window.attributes.flags and WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0
-        }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = false)
     fun getSafeAreaInsets(cb: Callback) {
         try {
+            if (!isInitialized) {
+                cb("init")
+                return
+            }
 
-            val getSafeArea = _getSafeAreaInsets()
             val resultObject: WritableMap = WritableNativeMap()
-            for (entry in getSafeArea) {
+            for (entry in safeareaInsets) {
                 resultObject.putDouble(entry.key, entry.value)
             }
-            Log.d(NAME, "getSafeAreaInsets: Callback! result $getSafeArea")
+            Log.d(NAME, "getSafeAreaInsets: Callback! result $safeareaInsets")
             cb.invoke(resultObject)
         } catch (e:java.lang.Exception) {
             Log.d(NAME, "getSafeAreaInsets: Error $e")
@@ -113,3 +120,5 @@ class ScreenUtillModule(reactContext: ReactApplicationContext) :
         const val NAME = "ScreenUtill"
     }
 }
+
+

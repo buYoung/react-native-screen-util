@@ -14,26 +14,30 @@ export const useSingleton = (callback: () => any, dependencies: any[] = []) => {
     const lastDependencies = useRef<any[]>([]);
 
     // Parameters type check
-    if(typeof callback !== "function") {
-        throw new Error(`Incorrect callback parameter for useSingleton hook; expected a function, but got: '${typeof callback}'.`);
+    if (typeof callback !== "function") {
+        throw new Error(
+            `Incorrect callback parameter for useSingleton hook; expected a function, but got: '${typeof callback}'.`
+        );
     }
-    if(!Array.isArray(dependencies)) {
-        throw new Error(`Incorrect dependencies parameter for useSingleton; expected an array, but got: '${typeof dependencies}'.`);
+    if (!Array.isArray(dependencies)) {
+        throw new Error(
+            `Incorrect dependencies parameter for useSingleton; expected an array, but got: '${typeof dependencies}'.`
+        );
     }
 
     const hasDependencies = Array.isArray(dependencies) && dependencies.length > 0;
-    if(hasDependencies) {
-    // Has dependencies
+    if (hasDependencies) {
+        // Has dependencies
         const hasAnyDependencyChanged = !shallowArraysEqual(lastDependencies.current, dependencies);
-        if(hasAnyDependencyChanged) {
+        if (hasAnyDependencyChanged) {
             // Any dep has changed => overwrite last dependencies and execute callback
             lastDependencies.current = dependencies;
-        } else if(hasRan.current) {
+        } else if (hasRan.current) {
             // No dep has changed => same behaviour as if no dependencies
             return;
         }
-    } else if(hasRan.current) {
-    // No dependencies
+    } else if (hasRan.current) {
+        // No dependencies
         return;
     }
 

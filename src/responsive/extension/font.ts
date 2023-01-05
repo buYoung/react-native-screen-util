@@ -1,10 +1,10 @@
 import { ResponsiveStore } from "../";
 
-Number.prototype.fontSize    = function (): number {
+Number.prototype.fontSize = function (): number {
     const value = Number(this);
     try {
         const currentState = ResponsiveStore;
-        if(!currentState.checkNumberIsAllowRange(value)) {
+        if (!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
         return currentState._____getFont(value);
@@ -12,11 +12,11 @@ Number.prototype.fontSize    = function (): number {
         return value;
     }
 };
-Number.prototype.sp          = function (): number {
+Number.prototype.sp = function (): number {
     const value = Number(this);
     try {
         const currentState = ResponsiveStore;
-        if(!currentState.checkNumberIsAllowRange(value)) {
+        if (!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
         return currentState._____getFont(value);

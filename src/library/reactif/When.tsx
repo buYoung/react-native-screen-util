@@ -24,9 +24,8 @@ const WhenFn: FC<ComponentWithConditionPropsWithFunctionChildren> = ({ condition
     return conditionResult && children ? render({ children }) : null;
 };
 
-
 export const When = _memo(WhenFn, _shallowFn);
 
 WhenFn.defaultProps = {
-    children : null
+    children: null
 };

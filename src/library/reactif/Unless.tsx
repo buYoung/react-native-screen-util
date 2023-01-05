@@ -25,7 +25,7 @@ export const UnlessFn: FC<ComponentWithConditionPropsWithFunctionChildren> = ({ 
 };
 
 UnlessFn.defaultProps = {
-    children : null
+    children: null
 };
 
 export const Unless = _memo(UnlessFn, _shallowFn);

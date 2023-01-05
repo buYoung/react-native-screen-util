@@ -19,11 +19,16 @@ export interface screenResponsiveCheckerAction {
 export interface screenResponsiveSetterAction {
     setScreenResponsiveInitialize(option?: ScreenUtilInitilizeParams): Promise<setStateResultType>;
     setScreenSizeRatio(): setStateResultType;
+    setScreenReScreeenSizeRatio(width: number, height: number): setStateResultType;
     setScreenSafeInset(): Promise<setStateResultType>;
 }
 export interface screenResponsiveSetterActionPrivate {
     copyData(data: screenResponsiveState): void;
 }
 
-export type screenResponsiveActionUnion = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterAction;
-export type screenResponsiveActionUnionPrivate = screenResponsiveGetterAction & screenResponsiveCheckerAction & screenResponsiveSetterActionPrivate;
+export type screenResponsiveActionUnion = screenResponsiveGetterAction &
+    screenResponsiveCheckerAction &
+    screenResponsiveSetterAction;
+export type screenResponsiveActionUnionPrivate = screenResponsiveGetterAction &
+    screenResponsiveCheckerAction &
+    screenResponsiveSetterActionPrivate;

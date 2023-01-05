@@ -1,11 +1,10 @@
 import { ResponsiveStore } from "../";
 
-
-Number.prototype.w           = function (): number {
+Number.prototype.w = function (): number {
     const value = Number(this);
     try {
         const currentState = ResponsiveStore;
-        if(!currentState.checkNumberIsAllowRange(value)) {
+        if (!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
         return currentState._____getWidth(value);
@@ -13,11 +12,11 @@ Number.prototype.w           = function (): number {
         return value;
     }
 };
-Number.prototype.width       = function (): number {
+Number.prototype.width = function (): number {
     const value = Number(this);
     try {
         const currentState = ResponsiveStore;
-        if(!currentState.checkNumberIsAllowRange(value)) {
+        if (!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
         return currentState._____getWidth(value);
@@ -25,11 +24,11 @@ Number.prototype.width       = function (): number {
         return value;
     }
 };
-Number.prototype.h           = function (): number {
+Number.prototype.h = function (): number {
     const value = Number(this);
     try {
         const currentState = ResponsiveStore;
-        if(!currentState.checkNumberIsAllowRange(value)) {
+        if (!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
         return currentState._____getHeight(value);
@@ -37,11 +36,11 @@ Number.prototype.h           = function (): number {
         return value;
     }
 };
-Number.prototype.height      = function (): number {
+Number.prototype.height = function (): number {
     const value = Number(this);
     try {
         const currentState = ResponsiveStore;
-        if(!currentState.checkNumberIsAllowRange(value)) {
+        if (!currentState.checkNumberIsAllowRange(value)) {
             return value;
         }
         return currentState._____getHeight(value);

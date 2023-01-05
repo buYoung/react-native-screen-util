@@ -6,12 +6,12 @@
  * @param message The message to throw if `condition` resolves to `true`
  */
 export function tinyWarning(condition: boolean, message: string): asserts condition {
-    if(__DEV__) {
-        if(condition) {
+    if (__DEV__) {
+        if (condition) {
             // check console for IE9 support which provides console
             // only with open devtools
 
-            if(typeof console !== "undefined") {
+            if (typeof console !== "undefined") {
                 console.warn(message);
             }
 

@@ -1,7 +1,7 @@
 declare global {
     interface Number {
         width(): number;
-        w(): number
+        w(): number;
         height(): number;
         h(): number;
     }

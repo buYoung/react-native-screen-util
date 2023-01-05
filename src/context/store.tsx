@@ -1,71 +1,98 @@
 import type { ScaledSize } from "react-native";
-import { Dimensions, NativeModules, Platform, StatusBar } from "react-native";
+import { Dimensions, NativeModules, StatusBar } from "react-native";
 import { createStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import type { StoreApi, Mutate } from "zustand/vanilla";
+import type { Mutate, StoreApi } from "zustand/vanilla";
 import { inRange, isString, isValueNumber, round } from "../library/lodash";
 import type {
-    screenResponsiveState,
     SafeAreaInsetType,
+    screenResponsiveActionUnion,
+    screenResponsiveState,
     ScreenUtilInitilizeParams,
-    setStateResultType,
-    screenResponsiveActionUnion
+    setStateResultType
 } from "../type";
 import { OrientationType } from "../type";
 import "../responsive/extension";
+
 const initializeState = {
-    safeAreaInset  : {
-        top   : 0,
+    safeAreaInset: {
+        top: 0,
         bottom: 0,
-        left  : 0,
-        right : 0
+        left: 0,
+        right: 0
     },
-    screenSize  : {
-        width    : 0,
-        height   : 0,
-        scale    : 0,
+    screenSize: {
+        width: 0,
+        height: 0,
+        scale: 0,
         fontScale: 0
     },
-    scaleHeight    : 0,
-    scaleWidth     : 0,
-    debug          : true,
-    minTextSize    : true,
-    safeArea       : true,
-    scaleByHeight  : false,
+    mainUI: { width: 0, height: 0 },
+    scaleHeight: 0,
+    scaleWidth: 0,
+    debug: true,
+    minTextSize: true,
+    safeArea: true,
+    scaleByHeight: false,
     splitScreenMode: false,
-    uiWidth        : 360,
-    uiHeight       : 690,
-    font           : 0
+    uiWidth: 360,
+    uiHeight: 690,
+    font: 0
 };
+
+// const enum DpiEnum {
+//     ldpi = 36,
+//     mdpi = 48,
+//     hdpi = 72,
+//     xhdpi = 96,
+//     xxhdpi = 144,
+//     xxxhdpi = 192
+// }
+
+// const Dpi: Record<DpiEnum, [number, number]> = {
+//     [DpiEnum.ldpi]: [0.75, 0.99],
+//     [DpiEnum.mdpi]: [1, 1.499],
+//     [DpiEnum.hdpi]: [1.5, 2],
+//     [DpiEnum.xhdpi]: [2, 3],
+//     [DpiEnum.xxhdpi]: [3, 4],
+//     [DpiEnum.xxxhdpi]: [4, 10]
+// };
+
 export type ScreemResponsiveStoreUnion = screenResponsiveState & screenResponsiveActionUnion;
 
-export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveStoreUnion>, [ [ "zustand/subscribeWithSelector", never ] ]> {
+export function createScreenResponsiveStore(): Mutate<
+    StoreApi<ScreemResponsiveStoreUnion>,
+    [["zustand/subscribeWithSelector", never]]
+> {
     return createStore<ScreemResponsiveStoreUnion>()(
         subscribeWithSelector(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            (set, get, store) => ({
+            (set, get) => ({
                 screenUtilInitialize: false,
-                orientation         : false,
+                orientation: false,
                 ...initializeState,
                 getOrientation(): OrientationType {
                     const currentState = get();
-                    if(!currentState.screenSize) {
+                    if (!currentState.screenSize) {
+                        return OrientationType.NONE;
+                    }
+                    if (isNaN(currentState.screenSize.width) || isNaN(currentState.screenSize.height)) {
                         return OrientationType.NONE;
                     }
                     const orientationState = currentState.screenSize.width < currentState.screenSize.height;
-                    if(orientationState) {
+                    if (orientationState) {
                         return OrientationType.POTTRAIT;
                     }
                     return OrientationType.LANDSCAPE;
                 },
-                getInitialize : async (): Promise<boolean> => {
+                getInitialize: async (): Promise<boolean> => {
                     let promiseCheckTimer = -1;
                     return new Promise((resolve): void => {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-ignore
                         promiseCheckTimer = setInterval(() => {
-                            if(!get().screenUtilInitialize) {
+                            if (!get().screenUtilInitialize) {
                                 return;
                             }
                             resolve(true);
@@ -75,47 +102,51 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                 },
                 getSpacing(value: number): number {
                     const currentState = get();
-                    if(!currentState.scaleWidth) {
+                    if (!currentState.scaleWidth) {
                         return value;
                     }
-                    if(!currentState.scaleHeight) {
+                    if (!currentState.scaleHeight) {
                         return value;
                     }
                     return Math.min(currentState.scaleWidth, currentState.scaleHeight) * value;
                 },
                 getSafeArea(): SafeAreaInsetType | undefined {
                     const safeAreaInset = get().safeAreaInset;
-                    if(!get().safeAreaInset) {
+                    if (!get().safeAreaInset) {
                         return undefined;
                     }
                     return safeAreaInset;
                 },
                 getDefaultStyle(): ScreenUtilInitilizeParams {
                     return {
-                        height       : 0,
-                        width        : 0,
+                        height: 0,
+                        width: 0,
+                        mainUI: { width: 0, height: 0 },
                         safeAreaInset: {
-                            top   : 0,
+                            top: 0,
                             bottom: 0,
-                            left  : 0,
-                            right : 0
+                            left: 0,
+                            right: 0,
+                            fontScale: 0,
+                            realWidth: 0,
+                            realHeight: 0,
+                            screenScale: 0
                         },
-                        screenSize     : Dimensions.get("window"),
-                        scaleHeight    : 0,
-                        scaleWidth     : 0,
-                        debug          : true,
-                        minTextSize    : true,
-                        safeArea       : true,
-                        scaleByHeight  : false,
+                        screenSize: Dimensions.get("window"),
+                        scaleHeight: 0,
+                        scaleWidth: 0,
+                        debug: true,
+                        minTextSize: true,
+                        safeArea: true,
+                        scaleByHeight: false,
                         splitScreenMode: false,
-                        uiWidth        : 360,
-                        uiHeight       : 690,
-                        font           : 0
+                        uiWidth: 360,
+                        uiHeight: 690,
+                        font: 0
                     } as ScreenUtilInitilizeParams;
                 },
                 checkIfValueIsNull<T>(value: T): boolean {
                     // if(!get().screenUtilInitialize) return false;
-
                     switch (typeof value) {
                         case "string":
                             return value !== "";
@@ -134,82 +165,140 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                     }
                 },
                 checkNumberIsAllowRange(value: number): boolean {
-                    if(!get().screenUtilInitialize) return false;
+                    if (!get().screenUtilInitialize) return false;
                     return isValueNumber(value) && inRange(value, 1, 10000);
                 },
                 async setScreenResponsiveInitialize(option?: ScreenUtilInitilizeParams): Promise<setStateResultType> {
-                    if(!NativeModules.ScreenUtill) {
+                    if (!NativeModules.ScreenUtill) {
                         return {
-                            error  : true,
+                            error: true,
                             message: "not load Native Module.... insetUtil"
                         };
                     }
+
                     try {
-                        if(!option) {
+                        if (!option) {
                             option = get().getDefaultStyle();
                         }
                         await get().setScreenSafeInset();
                         try {
-                            const width     = option.width;
-                            const height    = option.height;
+                            const width = option.width;
+                            const height = option.height;
+
                             set({
-                                screenSize     : option.screenSize,
-                                safeArea       : option.safeArea,
-                                debug          : option.debug,
-                                uiWidth        : width,
-                                uiHeight       : height,
-                                minTextSize    : option.minTextSize,
-                                scaleByHeight  : option.scaleByHeight,
+                                screenSize: option.screenSize,
+                                safeArea: option.safeArea,
+                                debug: option.debug,
+                                uiWidth: width,
+                                uiHeight: height,
+                                minTextSize: option.minTextSize,
+                                scaleByHeight: option.scaleByHeight,
                                 splitScreenMode: option.splitScreenMode
                             });
                             const setScreenSizeRatioResult = get().setScreenSizeRatio();
-                            if(setScreenSizeRatioResult.error) {
+                            if (setScreenSizeRatioResult.error) {
                                 return setScreenSizeRatioResult;
                             }
                         } catch (e) {
                             return makeErrorResult(e);
                         }
-                        set({ screenUtilInitialize : true });
+                        set({ screenUtilInitialize: true });
                         return {
-                            error  : false,
+                            error: false,
                             message: "success"
                         };
                     } catch (e: any) {
                         return makeErrorResult(e);
                     }
                 },
+                setScreenReScreeenSizeRatio(width, height): setStateResultType {
+                    try {
+                        const currentState = get();
+                        currentState.screenSize.width = width;
+                        currentState.screenSize.height = height;
+                        const screenSize: ScaledSize = { ...currentState.screenSize } as ScaledSize;
+
+                        screenSize.width = width;
+                        screenSize.height = height;
+                        const defaultScale = { ...screenSize } as ScaledSize;
+                        const fontScale = { ...screenSize } as ScaledSize;
+
+                        const uiSize = {
+                            ...{
+                                uiWidth: currentState.uiWidth,
+                                uiHeight: currentState.uiHeight
+                            }
+                        };
+                        defaultScale.width = round(defaultScale.width / uiSize.uiWidth, 3);
+                        defaultScale.height = round(defaultScale.height / uiSize.uiHeight, 3);
+                        let fontWidth = round(fontScale.width / uiSize.uiWidth, 3);
+                        let fontHeight = round(fontScale.height / uiSize.uiHeight, 3);
+                        if (!fontWidth) {
+                            fontWidth = defaultScale.width;
+                        }
+                        if (!fontHeight) {
+                            fontHeight = defaultScale.height;
+                        }
+
+                        set({
+                            scaleWidth: defaultScale.width,
+                            scaleHeight: defaultScale.height,
+                            font: currentState.minTextSize ? Math.min(fontWidth, fontHeight) : fontWidth
+                        });
+                        return {
+                            error: false,
+                            message: "success"
+                        };
+                    } catch (e) {
+                        return makeErrorResult(e);
+                    }
+                },
                 setScreenSizeRatio(): setStateResultType {
                     try {
-                        const currentState      = get();
-                        if(!get().checkIfValueIsNull(currentState.screenSize)) {
+                        const currentState = get();
+                        if (!get().checkIfValueIsNull(currentState.screenSize)) {
                             return {
-                                error  : true,
+                                error: true,
                                 message: "dimension value is null"
                             };
                         }
-                        const calcSafeAreaInset = getCalcSafeAreaInset((get() as screenResponsiveActionUnion), (currentState as screenResponsiveState));
-                        if("error" in calcSafeAreaInset) {
-                            return calcSafeAreaInset;
+                        let statusbar = StatusBar.currentHeight;
+                        if (!statusbar) {
+                            statusbar = 0;
                         }
-                        currentState.screenSize = calcSafeAreaInset;
-                        const screenSize  = { ...currentState.screenSize };
-                        const uiSize      = {...{
-                            uiWidth : currentState.uiWidth,
-                            uiHeight: currentState.uiHeight
-                        }};
-                        screenSize.width /= uiSize.uiWidth;
-                        screenSize.height /= uiSize.uiHeight;
-                        screenSize.width  = round(screenSize.width, 3);
-                        screenSize.height = round(screenSize.height, 3);
+                        const screenSize: ScaledSize = { ...currentState.screenSize } as ScaledSize;
+
+                        screenSize.width = currentState.screenSize.width;
+                        screenSize.height = currentState.screenSize.height - statusbar;
+
+                        const defaultScale = { ...screenSize } as ScaledSize;
+                        const fontScale = { ...screenSize } as ScaledSize;
+                        const uiSize = {
+                            ...{
+                                uiWidth: currentState.uiWidth,
+                                uiHeight: currentState.uiHeight
+                            }
+                        };
+                        defaultScale.width = round(defaultScale.width / uiSize.uiWidth, 3);
+                        defaultScale.height = round(defaultScale.height / uiSize.uiHeight, 3);
+                        let fontWidth = round(fontScale.width / uiSize.uiWidth, 3);
+                        let fontHeight = round(fontScale.height / uiSize.uiHeight, 3);
+                        if (!fontWidth) {
+                            fontWidth = defaultScale.width;
+                        }
+                        if (!fontHeight) {
+                            fontHeight = defaultScale.height;
+                        }
+
                         set({
-                            scaleWidth : screenSize.width,
-                            scaleHeight: screenSize.height,
-                            uiWidth    : currentState.uiWidth,
-                            uiHeight   : currentState.uiHeight,
-                            font       : currentState.minTextSize ? Math.min(screenSize.width, screenSize.height) : screenSize.width
+                            scaleWidth: defaultScale.width,
+                            scaleHeight: defaultScale.height,
+                            uiWidth: currentState.uiWidth,
+                            uiHeight: currentState.uiHeight,
+                            font: currentState.minTextSize ? Math.min(fontWidth, fontHeight) : fontWidth
                         });
                         return {
-                            error  : false,
+                            error: false,
                             message: "success"
                         };
                     } catch (e) {
@@ -221,21 +310,26 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         try {
                             NativeModules.ScreenUtill.getSafeAreaInsets((v: SafeAreaInsetType) => {
                                 try {
-                                    const keyList          = Object.keys(v);
+                                    const keyList = Object.keys(v);
                                     const setSafeAreaInset = {
-                                        top   : 0,
+                                        top: 0,
                                         bottom: 0,
-                                        left  : 0,
-                                        right : 0
+                                        left: 0,
+                                        right: 0,
+                                        fontScale: 0,
+                                        realHeight: 0,
+                                        realWidth: 0,
+                                        screenScale: 0
                                     } as SafeAreaInsetType;
                                     for (let i = 0; i < keyList.length; i++) {
                                         const key = keyList[i] as keyof typeof v;
                                         setSafeAreaInset[key] = v[key];
                                     }
 
-                                    set(({ safeAreaInset : setSafeAreaInset }));
+                                    set({ safeAreaInset: setSafeAreaInset });
+
                                     resolve({
-                                        error  : false,
+                                        error: false,
                                         message: "success"
                                     });
                                 } catch (e) {
@@ -247,83 +341,32 @@ export function createScreenResponsiveStore(): Mutate<StoreApi<ScreemResponsiveS
                         }
                     });
                 }
-            })));
+            })
+        )
+    );
 }
-function getCalcSafeAreaInset(currentState: screenResponsiveActionUnion, state: screenResponsiveState): ScaledSize | setStateResultType {
-    if(!state.safeArea) {
-        return {
-            error  : true,
-            message: "safeArea is not Enabled"
-        };
-    }
-    if(!state.safeAreaInset) {
-        return {
-            error  : true,
-            message: "safeAreaInset Is null"
-        };
-    }
-    if(!currentState.checkIfValueIsNull(state.safeAreaInset)) {
-        return {
-            error  : true,
-            message: "safeAreaInset Is null"
-        };
-    }
-    const statusBarHeight = StatusBar.currentHeight;
-    if(currentState.getOrientation() === OrientationType.POTTRAIT) {
-        let TopInset = Platform.select({
-            android: state.safeAreaInset.top,
-            ios    : 0
-        });
-        if(!TopInset) {
-            TopInset = 0;
-        }
-        state.screenSize.height += (TopInset + state.safeAreaInset.bottom);
-        return state.screenSize;
-    }
-    if(currentState.getOrientation() === OrientationType.LANDSCAPE) {
-        let LeftInset = Platform.select({
-            android: state.safeAreaInset.left,
-            ios    : 0
-        });
-        if(!LeftInset) {
-            LeftInset = 0;
-        }
-        state.screenSize.width += (LeftInset + state.safeAreaInset.right);
-        return state.screenSize;
-    }
-    if(!statusBarHeight) {
-        return {
-            error  : true,
-            message: "react native statusBar is Null"
-        };
-    }
-    state.screenSize.height += statusBarHeight;
-    return state.screenSize;
-}
-
 function makeErrorResult(e: any): setStateResultType {
     let message = "error";
-    if(isString(e)) {
+    if (isString(e)) {
         e = message;
     }
     message = e.message;
     return {
-        error  : false,
+        error: false,
         message: message
     };
 }
 
 export function numberValueCheckIsNull(value: number): boolean {
-
     return isValueNumber(value) && inRange(value, 1, 10000);
 }
 
 function objectValueCheckIsNull<T>(currentState: ScreemResponsiveStoreUnion, value: T): boolean {
-    if(!value) {
+    if (!value) {
         return false;
     }
-    const freezeKey         = Object.freeze(value);
-    const freezeValues      = Object.values(freezeKey);
+    const freezeKey = Object.freeze(value);
+    const freezeValues = Object.values(freezeKey);
     const result: boolean[] = [];
 
     for (let i = 0; i < freezeValues.length; i++) {
