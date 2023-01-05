@@ -31,7 +31,7 @@
         "typecheck": "tsc --noEmit",
         "lint": "eslint \"**/*.{js,ts,tsx}\"",
         "prepack": "bob build",
-        "release": "export GITHUB_TOKEN=$(gh auth token) && release-it",
+        "release": "release-it",
         "example": "yarn --cwd example",
         "bootstrap": "yarn example && yarn install",
         "scan": "qodana scan --show-report"
@@ -114,9 +114,12 @@
             "publish": true
         },
         "github": {
-            "release": true,
-            "preRelease": true,
-            "token": true
+            "release": true
+        },
+        "hooks": {
+            "before:init": [
+                "export GITHUB_TOKEN=$(gh auth token)"
+            ]
         }
     },
     "react-native-builder-bob": {
