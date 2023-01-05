@@ -1,4 +1,4 @@
-import type { NamedStyles, responsiveStyleSheetOption, responsiveAllowListCircle } from "./type";
+import type { NamedStyles, responsiveAllowListCircle } from "./type";
 import {
     responsiveAllowList,
     responsiveAllowListCircleKeys,
@@ -7,17 +7,43 @@ import {
 } from "./type";
 import { ResponsiveStore } from "../storePrivate";
 
+export type screenSizeChangeProps = {
+    width: number;
+    height: number;
+};
+type storeType = typeof ResponsiveStore.store;
+// type onSizeChange = {
+//     (
+//         listener: (
+//             selectedState: ScreemResponsiveStoreUnionPrivate,
+//             previousSelectedState: ScreemResponsiveStoreUnionPrivate
+//         ) => void
+//     ): () => void;
+//     <U>(
+//         selector: (state: ScreemResponsiveStoreUnionPrivate) => U,
+//         listener: (selectedState: U, previousSelectedState: U) => void,
+//         options?:
+//             | {
+//                   equalityFn?: ((a: U, b: U) => boolean) | undefined;
+//                   fireImmediately?: boolean | undefined;
+//               }
+//             | undefined
+//     ): () => void;
+// };
 class ResponsiveStyleSheetInstance {
-    // store = ResponsiveStore;
-    create<T extends NamedStyles<T> | NamedStyles<any>>(
-        styles: T | NamedStyles<T>,
-        option?: responsiveStyleSheetOption
-    ): T {
-        if (option) {
-            if (option.freeze) {
-                styles = Object.freeze(styles);
+    store: storeType;
+    create<T extends NamedStyles<T> | NamedStyles<any>>(styles: T | NamedStyles<T>): T {
+        const subscribe = this.store.subscribe(
+            (state) => state.screenSize,
+            (state, prev) => {
+                if (state.width === prev.width && state.height === prev.height) {
+                    return;
+                }
+                // console.log("state,/**/ change", state, prev);
+                subscribe();
+                this.create(styles);
             }
-        }
+        );
         return this._styleParse(styles);
     }
     _styleParse<T extends NamedStyles<T> | NamedStyles<any>>(styles: T | NamedStyles<T>): T {
@@ -103,15 +129,15 @@ class ResponsiveStyleSheetInstance {
                                 styles[key][inkey] = ResponsiveStore._____getHeight(value);
                             }
                             break;
-                        case responsiveCreateEnum.borderRadius:
+                        case responsiveCreateEnum.mixin:
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
-                            styles[key][inkey] = ResponsiveStore._____getCircle(value);
+                            styles[key][inkey] = ResponsiveStore._____getMixin(value);
                             break;
                         case responsiveCreateEnum.fontSize:
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
-                            styles[key][inkey] = ResponsiveStore._____getHeight(value);
+                            styles[key][inkey] = ResponsiveStore._____getFont(value);
                             break;
                         case responsiveCreateEnum.margin:
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -122,6 +148,16 @@ class ResponsiveStyleSheetInstance {
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             styles[key][inkey] = ResponsiveStore._____getSpacing(value);
+                            break;
+                        case responsiveCreateEnum.borderRadius:
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            styles[key][inkey] = ResponsiveStore._____getCircle(value);
+                            break;
+                        case responsiveCreateEnum.borderWidth:
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            styles[key][inkey] = ResponsiveStore._____getMixin(value);
                             break;
                         default:
                             break;
@@ -155,6 +191,9 @@ class ResponsiveStyleSheetInstance {
         } catch (e) {
             return false;
         }
+    }
+    constructor() {
+        this.store = ResponsiveStore.store;
     }
 }
 

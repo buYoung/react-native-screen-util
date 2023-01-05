@@ -6,5 +6,5 @@ export const onViewSizeChangeEvent = new EventEmitter2({
     newListener: true,
     maxListeners: 1000,
     removeListener: true,
-    verboseMemoryLeak: true,
+    verboseMemoryLeak: true
 });

@@ -12,7 +12,7 @@ import type { ScreemResponsiveStoreUnion } from "./store";
 import { createScreenResponsiveStore } from "./store";
 import type { EqualityFunctionUnion } from "../library";
 import { createEqualityFunctionStore, Else, Fallback, If, Then } from "../library";
-import { ResponsiveStore } from "../responsive/storePrivate";
+import { ResponsiveStore } from "../responsive";
 import type { equalityFunctionStore, screenResponsiveState, ScreenUtilDesignSize } from "../type";
 import { equalityFunctionEnum, OrientationType } from "../type";
 
@@ -40,8 +40,7 @@ type responsiveContainerStyle2 = {
 };
 const rootViewStyle = StyleSheet.create<responsiveContainerStyle2>({
     rootView: {
-        flexGrow: 1,
-        opacity: 0
+        flexGrow: 1
     }
 });
 
@@ -79,7 +78,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
         StyleSheet.create<responsiveContainerStyle>({
             responsiveContainer: {
                 flexGrow: 1,
-                backgroundColor: "green",
+                backgroundColor: "green"
             }
         })
     );
@@ -92,7 +91,6 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
             const result = await storeRef.current.getState().setScreenResponsiveInitialize(option);
             if (result.error) {
                 return;
-                // console.log("error ResponsiveScreen", result.message);
             }
             if (autoInset && Platform.OS === "ios") {
                 const orientation = storeRef.current.getState().getOrientation();
@@ -124,7 +122,6 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
             (state: screenResponsiveState) => state,
             (state) => {
                 ResponsiveStore.getAction().copyData(state);
-                // console.log("값 갱ㄷ신됨!!", state.scaleWidth, state.scaleWidth)
             },
             {
                 equalityFn: (a, b) => getAreEqual[0](a, b),
@@ -155,9 +152,7 @@ export function ResponsiveProvider({ children, option, loading, autoInset }: Res
         }
         const width = event.nativeEvent.layout.width;
         const height = event.nativeEvent.layout.height;
-        // onViewLoading.on('size', ())
         storeRef.current.getState().setScreenReScreeenSizeRatio(width, height);
-        // console.log(width, height);
     }, []);
 
     return (

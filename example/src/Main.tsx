@@ -13,6 +13,7 @@ function MainHome(): JSX.Element {
             </View>
             <View key={"body"} style={styles.cardBodyContainer}>
                 {/*<CardComponent/>*/}
+                {/*<CardComponent/>*/}
             </View>
             <View key={"bottom"} style={styles.bottomContainer}>
                 <Image style={{ ...styles.iconDefaultSize }} source={Assets.icons.library} />

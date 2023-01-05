@@ -10,7 +10,7 @@ export default function App(): JSX.Element {
         <ResponsiveProvider
             option={{
                 width: 390, // Design Sample Size Iphone 14
-                height: 844,
+                height: 750,
                 safeArea: true,
                 minTextSize: true,
                 scaleByHeight: false,

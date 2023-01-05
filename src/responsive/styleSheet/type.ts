@@ -3,13 +3,23 @@ import type { ImageStyle, TextStyle, ViewStyle } from "react-native";
 export type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle | any };
 export const enum responsiveCreateEnum {
     width,
+    mixin,
     height,
     fontSize,
     margin,
     padding,
-    borderRadius
+    borderRadius,
+    borderWidth
 }
 export const responsiveAllowList: Record<string, responsiveCreateEnum> = {
+    top: responsiveCreateEnum.mixin,
+    bottom: responsiveCreateEnum.mixin,
+    left: responsiveCreateEnum.mixin,
+    right: responsiveCreateEnum.mixin,
+    maxHeight: responsiveCreateEnum.height,
+    maxWidth: responsiveCreateEnum.width,
+    minHeight: responsiveCreateEnum.height,
+    minWidth: responsiveCreateEnum.width,
     width: responsiveCreateEnum.width,
     height: responsiveCreateEnum.height,
     fontSize: responsiveCreateEnum.fontSize,
@@ -31,7 +41,14 @@ export const responsiveAllowList: Record<string, responsiveCreateEnum> = {
     borderTopRightRadius: responsiveCreateEnum.borderRadius,
     borderTopLeftRadius: responsiveCreateEnum.borderRadius,
     borderBottomLeftRadius: responsiveCreateEnum.borderRadius,
-    borderBottomRightRadius: responsiveCreateEnum.borderRadius
+    borderBottomRightRadius: responsiveCreateEnum.borderRadius,
+    borderWidth: responsiveCreateEnum.borderWidth,
+    borderTopWidth: responsiveCreateEnum.borderWidth,
+    borderStartWidth: responsiveCreateEnum.borderWidth,
+    borderRightWidth: responsiveCreateEnum.borderWidth,
+    borderLeftWidth: responsiveCreateEnum.borderWidth,
+    borderEndWidth: responsiveCreateEnum.borderWidth,
+    borderBottomWidth: responsiveCreateEnum.borderWidth
 };
 export const responsiveAllowListKeys = Object.freeze(Object.getOwnPropertyNames(responsiveAllowList));
 

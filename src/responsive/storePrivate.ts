@@ -1,18 +1,17 @@
 import { Dimensions, PixelRatio } from "react-native";
-import {deepEqual} from "fast-equals";
 import create from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import { inRange, isValueNumber } from "../library";
+import { onViewSizeChangeEvent } from "../library/event/bus";
 import type {
     SafeAreaInsetType,
     screenResponsiveActionUnionPrivate,
-    screenResponsiveState, screenResponsiveStatePrivate,
+    screenResponsiveState,
+    screenResponsiveStatePrivate,
     ScreenUtilInitilizeParams
 } from "../type";
 import { OrientationType } from "../type";
 import "./extension";
-import shallow from "zustand/shallow";
-import { subscribeWithSelector } from "zustand/middleware";
-import { onViewSizeChangeEvent } from "../library/event/bus";
 
 export {};
 const initializeState = {
@@ -43,12 +42,11 @@ const initializeState = {
 export type ScreemResponsiveStoreUnionPrivate = screenResponsiveStatePrivate & screenResponsiveActionUnionPrivate;
 class responsivePrivateVarial {
     store = create<ScreemResponsiveStoreUnionPrivate>()(
-        subscribeWithSelector(
-        (set, get) => ({
+        subscribeWithSelector((set, get) => ({
             screenUtilInitialize: false,
             orientation: false,
-            oldSize: { width: 0, height:0 },
-            nextSize: { width: 0, height:0 },
+            oldSize: { width: 0, height: 0 },
+            nextSize: { width: 0, height: 0 },
             ...initializeState,
             getOrientation(): OrientationType {
                 const currentState = get();
@@ -163,11 +161,11 @@ class responsivePrivateVarial {
                 } as screenResponsiveState;
                 const prev = {
                     width: a.screenSize.width,
-                    height: a.screenSize.height,
+                    height: a.screenSize.height
                 };
                 const next = {
                     width: b.screenSize.width,
-                    height: b.screenSize.height,
+                    height: b.screenSize.height
                 };
                 if (prev.width === next.width && prev.height === next.height) {
                     return;
@@ -175,8 +173,8 @@ class responsivePrivateVarial {
                 onViewSizeChangeEvent.emit("change", [prev, next]);
                 set(data);
             }
-        })
-    ));
+        }))
+    );
     getState(): screenResponsiveState {
         return this.store.getState() as screenResponsiveState;
     }
@@ -208,7 +206,7 @@ class responsivePrivateVarial {
     }
     _____getFont(value: number): number {
         const font = this.store.getState().font;
-        if (!this.checkNumberIsAllowRange(font)) {
+        if (font < 0) {
             return value;
         }
         return PixelRatio.roundToNearestPixel(font * value);
@@ -217,7 +215,7 @@ class responsivePrivateVarial {
         const currentState = this.store.getState();
         const screenWidth = currentState.scaleWidth;
         const screenSizeWidth = currentState.screenSize.width;
-        if (!this.checkNumberIsAllowRange(screenWidth)) {
+        if (screenWidth < 0) {
             return value;
         }
         if (!this.checkNumberIsAllowRange(screenSizeWidth)) {
@@ -229,27 +227,49 @@ class responsivePrivateVarial {
         const currentState = this.store.getState();
         const screenHeight = currentState.scaleHeight;
         const screenSizeHeight = currentState.screenSize.height;
-        if (!this.checkNumberIsAllowRange(screenHeight)) {
+        if (screenHeight < 0) {
             return value;
         }
         if (!this.checkNumberIsAllowRange(screenSizeHeight)) {
             return value;
         }
-        return PixelRatio.roundToNearestPixel(Math.min(screenHeight * value, screenSizeHeight));
+        return PixelRatio.roundToNearestPixel(Math.min(value * screenHeight, screenSizeHeight));
     }
     _____getCircle(value: number): number {
         const currentState = this.store.getState();
         const screenWidth = currentState.scaleWidth;
-        const screenSizeWidth = currentState.screenSize.width;
         const screenHeight = currentState.scaleHeight;
+        const screenSizeWidth = currentState.screenSize.width;
         const screenSizeHeight = currentState.screenSize.height;
-        if (!this.checkNumberIsAllowRange(screenWidth)) {
+        if (screenWidth < 0) {
+            return value;
+        }
+        if (screenHeight < 0) {
             return value;
         }
         if (!this.checkNumberIsAllowRange(screenSizeWidth)) {
             return value;
         }
-        if (!this.checkNumberIsAllowRange(screenHeight)) {
+        if (!this.checkNumberIsAllowRange(screenSizeHeight)) {
+            return value;
+        }
+        const width = Math.min(screenWidth * value, screenSizeWidth);
+        const height = Math.min(screenHeight * value, screenSizeHeight);
+        return PixelRatio.roundToNearestPixel((width + height) / 2);
+    }
+    _____getMixin(value: number): number {
+        const currentState = this.store.getState();
+        const screenWidth = currentState.scaleWidth;
+        const screenHeight = currentState.scaleHeight;
+        const screenSizeWidth = currentState.screenSize.width;
+        const screenSizeHeight = currentState.screenSize.height;
+        if (screenWidth < 0) {
+            return value;
+        }
+        if (screenHeight < 0) {
+            return value;
+        }
+        if (!this.checkNumberIsAllowRange(screenSizeWidth)) {
             return value;
         }
         if (!this.checkNumberIsAllowRange(screenSizeHeight)) {
@@ -263,10 +283,10 @@ class responsivePrivateVarial {
         const currentState = this.store.getState();
         const screenWidth = currentState.scaleWidth;
         const screenHeight = currentState.scaleHeight;
-        if (!this.checkNumberIsAllowRange(screenHeight)) {
+        if (screenWidth < 0) {
             return value;
         }
-        if (!this.checkNumberIsAllowRange(screenWidth)) {
+        if (screenHeight < 0) {
             return value;
         }
         return PixelRatio.roundToNearestPixel(Math.min(screenWidth, screenHeight) * value);
@@ -274,11 +294,6 @@ class responsivePrivateVarial {
     checkNumberIsAllowRange(value: number): boolean {
         if (!this.store.getState().screenUtilInitialize) return false;
         return isValueNumber(value) && inRange(value, 1, 10000);
-    }
-    constructor() {
-        // this.store.subscribe((state, _prevState) => {
-        //     console.log("private State Change", state);
-        // });
     }
 }
 const ResponsiveStore = new responsivePrivateVarial();

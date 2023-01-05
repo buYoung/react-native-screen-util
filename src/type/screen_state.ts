@@ -13,6 +13,6 @@ export interface screenResponsiveStatePrivate extends ScreenUtilDesignSizeDefaul
 }
 
 export interface screenResponsiveSizeMatter {
-    width: number,
-    height: number
+    width: number;
+    height: number;
 }
