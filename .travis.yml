@@ -1,4 +1,0 @@
-script:
-  - git remote rm origin
-  - git remote add origin https://buYoung:${GITHUB_TOKEN}@github.com/buYoung/react-native-screen-util.git
-  - git symbolic-ref HEAD refs/heads/masterw
