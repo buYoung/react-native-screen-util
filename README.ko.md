@@ -25,6 +25,7 @@ yarn add react-native-screen-util
 4. 2022/12/28 ios 14기기에서 정상작동 확인했습니다 100% !!
 5. ios 는 최소 ios버전 이후부터 지원 됩니다. 11버전까지는 아마 안될껍니다. :<
 6. 2023/01/01 rework completely! Ver1 start
+7. 2023/01/05 패치완료! ux/ux의 디자인된 영역만 적어주세요.. (상태바, 네비게이션바 또는 하단바?)
 
 ### 디자인 적용 사진
 디자인 파일
@@ -44,8 +45,8 @@ yarn add react-native-screen-util
    1. 1-1와 같음
 3.  - [x] ios 기기 확인
 4.  - [x] 안드로이드 기기에서 Inset값이 마지막으로 확인했을때 0으로 나왔던점을 다시한번 확인해야합니다.(프로그램이 꺼지지는 않지만, 값이 0으로 출력됩니다)
-5.  - [ ] border에는 뭘쓸지 생각중
-6. - [ ] npm, yarn 업로드 아마도 23년1월1일 ?
+5.  - [x] border에는 뭘쓸지 생각중 - mixin이라는 함수를 쓰게됐습니다. 공식은 다음과 같습니다. value * ((비율넓이 + 비율높이) / 2)
+6. - [x] npm, yarn 업로드 아마도 23년1월1일 ?
 7. - [x] context, provider 추가 react에 대해 자세히 아는게 아니라 생명주기 등등 조사가 많이 필요했었네요 ㅋㅋ.. store가 react life cycle을 쓰고있었다니...
 8. - [x] responseiveApi에 대한 areEqual 알고리즘을 변경 할 수 있는 context 및 provider를 추가했습니다.
 9. - [x] react-if를 추가했습니다. 단, 재랜더링에 대해 방책이 없었고, pureComponent도 아니여서 React.memo를 사용하여 리팩토링 했습니다.

@@ -16,6 +16,8 @@ react native responsive ui for design size
 
 ```sh
 npm install react-native-screen-util
+```
+```sh
 yarn add react-native-screen-util
 ```
 ### Comment
@@ -25,6 +27,7 @@ yarn add react-native-screen-util
 4. 2022/12/28 ios example is work 100% !!
 5. ios work ios minimum 11 :<
 6. 2023/01/01 rework completely! Ver1 start
+7. 2023/01/05 patchd! ui/ux working size only input please! (status bar, navigation bar or bottom bar? exclude exactly height?)
 
 ### design file
 1. original png (390 x 844)
@@ -44,8 +47,9 @@ yarn add react-native-screen-util
    1. 1-1 is same
 3. - [X] Checking IOS
 4. - [X] Android Inset Checking Currently unsafe(program is not deadlock but result is 0)
-5. - [ ] how to use Border?
-6. - [ ] npm, yarn upload Probably 23/1/1 ?
+5. - [X] how to use Border? - used mixin  value * ((scaledWidth + scaledHeight) /2)
+   1. just usage ResponsiveStyleSheet.create !!!!! ur StytleSheet.create
+6. - [X] npm, yarn upload Probably 23/1/1 ?
 7. - [x] context Add (It's hard work, but it's almost over)
 8. - [x] Add context for multiple areEquals Algorithms
 9. - [x] Add React-If Add for loading option and customize React.memo

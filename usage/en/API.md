@@ -1,9 +1,22 @@
 ### API
 1. Provider(react context)
    1. ResponsiveProvider
-        ###### It's a provider used in reactive design. You can use this library if you have px instead of flex in UI/UX.
+         #### It's a provider used in reactive design.
+         #### You can use this library if you have px instead of flex in UI/UX.
+
       1. Props
          1. option
+            1. width : Please write down the width of the designed area of ui/ux!
+            2. height : Please write down the height of the designed area of ui/ux! (This is the height with the status bar and bottom or navigation bar removed, not the total height of the designed device.)
+            3. safeArea : deprecated ((This is a fact that I found out after 3 days of nonsense. iOS doesn't matter, but in Android, when the navigation bar has only _, the height is unknown))
+            4. mainUI : deprecated
+            5. safeAreaInset : deprecated
+            6. debug : deprecated
+            7. screenSize : deprecated (This value automatically obtains the size of the screen inside the provider. Size excluding top bar, navigation bar, or bottom bar)
+            8. scaleByHeight : The default value for the ratio of the calculation formula is width, but when using height, give true. (The calculated value will be slightly larger.)
+            9. minTextSize : The smallest value among width and height is used. (ratio)
+            10. splitScreenMode : When used, the maximum height is fixed at 700, and a split screen mobile phone is supported.
+            11. equality : subscribe or the areEqual algorithm to tell when a variable changes. shallow by default zustand
          2. loading (The loading indicator appears until the reactive setting is finished.)
          3. autoInset (IOS only) Android can be adjusted to the height value, but iOS is added because it has to be adjusted to top, left, bottom, and right.
    2. AreEqualProvider
@@ -18,10 +31,19 @@
       1. "set" Don't touch the function. This is the internal function associated with the provider.
       2. "_____" A function with 5 underbars is for private, but you can use it yourself.
          1. _____getInset(orientation) : If you insert the orientation value, it automatically prints the safe area set value. However, safeArea must be true in option.
-         2. _____getFont(value) : The value can only be numeric. The calculated font size ratio value is output.
-         3. _____getWidth(value) : The value can only be numeric. The width size ratio calculated value is output.
-         4. _____getHeight(value) : The value can only be numeric. The height size ratio calculated value is output.
-         5. _____getSpacing(value) : The value can only be numeric. The margin, padding size ratio calculated value is output.
+         2. _____getFont(value) : The value can only be number. The calculated font size ratio value is output.
+         3. _____getWidth(value) : The value can only be number. The width size ratio calculated value is output.
+         4. _____getHeight(value) : The value can only be number. The height size ratio calculated value is output.
+         5. _____getSpacing(value) : The value can only be number. The margin, padding size ratio calculated value is output.
+         6. _____getCircle(value) : The value can only be number. The borderWidth, The formula for this function is: ((scaleWidth * 2) + (scaleHeight * 2) / 2) Here's why. 1. To use the same size (eg icons) 2. To make a circle
+         7. _____getMixin(value) : The value can only be number. This is the same as number 6. However, there is a possibility that the formula will be changed later, so it is made separately.
+
+         ```md
+         Special Tips!
+         If width and height are the same in the same style,
+         the same value is displayed, so it does not stretch
+         to the left or to the right!
+         ```
       3. getState() return current store state
       4. getAction() return current store Function. don't touch plz!!! copyData is same "set" function
 4. Responsive extension(number only) Margin and padding have the same output value. However, do not use the same words for the quality of the code.

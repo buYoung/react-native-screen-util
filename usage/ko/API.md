@@ -1,9 +1,21 @@
 ### API
 1. Provider(react context)
    1. ResponsiveProvider
-        ###### 반응형 디자인에 쓰이는 Provider입니다. UI/UX에서 flex대신 px로 잡은경우 이 라이브러리를 사용하면 됩니다.
+        ###### 반응형 디자인에 쓰이는 Provider입니다.
+        ###### UI/UX에서 flex대신 px로 잡은경우 이 라이브러리를 사용하면 됩니다.
       1. Props
          1. option (반응형의 설정값입니다.)
+            1. width : ui/ux의 디자인된 영역의 넓이를 적어주세요!
+            2. height : ui/ux의 디자인된 영역의 높이를 적어주세요! (디자인된 기기의 전체 높이가 아닌 상태바와 바텀 또는 네비게이션바가 제거된 높이입니다.)
+            3. safeArea : deprecated (3일간의 뻘짓으로 알게된 사실입니다. ios는 상관없지만, 안드에서는 네비게이션바의 상태가 _만 있을때 높이를 모릅니다)
+            4. mainUI : deprecated
+            5. safeAreaInset : deprecated
+            6. debug : deprecated
+            7. screenSize : deprecated (이 값은 provider 내부에서 자동으로 화면의 크기를 구합니다. 상단바, 네비게이션바 또는 하단바를 제외한 크기)
+            8. scaleByHeight : 계산식의 비율을 기본값은 넓이지만, 높이를 사용할때 true를 줍니다. (계산된 값이 조금 더 커집니다.)
+            9. minTextSize : width와 height중 제일 작은값을 사용합니다. (비율)
+            10. splitScreenMode : 사용시 최대높이가 700으로 고정되고, split 화면인 핸드폰을 지원하게 됩니다.
+            11. equality : subscribe 또는 변수가 바뀔때를 알려주는 areEqual 알고리즘. 기본값 zustand의 shallow
          2. loading (반응형 설정이 끝날때까지 loading창이 나타납니다.)
          3. autoInset (IOS용) 안드로이드는 height값으로 조절이 가능하지만, ios는 top, left 또는 bottom, right로 조절해야해서 추가된 기능입니다.
    2. AreEqualProvider
