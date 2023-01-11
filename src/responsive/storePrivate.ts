@@ -1,13 +1,13 @@
 import { Dimensions, PixelRatio } from "react-native";
-import create from "zustand";
+import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { inRange, isValueNumber } from "../library";
 import { onViewSizeChangeEvent } from "../library/event/bus";
 import type {
     SafeAreaInsetType,
-    screenResponsiveActionUnionPrivate,
-    screenResponsiveState,
-    screenResponsiveStatePrivate,
+    ResponsiveActionUnionPrivate,
+    ResponsiveState,
+    ResponsiveStatePrivate,
     ScreenUtilInitilizeParams
 } from "../type";
 import { OrientationType } from "../type";
@@ -39,7 +39,7 @@ const initializeState = {
     uiHeight: 690,
     font: 0
 };
-export type ScreemResponsiveStoreUnionPrivate = screenResponsiveStatePrivate & screenResponsiveActionUnionPrivate;
+export type ScreemResponsiveStoreUnionPrivate = ResponsiveStatePrivate & ResponsiveActionUnionPrivate;
 class responsivePrivateVarial {
     store = create<ScreemResponsiveStoreUnionPrivate>()(
         subscribeWithSelector((set, get) => ({
@@ -138,7 +138,7 @@ class responsivePrivateVarial {
                 if (!get().screenUtilInitialize) return false;
                 return isValueNumber(value) && inRange(value, 1, 10000);
             },
-            copyData(data: screenResponsiveState): void {
+            copyData(data: ResponsiveState): void {
                 if (!data.screenUtilInitialize) {
                     return;
                 }
@@ -150,7 +150,7 @@ class responsivePrivateVarial {
                     scaleWidth: state.scaleWidth,
                     scaleHeight: state.scaleHeight,
                     font: state.font
-                } as screenResponsiveState;
+                } as ResponsiveState;
                 const b = {
                     safeAreaInset: data.safeAreaInset,
                     safeArea: data.safeArea,
@@ -158,7 +158,7 @@ class responsivePrivateVarial {
                     scaleWidth: data.scaleWidth,
                     scaleHeight: data.scaleHeight,
                     font: data.font
-                } as screenResponsiveState;
+                } as ResponsiveState;
                 const prev = {
                     width: a.screenSize.width,
                     height: a.screenSize.height
@@ -175,13 +175,13 @@ class responsivePrivateVarial {
             }
         }))
     );
-    getState(): screenResponsiveState {
-        return this.store.getState() as screenResponsiveState;
+    getState(): ResponsiveState {
+        return this.store.getState() as ResponsiveState;
     }
-    getAction(): screenResponsiveActionUnionPrivate {
-        return this.store.getState() as screenResponsiveActionUnionPrivate;
+    getAction(): ResponsiveActionUnionPrivate {
+        return this.store.getState() as ResponsiveActionUnionPrivate;
     }
-    set(data: screenResponsiveState): void {
+    set(data: ResponsiveState): void {
         this.store.setState(data);
     }
     _____getInset(orientation: OrientationType): number {
