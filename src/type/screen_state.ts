@@ -1,18 +1,18 @@
 import type { ScreenUtilDesignSizeDefault } from "./screen_util";
 
-export interface screenResponsiveState extends ScreenUtilDesignSizeDefault {
+export interface ResponsiveState extends ScreenUtilDesignSizeDefault {
     screenUtilInitialize: boolean;
     orientation: boolean;
 }
 
-export interface screenResponsiveStatePrivate extends ScreenUtilDesignSizeDefault {
+export interface ResponsiveStatePrivate extends ScreenUtilDesignSizeDefault {
     screenUtilInitialize: boolean;
     orientation: boolean;
-    oldSize: screenResponsiveSizeMatter;
-    nextSize: screenResponsiveSizeMatter;
+    oldSize: ResponsiveSizeMatter;
+    nextSize: ResponsiveSizeMatter;
 }
 
-export interface screenResponsiveSizeMatter {
+export interface ResponsiveSizeMatter {
     width: number;
     height: number;
 }

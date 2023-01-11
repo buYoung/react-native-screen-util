@@ -2,8 +2,8 @@ import type { OrientationType } from "./orientation";
 import type { setStateResultType } from "./result";
 import type { SafeAreaInsetType } from "./safeArea";
 import type { ScreenUtilInitilizeParams } from "./screen_util";
-import type { screenResponsiveState } from "../type/screen_state";
-export interface screenResponsiveGetterAction {
+import type { ResponsiveState } from "../type/screen_state";
+export interface ResponsiveGetterAction {
     getDefaultStyle(): ScreenUtilInitilizeParams;
     getInitialize(): Promise<boolean>;
     getOrientation(): OrientationType;
@@ -11,24 +11,22 @@ export interface screenResponsiveGetterAction {
     getSpacing(value: number): number;
 }
 
-export interface screenResponsiveCheckerAction {
+export interface ResponsiveCheckAction {
     checkIfValueIsNull<T>(value: T): boolean;
     checkNumberIsAllowRange(value: number): boolean;
 }
 
-export interface screenResponsiveSetterAction {
+export interface ResponsiveSetterAction {
     setScreenResponsiveInitialize(option?: ScreenUtilInitilizeParams): Promise<setStateResultType>;
     setScreenSizeRatio(): setStateResultType;
     setScreenReScreeenSizeRatio(width: number, height: number): setStateResultType;
     setScreenSafeInset(): Promise<setStateResultType>;
 }
-export interface screenResponsiveSetterActionPrivate {
-    copyData(data: screenResponsiveState): void;
+export interface ResponsiveSetterActionPrivate {
+    copyData(data: ResponsiveState): void;
 }
 
-export type screenResponsiveActionUnion = screenResponsiveGetterAction &
-    screenResponsiveCheckerAction &
-    screenResponsiveSetterAction;
-export type screenResponsiveActionUnionPrivate = screenResponsiveGetterAction &
-    screenResponsiveCheckerAction &
-    screenResponsiveSetterActionPrivate;
+export type ResponsiveActionUnion = ResponsiveGetterAction & ResponsiveCheckAction & ResponsiveSetterAction;
+export type ResponsiveActionUnionPrivate = ResponsiveGetterAction &
+    ResponsiveCheckAction &
+    ResponsiveSetterActionPrivate;

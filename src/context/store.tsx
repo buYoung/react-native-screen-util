@@ -6,8 +6,8 @@ import type { Mutate, StoreApi } from "zustand/vanilla";
 import { inRange, isString, isValueNumber, round } from "../library/lodash";
 import type {
     SafeAreaInsetType,
-    screenResponsiveActionUnion,
-    screenResponsiveState,
+    ResponsiveActionUnion,
+    ResponsiveState,
     ScreenUtilInitilizeParams,
     setStateResultType
 } from "../type";
@@ -58,13 +58,14 @@ const initializeState = {
 //     [DpiEnum.xxxhdpi]: [4, 10]
 // };
 
-export type ScreemResponsiveStoreUnion = screenResponsiveState & screenResponsiveActionUnion;
+export type ResponsiveUnion = ResponsiveState & ResponsiveActionUnion;
+export type ResponsiveStore = ReturnType<typeof createScreenResponsiveStore>;
 
 export function createScreenResponsiveStore(): Mutate<
-    StoreApi<ScreemResponsiveStoreUnion>,
+    StoreApi<ResponsiveUnion>,
     [["zustand/subscribeWithSelector", never]]
 > {
-    return createStore<ScreemResponsiveStoreUnion>()(
+    return createStore<ResponsiveUnion>()(
         subscribeWithSelector(
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -361,7 +362,7 @@ export function numberValueCheckIsNull(value: number): boolean {
     return isValueNumber(value) && inRange(value, 1, 10000);
 }
 
-function objectValueCheckIsNull<T>(currentState: ScreemResponsiveStoreUnion, value: T): boolean {
+function objectValueCheckIsNull<T>(currentState: ResponsiveUnion, value: T): boolean {
     if (!value) {
         return false;
     }

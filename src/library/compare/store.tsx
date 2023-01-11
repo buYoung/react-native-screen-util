@@ -11,6 +11,7 @@ import { equalityFunctionEnum } from "../../type";
 import type { equalityFunctionAction, equalityFunctionStore } from "../../type";
 
 export type EqualityFunctionUnion = equalityFunctionStore & equalityFunctionAction;
+export type EqualityFunctionStore = ReturnType<typeof createEqualityFunctionStore>;
 export function createEqualityFunctionStore(): Mutate<
     StoreApi<EqualityFunctionUnion>,
     [["zustand/subscribeWithSelector", never]]
