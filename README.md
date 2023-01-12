@@ -35,11 +35,12 @@ yarn add react-native-screen-util
 2. original svg (390 x 844)
     1. [Link](http://livteam.in:5000/d/s/rjFF5DGtp1NNNBlnE5BeC03I8Wbawycl/FbtgCrf_oLedb89v37uDyWOJJZXPoNRf-Vr1AAZQWGAo)
 3. ios 14
-    1. [Link](http://livteam.in:5000/d/s/rjGgUMaY8yQ5TVWP6aUtp7cTICozgGAc/aRlzIIzlOqvjwaJcQQyNVSfaGTluH-dk-fb3g-6oWGAo)
+   1. [Link](http://livteam.in:5000/d/s/rjGgUMaY8yQ5TVWP6aUtp7cTICozgGAc/aRlzIIzlOqvjwaJcQQyNVSfaGTluH-dk-fb3g-6oWGAo)
+   2. ![image](https://github.com/buYoung/react-native-screen-util/raw/main/img/ios/iPhone%2014.png)
 4. android
-    1. [Link](http://livteam.in:5000/d/s/rjGkffaGo2kdheF1lmYlAjb1H3bmJqaS/NNTh56mN22Li4duFvTRdV2U1sMpzxdvI-pL0gWL8WGAo)
-
-
+   1. [Link](http://livteam.in:5000/d/s/rjGkffaGo2kdheF1lmYlAjb1H3bmJqaS/NNTh56mN22Li4duFvTRdV2U1sMpzxdvI-pL0gWL8WGAo)
+   2. ![image](https://github.com/buYoung/react-native-screen-util/raw/main/img/android/pixel5x_navigation_bar.png)
+   3. ![image](https://github.com/buYoung/react-native-screen-util/raw/main/img/android/pixel5x_navigation_bar.png)
 # Futures
 1. - [x] make for Margin
    1. this fully typed and return styleCode marginLeft,Top,Bottom...
