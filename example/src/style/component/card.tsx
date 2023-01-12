@@ -19,13 +19,12 @@ const cardStyle = ResponsiveStyleSheet.create<cardStyle>({
         width: 390,
         height: 100,
         flexDirection: "row",
-        color: "#F8F7FC"
+        backgroundColor: "#F8F7FC"
     },
     cardLeftProfileContainer: {
         margin: 15,
         height: 100,
-        alignContent: "center",
-        alignItems: "center",
+        alignSelf: "center",
         justifyContent: "center"
     },
     cardLeftProfileIcon: {

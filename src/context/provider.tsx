@@ -1,14 +1,14 @@
 import inRange from "lodash/inRange";
 import React, { useCallback, useEffect, useRef } from "react";
 import type { LayoutChangeEvent, ViewStyle } from "react-native";
-import { ActivityIndicator, InteractionManager, Platform, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import shallow from "zustand/shallow";
 import { loadingStyleSheet } from "./loading";
 import { AreEqualProvider, ResponsiveProvider } from "./providers";
 import type { ResponsiveStore } from "./store";
 import { createScreenResponsiveStore } from "./store";
 import type { EqualityFunctionStore } from "../library";
-import { createEqualityFunctionStore, Fallback, If, round, Then } from "../library";
+import { createEqualityFunctionStore, round, Else, Fallback, If, Then} from "../library";
 import { onViewSizeChangeEvent } from "../library/event/bus";
 import { ResponsiveStore as ResponsivePrivateStore } from "../responsive";
 import type { equalityFunctionStore, ResponsiveState, ScreenUtilDesignSize } from "../type";
@@ -75,46 +75,47 @@ export function ScreenResponsiveProvider({
             }
         });
 
-        InteractionManager.runAfterInteractions(async () => {
-            const responsiveRefCurrent = storeRef.current;
-            const areEqualRefCurrent = areEqualStoreRef.current;
-            if (!responsiveRefCurrent) {
-                return;
-            }
-            if (!areEqualRefCurrent) {
-                return;
-            }
+        const responsiveRefCurrent = storeRef.current;
+        const areEqualRefCurrent = areEqualStoreRef.current;
+        if (!responsiveRefCurrent) {
+            return;
+        }
+        if (!areEqualRefCurrent) {
+            return;
+        }
 
-            const result = await responsiveRefCurrent.getState().setScreenResponsiveInitialize(option);
-
-            if (result.error) {
-                return;
-            }
-
-            unSubcribeResponsive = responsiveRefCurrent.subscribe(
-                (state: ResponsiveState) => state,
-                (next, _prev) => {
-                    ResponsivePrivateStore.getAction().copyData(next);
-                },
-                {
-                    equalityFn: (a, b) => areEqualRef.current[0](a, b),
-                    fireImmediately: true
+        responsiveRefCurrent
+            .getState()
+            .setScreenResponsiveInitialize(option)
+            .then((v) => {
+                if (v.error) {
+                    return;
                 }
-            );
 
-            unSubcribeAreEqual = areEqualRefCurrent.subscribe(
-                (state: equalityFunctionStore) => state,
-                (next, _prev) => {
-                    if (next.type === areEqualRef.current[1]) {
-                        return;
+                unSubcribeResponsive = responsiveRefCurrent.subscribe(
+                    (state: ResponsiveState) => state,
+                    (next, _prev) => {
+                        ResponsivePrivateStore.getAction().copyData(next);
+                    },
+                    {
+                        equalityFn: (a, b) => areEqualRef.current[0](a, b),
+                        fireImmediately: true
                     }
-                    areEqualRef.current = [next.areEqual, next.type];
-                },
-                {
-                    equalityFn: (a, b) => areEqualRef.current[0](a, b)
-                }
-            );
-        });
+                );
+
+                unSubcribeAreEqual = areEqualRefCurrent.subscribe(
+                    (state: equalityFunctionStore) => state,
+                    (next, _prev) => {
+                        if (next.type === areEqualRef.current[1]) {
+                            return;
+                        }
+                        areEqualRef.current = [next.areEqual, next.type];
+                    },
+                    {
+                        equalityFn: (a, b) => areEqualRef.current[0](a, b)
+                    }
+                );
+            });
 
         return () => {
             unSubcribeResponsive();
@@ -126,11 +127,11 @@ export function ScreenResponsiveProvider({
     }, []);
 
     useEffect(() => {
-        InteractionManager.runAfterInteractions(async () => {
-            await ResponsivePrivateStore.getAction().getInitialize();
-
-            onViewSizeChangeEvent.emit("onChangeInsideEvent");
-        });
+        ResponsivePrivateStore.getAction()
+            .getInitialize()
+            .then(() => {
+                onViewSizeChangeEvent.emit("onChangeInsideEvent");
+            });
     }, []);
 
     const getSize = useCallback((event: LayoutChangeEvent) => {
@@ -161,16 +162,12 @@ export function ScreenResponsiveProvider({
                                         <ActivityIndicator style={loadingStyleSheet.loading} />
                                     }
                                 </Fallback>
-                                <Then>
-                                    {(): any => {
-                                        return children;
-                                    }}
-                                </Then>
+                                <Then>{(): any => children}</Then>
                             </If>
                         </Then>
-                    </If>
-                    <If condition={!loading}>
-                        <Then>{children}</Then>
+                        <Else>
+                            {children}
+                        </Else>
                     </If>
                 </ResponsiveProvider>
             </View>

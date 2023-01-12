@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Text, View } from "react-native";
-import shallow from "zustand/shallow";
+import { Image, Text, View } from "react-native";
 import { cardStyle } from "../style/component/card";
 
 export type CardProps = {
@@ -14,15 +13,15 @@ function CardComponent(props: CardProps): JSX.Element {
     return (
         <View style={cardStyle.cardContainer}>
             <View style={cardStyle.cardLeftProfileContainer}>
-                <Text style={cardStyle.cardLeftProfileIcon}>프로필 자리</Text>
+                <Image style={cardStyle.cardLeftProfileIcon} source={{ uri: props.profileImg }} />
             </View>
             <View style={cardStyle.cardTextContainer}>
-                <Text>내자리야</Text>
-                <Text>내자리야</Text>
-                <Text>내자리야</Text>
+                <Text style={cardStyle.cardTitle}>{props.title}</Text>
+                <Text style={cardStyle.cardSubject}>{props.subtitle}</Text>
+                <Text style={cardStyle.cardMaker}>{props.status}</Text>
             </View>
         </View>
     );
 }
 
-export default React.memo(CardComponent, shallow);
+export default CardComponent;

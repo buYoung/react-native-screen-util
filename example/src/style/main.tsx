@@ -17,7 +17,6 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
     container: {
         width: 390,
         height: 750, // ui Size Only indicator height exclude !! important !!
-        backgroundColor: "blue"
         // backgroundColor: "#F8F7FC"
     },
     iconDefaultSize: {
@@ -28,7 +27,6 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
         width: 390,
         height: 60,
         paddingHorizontal: 16,
-        backgroundColor: "#f00",
         flexDirection: "row",
         alignItems: "center",
         alignContent: "center",
@@ -42,13 +40,12 @@ const styles = ResponsiveStyleSheet.create<mainStyle>({
     cardBodyContainer: {
         width: 390,
         height: 630,
-        backgroundColor: "#333"
+        backgroundColor: "#F8F7FC"
     },
     bottomContainer: {
         width: 390,
         height: 60,
         paddingHorizontal: 16,
-        backgroundColor: "#f00",
         flexDirection: "row",
         alignItems: "center",
         alignContent: "center",
