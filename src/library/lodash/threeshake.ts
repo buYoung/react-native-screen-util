@@ -4,6 +4,7 @@ import isNull from "lodash/isNull";
 import isNumber from "lodash/isNumber";
 import isString from "lodash/isString";
 import isUndefined from "lodash/isUndefined";
+import random from "lodash/random";
 import reduce from "lodash/reduce";
 import round from "lodash/round";
 import values from "lodash/values";
@@ -23,4 +24,5 @@ function isValueNumber(value: any): boolean {
     }
     return true;
 }
-export { isString, isValueNumber, reduce, inRange, values, round };
+
+export { isString, isValueNumber, reduce, inRange, values, round, random };

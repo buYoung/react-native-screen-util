@@ -1,8 +1,8 @@
 ### API
 1. Provider(react context)
-   1. ResponsiveProvider
-         #### It's a provider used in reactive design.
-         #### You can use this library if you have px instead of flex in UI/UX.
+   1. ScreenResponsiveProvider
+         ##### It's a provider used in reactive design.
+         ##### You can use this library if you have px instead of flex in UI/UX.
 
       1. Props
          1. option

@@ -1,7 +1,7 @@
 ### 사용법
-1. react의 root app.jsx 또는 app.tsx쪽에 ResponsiveProvider 를 추가해주세요
+1. react의 root app.jsx 또는 app.tsx쪽에 ScreenResponsiveProvider 를 추가해주세요
    1. 옵션은 아래에서 봐주세요.
-2. ResponsiveProviderd의 option에 값을 넣어주세요 example을 보고 따라하셔도 됩니다!
+2. ScreenResponsiveProvider의 option에 값을 넣어주세요 example을 보고 따라하셔도 됩니다!
     1. 왠만하면 option값에 screenSize는 Dimensions.get("window")로 넣어주세요.
 2. style 코드가 있는 곳에서 ResponsiveStyleSheet.create를 써서 기존에 사용하던 StyleSheet을 대신해주세요
    1. 자동으로 반응형으로 변경됩니다.

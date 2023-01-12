@@ -1,6 +1,6 @@
 ### API
 1. Provider(react context)
-   1. ResponsiveProvider
+   1. ScreenResponsiveProvider
         ###### 반응형 디자인에 쓰이는 Provider입니다.
         ###### UI/UX에서 flex대신 px로 잡은경우 이 라이브러리를 사용하면 됩니다.
       1. Props

@@ -1,5 +1,5 @@
 import type { ScaledSize } from "react-native";
-import { Dimensions, NativeModules, StatusBar } from "react-native";
+import { Dimensions, NativeModules, PixelRatio, Platform, StatusBar } from "react-native";
 import { createStore } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import type { Mutate, StoreApi } from "zustand/vanilla";
@@ -263,14 +263,25 @@ export function createScreenResponsiveStore(): Mutate<
                                 message: "dimension value is null"
                             };
                         }
-                        let statusbar = StatusBar.currentHeight;
-                        if (!statusbar) {
-                            statusbar = 0;
+                        let insetHeight = StatusBar.currentHeight;
+                        if (!insetHeight) {
+                            insetHeight = 0;
+                        }
+                        const inset = currentState.safeAreaInset;
+                        if (inset) {
+                            if (currentState.safeArea) {
+                                if (Platform.OS === "ios") {
+                                    insetHeight = inset.top + inset.bottom;
+                                } else {
+                                    const scale = PixelRatio.get();
+                                    insetHeight = inset.top / scale;
+                                }
+                            }
                         }
                         const screenSize: ScaledSize = { ...currentState.screenSize } as ScaledSize;
 
                         screenSize.width = currentState.screenSize.width;
-                        screenSize.height = currentState.screenSize.height - statusbar;
+                        screenSize.height = currentState.screenSize.height - insetHeight;
 
                         const defaultScale = { ...screenSize } as ScaledSize;
                         const fontScale = { ...screenSize } as ScaledSize;
